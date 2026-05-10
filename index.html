@@ -158,7 +158,13 @@
   .desktop-filter-contents { display: flex; gap: 8px; align-items: center; }
 
   /* FLASHCARDS */
-  .flashcard-wrap { perspective: 1800px; height: clamp(240px, 35vh, 320px); margin-bottom: 16px; }
+  .flashcard-wrap {
+  perspective: 1800px;
+  width: 100%;
+  max-width: 500px; /* Shrinks the card horizontally on PC */
+  aspect-ratio: 1.4 / 1; /* Forces the horizontal playing card shape */
+  margin: 0 auto 16px auto; /* Centers the card horizontally */
+}
   .flashcard { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: pointer; }
   .flashcard.flipped { transform: rotateY(180deg); }
   .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 24px 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: var(--shadow); overflow-y: auto; overflow-x: hidden; }
@@ -368,7 +374,10 @@
     .ch-modal { width: 100%; max-width: 100%; border-radius: 24px 24px 0 0; border-bottom: none; transform: translateY(100%); max-height: 85vh; padding-bottom: env(safe-area-inset-bottom); }
     .ch-modal-overlay.active .ch-modal { transform: translateY(0); }
 
-    .flashcard-wrap { height: 420px; }
+    .flashcard-wrap {
+    height: auto;
+    /* The 1.4/1 aspect ratio is inherited from above, so it scales down perfectly */
+  }
     .card-face { padding: 28px 22px; }
     .card-term { font-size: 26px; }
     .card-def { font-size: 15px; }
@@ -414,7 +423,8 @@
     .nav-btn { padding: 7px 10px; font-size: 12px; }
 
     .match-terms-bank {
-      top: 120px;
+      top: 96px;
+      box-shadow: 0 -20px 0 0 var(--bg), 0 4px 12px rgba(26,22,19,0.08);
       z-index: 9;
       padding: 16px;
       margin: 16px -14px;
@@ -2302,7 +2312,7 @@ function updateMobileFlashcardLabels() {
   if (fcStarredOnly) active.push('Starred');
   if (fcReverse) active.push('Reverse');
 
-  valEl.textContent = (active.length > 0 ? active.join(', ') : 'Standard') + ' ▼';
+  valEl.textContent = active.length > 0 ? active.join(', ') : 'Standard';
 }
 
 function toggleSmartOrder() {
