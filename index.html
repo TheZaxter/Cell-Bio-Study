@@ -44,6 +44,7 @@
   body {
     font-family: 'Geist', -apple-system, sans-serif; background: var(--bg); color: var(--ink);
     line-height: 1.55; min-height: 100vh; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; /* <--- THIS FIXES THE SCROLL/LAG */
     background-image: radial-gradient(circle at 20% 10%, rgba(139,38,53,0.03) 0%, transparent 40%),
                       radial-gradient(circle at 80% 80%, rgba(163,107,12,0.03) 0%, transparent 40%);
   }
@@ -3063,11 +3064,11 @@ if (flashcardEl && isAndroid) {
     leftHint.style.opacity = 0;
     rightHint.style.opacity = 0;
 
-    // Increased threshold so it doesn't swipe too easily
-    if (diffX > 140) {
+    // Adjusted threshold for a more comfortable thumb flick
+    if (diffX > 80) {
       flashcardEl.style.transform = `translateX(150vw) rotate(30deg)`;
       setTimeout(() => { rateConfidence(2); flashcardEl.style.transform = ''; window.isSwiping = false; }, 250);
-    } else if (diffX < -140) {
+    } else if (diffX < -80) {
       flashcardEl.style.transform = `translateX(-150vw) rotate(-30deg)`;
       setTimeout(() => { rateConfidence(0); flashcardEl.style.transform = ''; window.isSwiping = false; }, 250);
     } else {
