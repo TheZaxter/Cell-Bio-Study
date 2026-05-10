@@ -178,7 +178,7 @@
   .card-star-indicator { position: absolute; bottom: 16px; right: 16px; color: #d4a017; font-size: 18px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 2;}
   .card-star-indicator.shown { opacity: 1; }
 
-  .confidence-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 4px; max-width: 400px; margin-left: auto; margin-right: auto; }
+  .confidence-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 4px; max-width: 400px; margin-left: auto; margin-right: auto; }
   .conf-btn { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 12px; cursor: pointer; color: var(--ink); transition: all 0.15s ease; display: flex; justify-content: center; align-items: center; min-height: 48px; }
   .conf-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
   .conf-btn .conf-label { font-weight: 600; font-size: 14px; letter-spacing: 0.02em; }
@@ -375,6 +375,34 @@
 
     .quiz-question-block, .fib-card { padding: 16px; }
 
+    /* Mobile Swipe Indicators */
+.swipe-indicator {
+  position: absolute;
+  top: 50%;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  opacity: 0; /* Hidden by default, controlled by JS */
+  pointer-events: none;
+  z-index: 10;
+}
+
+.swipe-left-hint {
+  right: 20px; /* Appears on the right side when pulling left */
+  color: var(--bad);
+  border: 3px solid var(--bad);
+  transform: translateY(-50%) rotate(15deg);
+}
+
+.swipe-right-hint {
+  left: 20px; /* Appears on the left side when pulling right */
+  color: var(--good);
+  border: 3px solid var(--good);
+  transform: translateY(-50%) rotate(-15deg);
+}
+
     /* MOBILE STATS */
     .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .stat { padding: 16px; }
@@ -386,7 +414,8 @@
     .nav-btn { padding: 7px 10px; font-size: 12px; }
 
     .match-terms-bank {
-      top: 90px;
+      top: 120px;
+      z-index: 9;
       padding: 16px;
       margin: 16px -14px;
       background: var(--card);
@@ -508,13 +537,16 @@
     </div>
 
     <div class="flashcard-controls">
-      <button class="btn btn-icon" onclick="prevCard()" title="Previous">←</button>
-      <span class="fc-progress mono" id="fc-progress">1 / 100</span>
-      <button class="btn btn-icon" onclick="nextCard()" title="Next">→</button>
-      <button class="btn btn-icon" id="fc-star-btn" onclick="toggleStar()" title="Star this card">☆</button>
-      <button class="btn btn-icon" onclick="shuffleCards()" title="Reshuffle">⟳</button>
-      <button class="btn btn-icon" onclick="toggleZenMode()" title="Zen Mode">⛶</button>
-    </div>
+  <button class="btn btn-icon" onclick="prevCard()" title="Previous">←</button>
+  <span class="fc-progress mono" id="fc-progress">1 / 100</span>
+  <button class="btn btn-icon" onclick="nextCard()" title="Next">→</button>
+</div>
+
+<div class="flashcard-controls" style="margin-bottom: 12px; gap: 12px;">
+  <button class="btn btn-icon" id="fc-star-btn" onclick="toggleStar()" title="Star this card">☆</button>
+  <button class="btn btn-icon" onclick="shuffleCards()" title="Reshuffle">⟳</button>
+  <button class="btn btn-icon" onclick="toggleZenMode()" title="Zen Mode">⛶</button>
+</div>
 
     <div class="confidence-row binary">
       <button class="conf-btn conf-forgot" onclick="rateConfidence(0)" title="Forgot (Swipe Left)"><span class="conf-label">❌ Forgot</span></button>
@@ -1922,16 +1954,13 @@ function populateChapterFilters() {
     const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 12px; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
 
     if (mode === 'exam') {
-      // Exam Mode (Vertical layout matching the other 2x2 grid boxes)
+      // Exam Mode (Clean layout without the box-in-a-box redundancy)
       bar.innerHTML = `
-        <span class="filter-label" style="margin-bottom: 4px; color: var(--ink); font-size: 13px;">📚 Chapters</span>
-        <button class="chapter-btn-universal" onclick="openChapterModal('${mode}')">
-          <div class="cbu-left"><span>📚</span><span>Chapters</span></div>
-          <div class="cbu-right">
-            <span class="cbu-val" id="cbu-val-${mode}">All</span>
-            <span class="cbu-arrow">▼</span>
-          </div>
-        </button>
+        <span class="filter-label" style="margin-bottom: 8px; color: var(--ink); font-size: 13px;">📚 Chapters</span>
+        <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between; gap: 12px;">
+          <div class="cbu-val" id="cbu-val-${mode}" style="color: var(--ink-muted); font-size: 14px; font-weight: 500; line-height: 1.4;">All</div>
+          <button class="btn" style="width: 100%; justify-content: center;" onclick="openChapterModal('${mode}')">Select Chapters</button>
+        </div>
       `;
     } else {
       // All other modes (Horizontal layout spanning the page width)
