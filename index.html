@@ -160,24 +160,19 @@
   .conf-easy { border-color: rgba(80, 160, 100, 0.4); } .conf-easy:hover { background: rgba(80, 160, 100, 0.08); border-color: var(--good); }
 
   /* EXAM CENTER */
-  .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-  .exam-cell {
-    display: flex; flex-direction: column; gap: 12px;
-    padding: 18px 20px !important;
-    background: var(--card) !important;
-    border: 1px solid var(--rule) !important;
-    border-radius: 12px; margin: 0 !important;
-  }
-  .exam-cell .filter-label { color: var(--ink); font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; margin: 0; }
+   .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 
-  /* Make chips inside the grid slightly larger to fill the space better */
-  .exam-cell .chip { padding: 8px 16px; font-size: 13px; }
-  .exam-cell .count-input { min-height: 38px; padding: 8px 12px; font-size: 14px; width: 100%; flex: 1; }
+  /* Make the text inputs look exactly like inactive chips until focused */
+  .chip-input { background: transparent; border: 1px solid var(--rule); border-radius: 20px; padding: 5px 12px; font-family: inherit; font-size: 11px; font-weight: 500; color: var(--ink); width: 70px; text-align: center; outline: none; transition: all 0.15s; }
+  .chip-input::placeholder { color: var(--ink-muted); }
+  .chip-input:focus { border-color: var(--ink-soft); background: var(--bg); }
 
   @media (max-width: 600px) {
-    .exam-grid { grid-template-columns: 1fr; gap: 0; }
-    .exam-cell { padding: 0 !important; background: transparent !important; border: none !important; margin-bottom: 0 !important; }
-    .exam-cell .desktop-filter-contents { display: none !important; }
+    .exam-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
+    /* Hide the desktop chips on mobile inside the grid */
+    .exam-grid .desktop-filter-contents { display: none !important; }
+    /* Hide the extra transparent wrapper padding on mobile to match the other screens */
+    .exam-grid .filter-bar.transparent { margin-bottom: 0; }
   }
   .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px; }
   .quiz-progress-bar { height: 4px; background: var(--rule-soft); border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
@@ -578,11 +573,13 @@
 
     <div id="exam-setup">
       <div class="exam-grid">
+
         <!-- 1. Chapters (Top Left) -->
-        <div class="filter-bar exam-cell" id="exam-chapter-bar"></div>
+        <!-- Just uses the standard empty transparent bar, JS does the rest perfectly -->
+        <div class="filter-bar transparent" id="exam-chapter-bar" style="margin-bottom: 0;"></div>
 
         <!-- 2. Format (Top Right) -->
-        <div class="filter-bar exam-cell">
+        <div class="filter-bar transparent" style="margin-bottom: 0;">
           <span class="filter-label desktop-filter-contents">⚙️ Format</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Format', 'exam-fmt-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Format</span></div>
@@ -600,7 +597,7 @@
         </div>
 
         <!-- 3. Length (Bottom Left) -->
-        <div class="filter-bar exam-cell" id="exam-len-bar">
+        <div class="filter-bar transparent" id="exam-len-bar" style="margin-bottom: 0;">
           <span class="filter-label desktop-filter-contents">📏 Length</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Length', 'exam-len-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>📏</span><span>Length</span></div>
@@ -609,19 +606,17 @@
               <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
             </div>
           </button>
-          <div id="exam-len-chips" class="desktop-filter-contents" style="display: flex; width: 100%;">
-            <input class="count-input" id="exam-len-input" type="number" min="1" max="999" inputmode="numeric" value="20" oninput="setExamLenFromInput()" placeholder="Custom..." style="max-width: 110px;" />
-            <div style="display: flex; gap: 7px; flex-wrap: wrap;">
-              <button class="chip" data-e-len="10" onclick="setExamLen(10)">10</button>
-              <button class="chip active" data-e-len="20" onclick="setExamLen(20)">20</button>
-              <button class="chip" data-e-len="50" onclick="setExamLen(50)">50</button>
-              <button class="chip" data-e-len="all" onclick="setExamLen('all')">All</button>
-            </div>
+          <div id="exam-len-chips" class="desktop-filter-contents">
+            <input class="chip-input" id="exam-len-input" type="number" min="1" max="999" inputmode="numeric" value="20" oninput="setExamLenFromInput()" placeholder="Custom" />
+            <button class="chip" data-e-len="10" onclick="setExamLen(10)">10</button>
+            <button class="chip active" data-e-len="20" onclick="setExamLen(20)">20</button>
+            <button class="chip" data-e-len="50" onclick="setExamLen(50)">50</button>
+            <button class="chip" data-e-len="all" onclick="setExamLen('all')">All</button>
           </div>
         </div>
 
         <!-- 4. Timer (Bottom Right) -->
-        <div class="filter-bar exam-cell">
+        <div class="filter-bar transparent" style="margin-bottom: 0;">
           <span class="filter-label desktop-filter-contents">⏱️ Timer</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Time Limit', 'exam-timer-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>⏱️</span><span>Timer</span></div>
@@ -630,18 +625,17 @@
               <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
             </div>
           </button>
-          <div id="exam-timer-chips" class="desktop-filter-contents" style="display: flex; width: 100%;">
-            <input class="count-input" id="exam-timer-input" type="number" min="1" max="999" placeholder="Mins" oninput="setExamTimerFromInput()" style="max-width: 110px;" />
-            <div style="display: flex; gap: 7px; flex-wrap: wrap;">
-              <button class="chip active" data-e-timer="0" onclick="setExamTimer(0)">None</button>
-              <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10m</button>
-              <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30m</button>
-            </div>
+          <div id="exam-timer-chips" class="desktop-filter-contents">
+            <input class="chip-input" id="exam-timer-input" type="number" min="1" max="999" placeholder="Custom" oninput="setExamTimerFromInput()" />
+            <button class="chip active" data-e-timer="0" onclick="setExamTimer(0)">None</button>
+            <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10m</button>
+            <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30m</button>
           </div>
         </div>
-      </div>
 
-      <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px; margin-top: 8px;" onclick="startExam()">Start Exam →</button>
+      </div> <!-- End Grid -->
+
+      <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px;" onclick="startExam()">Start Exam →</button>
     </div>
 
     <div id="exam-active" style="display: none;">
@@ -1912,7 +1906,7 @@ function fireConfetti() {
 // ============================================================
 const chapterModeMap = {
   fc: { barId: 'fc-chapter-bar', action: null },
-  exam: { barId: 'exam-chapter-bar', action: null }, /* Restored */
+  exam: { barId: 'exam-chapter-bar', action: null },
   match: { barId: 'match-chapter-bar', action: 'startMatching()' },
   fib: { barId: 'fib-chapter-bar', action: null },
   browse: { barId: 'browse-chapter-bar', action: null }
@@ -1936,20 +1930,14 @@ function updateChapterBar(mode) {
   if (!cfg) return;
   const total = getActiveChapters().length;
   const selected = getSelectedChapters(mode);
-  const valEl = document.getElementById(`trigger-val-${mode}`);
-  if (!valEl) return;
 
-  if (selected.length === total) {
-    valEl.textContent = "All Chapters";
-  } else {
-    // Lists them out like "Ch. 1, 2, 4"
-    valEl.textContent = "Ch. " + selected.join(', ');
-    // Update desktop chip specifically for Exam mode
-  const desktopExamEl = document.getElementById(`trigger-val-${mode}`);
-  if (desktopExamEl && mode === 'exam') {
-    desktopExamEl.textContent = selected.length === total ? "All" : selected.join(', ');
-  }
-  }
+  const text = selected.length === total ? "All Chapters" : "Ch. " + selected.join(', ');
+
+  const mobileValEl = document.getElementById(`trigger-val-${mode}`);
+  if (mobileValEl) mobileValEl.textContent = text;
+
+  const desktopValEl = document.getElementById(`trigger-val-desktop-${mode}`);
+  if (desktopValEl) desktopValEl.textContent = text;
 }
 
 function getChapterCount(mode, ch) {
@@ -1981,20 +1969,29 @@ function updateAllChapterBars() { Object.keys(chapterModeMap).forEach(updateChap
 function populateChapterFilters() {
   Object.entries(chapterModeMap).forEach(([mode, cfg]) => {
     const bar = document.getElementById(cfg.barId);
-    if (!bar || cfg.noInject) return;
+    if (!bar) return;
 
     // flex-shrink: 0 prevents the Start button from being squished
     const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 8px; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
 
-    // flex: 1 1 0% forces the button to fill exactly the remaining space without overflowing
+    // Added mobile-filter-trigger class so it gets the correct Android styling
     bar.innerHTML = `
-      <button class="chapter-trigger" style="flex: 1 1 0%; min-width: 0;" onclick="openChapterModal('${mode}')">
+      <button class="chapter-trigger mobile-filter-trigger" style="display:flex; flex: 1 1 0%; min-width: 0; margin-bottom: 0;" onclick="openChapterModal('${mode}')">
         <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
         <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
-          <span class="chapter-trigger-val" id="trigger-val-${mode}">All</span>
+          <span class="chapter-trigger-val" id="trigger-val-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
           <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
         </div>
       </button>
+      <div class="desktop-filter-contents" style="display:flex; align-items:center;">
+        <button class="chapter-trigger" style="flex: 1 1 0%; min-width: 0;" onclick="openChapterModal('${mode}')">
+          <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
+          <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
+            <span class="chapter-trigger-val" id="trigger-val-desktop-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
+            <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
+          </div>
+        </button>
+      </div>
       ${actionBtn}
     `;
   });
