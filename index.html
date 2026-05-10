@@ -106,6 +106,8 @@
   .btn:hover { background: var(--card-alt); border-color: var(--ink-soft); }
   .btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .btn-primary:hover { background: var(--ink-soft); border-color: var(--ink-soft); }
+  .btn-bad { background: var(--bad); color: white; border-color: var(--bad); }
+  .btn-bad:hover { background: #8a2424; border-color: #8a2424; }
   .btn-icon { width: 38px; height: 38px; padding: 0; }
 
   .chip { font-family: inherit; font-size: 12px; font-weight: 500; padding: 8px 14px; background: var(--bg); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 8px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;}
@@ -413,6 +415,11 @@
     #browse-search-row .text-field { grid-column: 1 / -1; }
     #browse-search-row .btn { width: 100%; justify-content: center; }
   }
+  
+  /* UTILS */
+  .file-input-hidden { display: none; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 9999; box-shadow: var(--shadow-lg); }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
 </head>
 <body>
@@ -660,7 +667,7 @@
         <button class="btn" onclick="showView('home')">End drill</button>
       </div>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="drill-progress-fill" style="width: 0%;"></div></div>
-      <div id="drill-block"></div>
+      <div class="quiz-question-block" id="drill-block"></div>
       <div style="text-align: right; margin-top: 16px;">
         <button class="btn btn-primary" id="drill-next-btn" style="display: none;" onclick="nextDrill()">Next →</button>
       </div>
@@ -774,9 +781,9 @@
     </div>
     <div class="carousel-body" id="carousel-body"></div>
     <div class="carousel-footer">
-      <button class="carousel-nav-btn" id="carousel-prev" onclick="navCarousel(-1)">← Prev</button>
+      <button class="btn" id="carousel-prev" onclick="navCarousel(-1)">← Prev</button>
       <div class="mono" id="carousel-status" style="font-size: 12px; color: var(--ink-muted);">1 / 5</div>
-      <button class="carousel-nav-btn" id="carousel-next" onclick="navCarousel(1)">Next →</button>
+      <button class="btn" id="carousel-next" onclick="navCarousel(1)">Next →</button>
     </div>
   </div>
 </div>
@@ -1046,7 +1053,7 @@ const FLASHCARDS = [
   {term: "Ribosome", def: "Cellular structure responsible for protein synthesis. Found in PRACTICALLY EVERY CELL. Can be free in cytoplasm or attached to RER. Consists of a large and a small subunit.", chapter: 3, category: "Cell Basics"},
   {term: "Surface Area to Volume Ratio", def: "As a cell grows, volume increases much faster than surface area. The membrane becomes a bottleneck — can't bring in nutrients or remove waste fast enough. WHY cells divide instead of growing infinitely.", chapter: 3, category: "Cell Basics"},
   {term: "Cell Sizes", def: "Prokaryotic cells: 0.1–5.0 μm. Eukaryotic cells: 10–100 μm. Eukaryotic cells are MUCH larger.", chapter: 3, category: "Cell Basics"},
-  {term: "Prokaryotic Cell", def: "Simple, single-celled organism that LACKS a nucleus or any other membrane-bound organelles. DNA is in the nucleoid. Includes bacteria and archaea.", chapter: 3, category: "Prokaryotes vs Eukaryotes"},
+  {term: "Prokaryotic Cell", def: "Simple, single-celled organism that LACKS a membrane-bound nucleus and lacks membrane-bound organelles. DNA is in the nucleoid. Includes bacteria and archaea.", chapter: 3, category: "Prokaryotes vs Eukaryotes"},
   {term: "Eukaryotic Cell", def: "Cell that HAS a membrane-bound nucleus and other membrane-bound organelles. Includes animals, plants, fungi, protists.", chapter: 3, category: "Prokaryotes vs Eukaryotes"},
   {term: "Nucleoid", def: "The darkened central region of a PROKARYOTIC cell where the DNA is found. NOT a true nucleus — no membrane around it.", chapter: 3, category: "Prokaryotes vs Eukaryotes"},
   {term: "Peptidoglycan", def: "The material that makes up the BACTERIAL cell wall. Composed of amino acids and sugars. ARCHAEA cell walls LACK peptidoglycan.", chapter: 3, category: "Prokaryotes vs Eukaryotes"},
@@ -1512,8 +1519,8 @@ const QUIZ_QUESTIONS = [
   {q: "Meiosis differs from mitosis most fundamentally because:", choices: ["Meiosis occurs only in prokaryotes", "Meiosis involves two rounds of division and produces 4 haploid cells; mitosis involves one division and produces 2 diploid cells", "Meiosis requires no interphase", "Meiosis produces genetically identical cells"], correct: 1, explain: "Key differences: meiosis = 2 divisions → 4 haploid genetically unique cells. Mitosis = 1 division → 2 diploid identical cells.", chapter: 7},
   {q: "Where does crossing over occur during meiosis?", choices: ["During S phase", "During Metaphase I", "During Prophase I (at synapsis)", "During Anaphase II"], correct: 2, explain: "Crossing over occurs during Prophase I when homologous chromosomes pair up (synapsis) and non-sister chromatids exchange segments. The physical connections are called chiasmata.", chapter: 7},
   {q: "A tetrad consists of:", choices: ["4 separate chromosomes", "One homologous pair of chromosomes (4 chromatids total)", "4 haploid cells", "2 sister chromatids joined at the centromere"], correct: 1, explain: "A tetrad = two homologous chromosomes (each consisting of 2 sister chromatids) paired during prophase I = 4 chromatids total.", chapter: 7},
-  {q: "Independent assortment produces genetic variation because:", choices: ["Genes mutate more rapidly during meiosis", "Homologous chromosomes orient randomly at the metaphase plate", "giving different possible gametes", "Sister chromatids exchange segments", "The cell skips G1 during meiosis"], correct: 1, explain: "Independent assortment: during metaphase I, each homologous pair orients randomly. With 23 pairs in humans, this creates 2²³ (>8 million) possible chromosome combinations.", chapter: 7},
-   {q: "Which event occurs during Meiosis I but NOT during Meiosis II?", choices: ["Chromosomes condense", "A metaphase plate forms", "Separation of homologous chromosomes (reduction division)", "Spindle fibers form"], correct: 2, explain: "Meiosis I is 'Reduction Division' — homologous chromosomes are separated, reducing the cell from diploid to haploid. In Meiosis II, sister chromatids are separated (similar to mitosis).", chapter: 7},
+  {q: "Independent assortment produces genetic variation because:", choices: ["Genes mutate more rapidly during meiosis", "Homologous chromosomes orient randomly at the metaphase plate, giving different possible gametes", "Sister chromatids exchange segments", "The cell skips G1 during meiosis"], correct: 1, explain: "Independent assortment: during metaphase I, each homologous pair orients randomly. With 23 pairs in humans, this creates 2²³ (>8 million) possible chromosome combinations.", chapter: 7},
+  {q: "Which event occurs during Meiosis I but NOT during Meiosis II?", choices: ["Chromosomes condense", "A metaphase plate forms", "Separation of homologous chromosomes (reduction division)", "Spindle fibers form"], correct: 2, explain: "Meiosis I is 'Reduction Division' — homologous chromosomes are separated, reducing the cell from diploid to haploid. In Meiosis II, sister chromatids are separated (similar to mitosis).", chapter: 7},
   {q: "Nondisjunction during meiosis I results in:", choices: ["Gametes with the correct chromosome number", "Some gametes with both homologs and some with neither homolog", "Only one cell with extra chromosomes", "Gametes with extra sister chromatids only"], correct: 1, explain: "If homologs fail to separate in meiosis I, one cell gets BOTH members of a pair and the other gets NONE — leading to aneuploid gametes.", chapter: 7},
   {q: "Trisomy 21 (Down Syndrome) results from:", choices: ["Deletion of chromosome 21", "An extra copy of chromosome 21 due to nondisjunction", "Inversion of chromosome 21", "Translocation between chromosomes 21 and 13"], correct: 1, explain: "Trisomy 21: three copies of chromosome 21 due to nondisjunction. It is the most common viable trisomy. Risk increases with maternal age.", chapter: 7},
   {q: "X inactivation in females results in the formation of a:", choices: ["Chiasmata", "Barr body", "Tetrad", "Karyogram"], correct: 1, explain: "During early female development, one X chromosome per cell is inactivated and condensed into a structure called a Barr body. Its genes are not expressed.", chapter: 7},
@@ -1888,7 +1895,6 @@ function getChapterCount(mode, ch) {
     const fib = FIB_QUESTIONS.filter(q => q.chapter === ch).length;
     const rev = FLASHCARDS.filter(c => c.chapter === ch && c.def.length > 15).length;
 
-    if (examFormat === 'custom') return mc + fib + rev;
     if (examFormat === 'mc') return mc;
     if (examFormat === 'reverse') return rev;
     if (examFormat === 'fib') return fib;
@@ -1905,12 +1911,10 @@ function populateChapterFilters() {
     if (!bar) return;
 
     const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 8px; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
-
-    // If it's the exam mode, inject the bold header label to match the other cards
     const examLabel = mode === 'exam' ? `<span class="filter-label desktop-filter-contents">📚 Chapters</span>` : '';
 
     bar.innerHTML = examLabel + `
-      <button class="chapter-trigger mobile-filter-trigger" style="display:flex; flex: 1 1 0%; min-width: 0; margin-bottom: 0;" onclick="openChapterModal('${mode}')">
+      <button class="chapter-trigger mobile-filter-trigger" style="flex: 1 1 0%; min-width: 0; margin-bottom: 0;" onclick="openChapterModal('${mode}')">
         <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
         <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
           <span class="chapter-trigger-val" id="trigger-val-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
@@ -1991,6 +1995,7 @@ function toggleModalChapter(ch) {
 
   chapterSelections[activeModalMode] = current;
   renderModalList();
+  if (activeModalMode === 'exam') updateExamTotalCount();
 }
 
 function toggleModalAll() {
@@ -2002,6 +2007,7 @@ function toggleModalAll() {
     chapterSelections[activeModalMode] = new Set(chapters);
   }
   renderModalList();
+  if (activeModalMode === 'exam') updateExamTotalCount();
 }
 
 // ============================================================
@@ -2315,7 +2321,11 @@ function renderFlashcard() {
   state.viewedCards[card.term] = true; state.lastSeen[card.term] = Date.now(); saveState();
 }
 
-function flipCard() { document.getElementById('flashcard').classList.toggle('flipped'); }
+let isSwiping = false;
+function flipCard() { 
+  if (isSwiping) return;
+  document.getElementById('flashcard').classList.toggle('flipped'); 
+}
 function nextCard() { if (fcDeck.length === 0) return; fcIndex = (fcIndex + 1) % fcDeck.length; renderFlashcard(); }
 function prevCard() { if (fcDeck.length === 0) return; fcIndex = (fcIndex - 1 + fcDeck.length) % fcDeck.length; renderFlashcard(); }
 function shuffleCards() { buildDeck(); renderFlashcard(); toast('🔀 Deck shuffled'); }
@@ -2391,12 +2401,10 @@ function setExamFormat(f) {
 
   const valEl = document.getElementById('trigger-val-exam-fmt');
   if (valEl) {
-    valEl.textContent = (labels[f] || 'Select') + ' ▼'; /* Added the arrow back */
+    valEl.textContent = (labels[f] || 'Select');
   }
 
-  if (typeof updateExamTotalCount === 'function') {
-    updateExamTotalCount();
-  }
+  updateExamTotalCount();
 }
 
 function setExamTimer(seconds) {
@@ -2406,6 +2414,13 @@ function setExamTimer(seconds) {
   const labels = { 0: 'None', 600: '10m', 1200: '20m', 1800: '30m', 3600: '60m' };
   const valEl = document.getElementById('trigger-val-exam-timer');
   if (valEl) valEl.textContent = labels[seconds] || (seconds/60 + 'm'); 
+}
+
+function setExamTimerFromInput() {
+  const input = document.getElementById('exam-timer-input');
+  if (!input || !input.value) return;
+  const mins = parseInt(input.value);
+  if (mins > 0) setExamTimer(mins * 60);
 }
 
 function formatTime(s) { return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
@@ -2439,6 +2454,39 @@ function buildStandardMCFromCard(card, allCards) {
   return { q: `What is the definition of "${card.term}"?`, choices: [card.def, ...pool.slice(0, 3).map(c => c.def)], correct: 0, explain: `"${card.term}" is defined as: ${card.def}`, chapter: card.chapter, _type: 'mc', _key: 'MC_GEN:' + card.term };
 }
 
+function updateExamTotalCount() {
+  const chapters = getSelectedChapters('exam');
+  let total = 0;
+
+  chapters.forEach(ch => {
+    total += getChapterCount('exam', ch);
+  });
+
+  const allBtn = document.querySelector('button[data-e-len="all"]');
+  if (allBtn) allBtn.textContent = `All (${total})`;
+
+  const valEl = document.getElementById('trigger-val-exam-len');
+  if (valEl && examLen === null) {
+    valEl.textContent = `All (${total})`;
+  }
+}
+
+function initSegmentBar(total) {
+  const bar = document.getElementById('exam-segment-bar');
+  if (!bar) return;
+  bar.innerHTML = Array.from({length: total}).map((_, i) => `<div class="segment" id="seg-${i}"></div>`).join('');
+  if (total > 0) document.getElementById(`seg-0`).classList.add('active');
+}
+
+function updateSegmentBar(idx, isCorrect) {
+  const seg = document.getElementById(`seg-${idx}`);
+  if (!seg) return;
+  seg.classList.remove('active');
+  seg.classList.add(isCorrect ? 'correct' : 'incorrect');
+  const nextSeg = document.getElementById(`seg-${idx + 1}`);
+  if (nextSeg) nextSeg.classList.add('active');
+}
+
 function resetExamSetup() { document.getElementById('exam-setup').style.display = 'block'; document.getElementById('exam-active').style.display = 'none'; document.getElementById('exam-done').style.display = 'none'; }
 
 function startExam() {
@@ -2458,39 +2506,19 @@ function startExam() {
   const generatedMC = cardPool.filter(c => c.def.length < 150).map(c => buildStandardMCFromCard(c, cardPool));
   mcPool.push(...generatedMC);
 
-  if (examFormat === 'reverse' || examFormat === 'mixed' || examFormat === 'custom') {
+  if (examFormat === 'reverse' || examFormat === 'mixed') {
     const usable = cardPool.filter(c => c.def.length > 15);
     revPool = usable.map(c => buildReverseQuestion(c, cardPool));
   }
 
-  if (examFormat === 'custom') {
-    const mcCount = parseInt(document.getElementById('e-ge-mc').value) || 0;
-    const revCount = parseInt(document.getElementById('e-ge-rev').value) || 0;
-    const fibCount = parseInt(document.getElementById('e-ge-fib').value) || 0;
-    const matchBoards = parseInt(document.getElementById('e-ge-match').value) || 0;
+  if (examFormat === 'mc') pool = mcPool;
+  else if (examFormat === 'reverse') pool = revPool;
+  else if (examFormat === 'fib') pool = fibPool;
+  else pool = [...mcPool, ...fibPool, ...revPool];
 
-    shuffleInPlace(mcPool); pool.push(...mcPool.slice(0, mcCount));
-    shuffleInPlace(revPool); pool.push(...revPool.slice(0, revCount));
-    shuffleInPlace(fibPool); pool.push(...fibPool.slice(0, fibCount));
-
-    for(let i=0; i < matchBoards; i++) {
-       if(cardPool.length >= 8) {
-           shuffleInPlace(cardPool);
-           const roundCards = cardPool.splice(0, 8);
-           pool.push({ _type: 'full_match', data: roundCards, pool: cardPool, chapter: 'Mixed' });
-       }
-    }
-    shuffleInPlace(pool);
-  } else {
-    if (examFormat === 'mc') pool = mcPool;
-    else if (examFormat === 'reverse') pool = revPool;
-    else if (examFormat === 'fib') pool = fibPool;
-    else pool = [...mcPool, ...fibPool, ...revPool];
-
-    shuffleInPlace(pool);
-    const limit = examLen === null ? pool.length : examLen;
-    pool = pool.slice(0, Math.min(limit, pool.length));
-  }
+  shuffleInPlace(pool);
+  const limit = examLen === null ? pool.length : examLen;
+  pool = pool.slice(0, Math.min(limit, pool.length));
 
   if (pool.length === 0) return toast('📭 No questions available.');
 
@@ -2503,6 +2531,8 @@ function startExam() {
   document.getElementById('exam-setup').style.display = 'none';
   document.getElementById('exam-active').style.display = 'block';
   document.getElementById('exam-done').style.display = 'none';
+
+  if (examDeck.length > 0) initSegmentBar(examDeck.length);
 
   stopExamTimer();
   const timerEl = document.getElementById('exam-timer');
@@ -2522,7 +2552,6 @@ function startExam() {
 function renderExamQ() {
   examAnswered = false; const item = examDeck[examIdx];
   document.getElementById('exam-status').textContent = `Task ${examIdx + 1} of ${examDeck.length}`;
-  document.getElementById('exam-progress-fill').style.width = Math.round(100 * (examIdx + 1) / examDeck.length) + '%';
   document.getElementById('exam-next-btn').style.display = 'none';
   const block = document.getElementById('exam-block');
 
@@ -2540,8 +2569,11 @@ function renderExamQ() {
     block.innerHTML = `<div class="quiz-question-block"><div class="q-type-tag">${item._type === 'reverse' ? 'Identify term' : 'MC'} · Ch.${item.chapter}</div><div class="q-text" style="font-family:'Fraunces',serif;font-size:18px;line-height:1.5;margin-bottom:16px;">${escapeHtml(item.q)}</div><div class="choices">${ord.map(({c, i}) => `<button class="choice" data-original-idx="${i}" onclick="answerExamMC(${i})">${escapeHtml(c)}</button>`).join('')}</div><div class="q-explanation" id="exam-explanation"></div></div>`;
   }
   else {
-    block.innerHTML = `<div class="quiz-question-block"><div class="q-type-tag">FIB · Ch.${item.chapter}</div><div class="q-text" style="font-family:'Fraunces',serif;font-size:18px;line-height:1.5;margin-bottom:16px;">${escapeHtml(item.sentence)}</div><input type="text" class="search-input" id="exam-fib-input" placeholder="Type answer…" onkeydown="if(event.key==='Enter')answerExamFib()" autocomplete="off" spellcheck="false" /><div id="exam-feedback" style="margin-top:12px;display:none;"></div><button class="btn btn-primary" id="exam-check-btn" onclick="answerExamFib()" style="margin-top:12px;">Submit</button></div>`;
+    const sentenceHTML = item.sentence.replace('___', `<input type="text" class="blank-input" id="exam-fib-input" autocomplete="off" spellcheck="false" />`);
+    block.innerHTML = `<div class="quiz-question-block"><div class="q-type-tag">FIB · Ch.${item.chapter}</div><div class="fib-sentence" style="margin-bottom:16px;">${sentenceHTML}</div><div id="exam-feedback" class="fib-feedback"></div><button class="btn btn-primary" id="exam-check-btn" onclick="answerExamFib()" style="margin-top:12px;">Submit</button></div>`;
     setTimeout(() => document.getElementById('exam-fib-input').focus(), 50);
+    const input = document.getElementById('exam-fib-input');
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); answerExamFib(); } });
   }
 }
 
@@ -2577,13 +2609,22 @@ function answerExamFib() {
   if (examAnswered) return; const input = document.getElementById('exam-fib-input'); const raw = input.value.trim(); if (!raw) return;
   examAnswered = true; const item = examDeck[examIdx]; const result = checkFibAnswer(raw, item.answers); const isCorrect = result.match !== 'none';
   const fb = document.getElementById('exam-feedback'); fb.style.display = 'block';
-  if (isCorrect) { fb.className = 'fib-feedback correct'; fb.innerHTML = result.match === 'fuzzy' ? '<strong>✓ Correct (close).</strong> Exact: <em>' + escapeHtml(result.canonical) + '</em>' : '<strong>✓ Correct.</strong>'; }
-  else { fb.className = 'fib-feedback incorrect'; fb.innerHTML = '<strong>✗ Not quite.</strong> Correct: <em>' + escapeHtml(item.answers[0]) + '</em>'; }
+  if (isCorrect) { 
+    fb.className = 'fib-feedback correct'; 
+    fb.innerHTML = result.match === 'fuzzy' ? '<strong>✓ Correct (close).</strong> Exact: <em>' + escapeHtml(result.canonical) + '</em>' : '<strong>✓ Correct.</strong>'; 
+    input.classList.add(result.match === 'fuzzy' ? 'fuzzy' : 'correct');
+  }
+  else { 
+    fb.className = 'fib-feedback incorrect'; 
+    fb.innerHTML = '<strong>✗ Not quite.</strong> Correct: <em>' + escapeHtml(item.answers[0]) + '</em>'; 
+    input.classList.add('incorrect');
+  }
   input.disabled = true; document.getElementById('exam-check-btn').style.display = 'none';
   recordExamAnswer(isCorrect, item, raw);
 }
 
 function recordExamAnswer(isCorrect, item, userAnswer) {
+  updateSegmentBar(examIdx, isCorrect);
   if (isCorrect) examCorrect++; examAnswers.push({key: item._key, isCorrect, chapter: item.chapter, type: item._type});
   if (item._type !== 'full_match') {
     const key = item._type === 'reverse' ? item.choices[item.correct] : item._key;
@@ -2603,7 +2644,7 @@ function nextExamQ() { if (examIdx < examDeck.length - 1) { examIdx++; renderExa
 function abandonExam() { if (confirm('End early? Only answered questions will be recorded.')) { stopExamTimer(); finishExam(); } }
 
 function finishExam() {
-  stopExamTimer(); const isFormal = examFormat === 'custom' || examFormat === 'mixed';
+  stopExamTimer(); 
   state.quizHistory.push({ date: new Date().toISOString(), total: examIdx + 1, correct: examCorrect, chapters: getSelectedChapters('exam') }); saveState();
 
   document.getElementById('exam-active').style.display = 'none'; document.getElementById('exam-done').style.display = 'block';
@@ -2617,11 +2658,27 @@ function finishExam() {
   const chapterCells = Object.entries(byCh).sort().map(([ch, s]) => `<div class="test-breakdown-cell"><div class="num">${s.c}/${s.t}</div><div class="lbl">Ch. ${ch}</div></div>`).join('');
   const timedOutNote = examTimedOut ? '<div style="color:var(--bad);font-size:14px;margin-top:4px;">Timer ran out. Unanswered tasks excluded from % score.</div>' : '';
 
-  const scoreDisplay = isFormal
-    ? `<div style="font-family:'Fraunces',serif;font-size:96px;font-weight:700;color:${gradeColor};line-height:1;">${grade}</div><div style="font-family:'Fraunces',serif;font-size:36px;margin-top:8px;">${examCorrect}/${attempted}</div>`
-    : `<div class="results-score">${examCorrect}<span>/${attempted}</span></div>`;
+  const scoreDisplay = `<div class="results-score">${examCorrect}<span>/${attempted}</span></div>`;
 
-  document.getElementById('exam-done').innerHTML = `<div class="quiz-results">${scoreDisplay}<div style="color:var(--ink-muted);font-size:16px;margin-top:4px;">${pct}% accuracy</div>${timedOutNote}</div>${Object.keys(byCh).length > 1 ? `<h3 style="font-family:'Fraunces',serif;margin:20px 0 8px;">By chapter</h3><div class="test-breakdown">${chapterCells}</div>` : ''}<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:32px;"><button class="btn btn-primary" onclick="resetExamSetup()">New Exam</button><button class="btn" onclick="showView('drill')">Drill what I missed</button></div>`;
+  document.getElementById('exam-done').innerHTML = `<div class="quiz-results">${scoreDisplay}<div style="color:var(--ink-muted);font-size:16px;margin-top:4px;">${pct}% accuracy</div>${timedOutNote}</div>${Object.keys(byCh).length > 1 ? `<h3 style="font-family:'Fraunces',serif;margin:20px 0 8px;">By chapter</h3><div class="test-breakdown">${chapterCells}</div>` : ''}<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:32px;" id="exam-done-buttons"><button class="btn btn-primary" onclick="resetExamSetup()">New Exam</button><button class="btn" onclick="showView('drill')">Drill what I missed</button></div>`;
+
+  const sessionMistakes = examAnswers.filter(a => !a.isCorrect && a.type !== 'full_match').map(a => {
+    const rawState = state.wrongQuestions[a.key];
+    if (rawState) return rawState;
+    return { q: a.key, chapter: a.chapter, type: a.type, yourAnswer: 'Unknown', correctAnswer: 'Check notes' };
+  });
+
+  if (sessionMistakes.length > 0) {
+    const resultsDiv = document.querySelector('.quiz-results');
+    if (resultsDiv) {
+      const reviewBtn = document.createElement('button');
+      reviewBtn.className = 'btn';
+      reviewBtn.style.marginTop = '16px';
+      reviewBtn.textContent = `Review ${sessionMistakes.length} Mistake${sessionMistakes.length > 1 ? 's' : ''} →`;
+      reviewBtn.onclick = () => openCarousel(sessionMistakes);
+      resultsDiv.appendChild(reviewBtn);
+    }
+  }
 }
 
 // ============================================================
@@ -2706,7 +2763,7 @@ function renderFib() {
   if (fibDeck.length === 0) buildFibDeck(); if (fibDeck.length === 0) return;
   const q = fibDeck[fibIdx];
   const sentenceHTML = q.sentence.replace('___', `<input type="text" class="blank-input" id="fib-input" autocomplete="off" spellcheck="false" />`);
-  document.getElementById('fib-card').innerHTML = `<div class="question-num"> <span class="question-chapter">Chapter ${q.chapter}</span></div><div class="fib-sentence">${sentenceHTML}</div><div class="fib-feedback" id="fib-feedback"></div>`;
+  document.getElementById('fib-card').innerHTML = `<div class="q-type-tag" style="margin-bottom: 12px;">Chapter ${q.chapter}</div><div class="fib-sentence">${sentenceHTML}</div><div class="fib-feedback" id="fib-feedback"></div>`;
   document.getElementById('fib-progress').textContent = (fibIdx + 1) + ' / ' + fibDeck.length;
   document.getElementById('fib-check-btn').style.display = 'inline-block'; document.getElementById('fib-next-btn').style.display = 'none';
 
@@ -2773,11 +2830,14 @@ function renderDrillQ() {
 
   const block = document.getElementById('drill-block');
   if (drillCurrent.isFib) {
-    block.innerHTML = `<div class="q-type-tag">FIB</div><div class="q-chapter mono" style="color:var(--ink-muted);font-size:12px;margin-bottom:6px;">Chapter ${original.chapter}</div><div class="q-text" style="font-family:'Fraunces',serif;font-size:18px;line-height:1.5;margin-bottom:16px;">${escapeHtml(original.sentence)}</div><input type="text" class="search-input" id="drill-fib-input" placeholder="Type answer…" onkeydown="if(event.key==='Enter')checkDrillFib()" autocomplete="off" spellcheck="false" /><div id="drill-feedback" style="margin-top:12px;display:none;"></div><button class="btn btn-primary" id="drill-check-btn" onclick="checkDrillFib()" style="margin-top:12px;">Check</button>`;
+    const sentenceHTML = original.sentence.replace('___', `<input type="text" class="blank-input" id="drill-fib-input" autocomplete="off" spellcheck="false" />`);
+    block.innerHTML = `<div class="q-type-tag">FIB · Ch.${original.chapter}</div><div class="fib-sentence" style="margin-bottom:16px;">${sentenceHTML}</div><div class="fib-feedback" id="drill-feedback" style="margin-top:12px;display:none;"></div><button class="btn btn-primary" id="drill-check-btn" onclick="checkDrillFib()" style="margin-top:12px;">Check</button>`;
     setTimeout(() => document.getElementById('drill-fib-input').focus(), 50);
+    const input = document.getElementById('drill-fib-input');
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); checkDrillFib(); } });
   } else {
     const ord = shuffleInPlace(original.choices.map((c, i) => ({c, i})));
-    block.innerHTML = `<div class="q-type-tag">MC</div><div class="q-chapter mono" style="color:var(--ink-muted);font-size:12px;margin-bottom:6px;">Chapter ${original.chapter}</div><div class="q-text" style="font-family:'Fraunces',serif;font-size:18px;line-height:1.5;margin-bottom:16px;">${escapeHtml(original.q)}</div><div class="choices">${ord.map(({c, i}) => `<button class="choice" data-original-idx="${i}" onclick="answerDrillMC(${i}, this)">${escapeHtml(c)}</button>`).join('')}</div><div class="q-explanation" id="drill-explanation"></div>`;
+    block.innerHTML = `<div class="q-type-tag">MC · Ch.${original.chapter}</div><div class="q-text" style="font-family:'Fraunces',serif;font-size:18px;line-height:1.5;margin-bottom:16px;">${escapeHtml(original.q)}</div><div class="choices">${ord.map(({c, i}) => `<button class="choice" data-original-idx="${i}" onclick="answerDrillMC(${i}, this)">${escapeHtml(c)}</button>`).join('')}</div><div class="q-explanation" id="drill-explanation"></div>`;
   }
 }
 
@@ -2792,8 +2852,16 @@ function checkDrillFib() {
   const input = document.getElementById('drill-fib-input'); const raw = input.value.trim(); if (!raw) return;
   const f = drillCurrent.original; const result = checkFibAnswer(raw, f.answers); const isCorrect = result.match !== 'none';
   const fb = document.getElementById('drill-feedback'); fb.style.display = 'block';
-  if (isCorrect) { fb.className = 'fib-feedback correct'; fb.innerHTML = result.match === 'fuzzy' ? '<strong>✓ Correct (close).</strong> Exact: <em>' + escapeHtml(result.canonical) + '</em>' : '<strong>✓ Correct.</strong>'; input.classList.add('correct'); }
-  else { fb.className = 'fib-feedback incorrect'; fb.innerHTML = '<strong>✗ Not quite.</strong> Correct: <em>' + escapeHtml(f.answers[0]) + '</em>'; input.classList.add('incorrect'); }
+  if (isCorrect) { 
+    fb.className = 'fib-feedback correct'; 
+    fb.innerHTML = result.match === 'fuzzy' ? '<strong>✓ Correct (close).</strong> Exact: <em>' + escapeHtml(result.canonical) + '</em>' : '<strong>✓ Correct.</strong>'; 
+    input.classList.add(result.match === 'fuzzy' ? 'fuzzy' : 'correct'); 
+  }
+  else { 
+    fb.className = 'fib-feedback incorrect'; 
+    fb.innerHTML = '<strong>✗ Not quite.</strong> Correct: <em>' + escapeHtml(f.answers[0]) + '</em>'; 
+    input.classList.add('incorrect'); 
+  }
   input.disabled = true; document.getElementById('drill-check-btn').style.display = 'none'; trackDrillResult(isCorrect);
 }
 
@@ -2832,87 +2900,8 @@ function toggleBrowseStarred() {
   browseStarredOnly = !browseStarredOnly;
   const btn = document.getElementById('browse-starred-toggle');
   btn.classList.toggle('btn-primary', browseStarredOnly);
-  btn.textContent = browseStarredOnly ? '★ Starred' : '☆ Starred';
+  btn.querySelector('.toggle-dot').style.background = browseStarredOnly ? 'var(--good)' : 'var(--ink-muted)';
   filterBrowse();
-}
-
-const _filterBrowse = filterBrowse;
-filterBrowse = function() {
-  const q = (document.getElementById('browse-search').value || '').trim().toLowerCase();
-  const chapters = getSelectedChapters('browse');
-
-  let cards = chapters.length === getActiveChapters().length ? [...FLASHCARDS] : FLASHCARDS.filter(c => chapters.includes(c.chapter));
-  if (browseStarredOnly) cards = cards.filter(c => state.starredCards[c.term]);
-  if (q) cards = cards.filter(c => c.term.toLowerCase().includes(q) || c.def.toLowerCase().includes(q) || c.category.toLowerCase().includes(q));
-
-  const meta = document.getElementById('browse-meta');
-  const el = document.getElementById('browse-content');
-
-  if (cards.length === 0) {
-    meta.textContent = 'No matches.';
-    el.innerHTML = '<div class="browse-empty">📭 Nothing matches those filters.</div>';
-    return;
-  }
-
-  meta.textContent = cards.length === FLASHCARDS.length ? `Showing all ${cards.length} cards.` : `Showing ${cards.length} cards.`;
-
-  const byChapter = {};
-  cards.forEach(c => {
-    if (!byChapter[c.chapter]) byChapter[c.chapter] = {};
-    if (!byChapter[c.chapter][c.category]) byChapter[c.chapter][c.category] = [];
-    byChapter[c.chapter][c.category].push(c);
-  });
-
-  const isOpen = q.length > 0 ? 'open' : '';
-
-  el.innerHTML = Object.keys(byChapter).sort().map(chNum =>
-    `<section class="browse-section">
-      <h2 class="browse-chapter-title">
-        <span>Chapter ${chNum}</span>
-        <span class="browse-chapter-num" style="margin-left: 12px;">${escapeHtml(chapterTitle(parseInt(chNum)))}</span>
-      </h2>` +
-      Object.keys(byChapter[chNum]).sort().map(cat => {
-        const catCards = byChapter[chNum][cat];
-        return `<div class="browse-topic ${isOpen}">
-          <div class="browse-topic-title" onclick="this.parentNode.classList.toggle('open')">
-            <span>${escapeHtml(cat)}</span>
-            <span style="color:var(--ink-muted);font-weight:400;font-size:12px;margin-left:auto;margin-right:12px;">${catCards.length} card${catCards.length === 1 ? '' : 's'}</span>
-          </div>
-          <ul>` + catCards.map(c => {
-            const isStarred = !!state.starredCards[c.term];
-            return `<li class="${isStarred ? 'browse-li-starred' : ''}">
-              <div class="browse-term">
-                ${isStarred ? '<span class="browse-star">★</span>' : ''}
-                <span>${highlightMatch(c.term, q)}</span>
-              </div>
-              <div class="browse-def">${highlightMatch(c.def, q)}</div>
-            </li>`;
-          }).join('') + `</ul>
-        </div>`;
-      }).join('') +
-    `</section>`
-  ).join('');
-
-  // Re-run the struggle flag logic after rebuilding HTML
-  const listItems = document.querySelectorAll('.browse-topic li');
-  listItems.forEach(li => {
-    const termEl = li.querySelector('.browse-term span:last-child');
-    if (!termEl) return;
-    const termText = termEl.textContent.replace('.', '').trim();
-
-    const isStruggling = Object.values(state.wrongQuestions).some(wq => {
-      if (wq.type === 'fib') return false;
-      return wq.correctAnswer === termText || wq.yourAnswer === termText;
-    });
-
-    if (isStruggling && !li.querySelector('.struggle-flag')) {
-      const flag = document.createElement('span');
-      flag.className = 'struggle-flag';
-      flag.textContent = '⚠️';
-      flag.title = 'In your Drill Mistakes queue';
-      termEl.parentNode.insertBefore(flag, termEl);
-    }
-  });
 }
 
 function expandAllAccordions() {
@@ -2980,9 +2969,8 @@ function filterBrowse() {
     `</section>`
   ).join('');
 
-  // Inject Struggle Flags directly after building the HTML
-  const listItems = document.querySelectorAll('.browse-topic li');
-  listItems.forEach(li => {
+  // Add struggle flags seamlessly after building HTML
+  document.querySelectorAll('.browse-topic li').forEach(li => {
     const termEl = li.querySelector('.browse-term span:last-child');
     if (!termEl) return;
     const termText = termEl.textContent.replace('.', '').trim();
@@ -2992,7 +2980,7 @@ function filterBrowse() {
       return wq.correctAnswer === termText || wq.yourAnswer === termText;
     });
 
-    if (isStruggling && !li.querySelector('.struggle-flag')) {
+    if (isStruggling) {
       const flag = document.createElement('span');
       flag.className = 'struggle-flag';
       flag.textContent = '⚠️';
@@ -3108,104 +3096,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================================
-// TOTAL QUESTION COUNT UPDATER
-// ============================================================
-function updateExamTotalCount() {
-  const chapters = getSelectedChapters('exam');
-  let total = 0;
-
-  chapters.forEach(ch => {
-    total += getChapterCount('exam', ch);
-  });
-
-  const allBtn = document.querySelector('button[data-e-len="all"]');
-  if (allBtn) allBtn.textContent = `All (${total})`;
-
-  const valEl = document.getElementById('trigger-val-exam-len');
-  if (valEl && examLen === null) {
-    valEl.textContent = `All (${total})`;
-  }
-}
-
-function setExamTimerFromInput() {
-  const input = document.getElementById('exam-timer-input');
-  if (!input || !input.value) return;
-  const mins = parseInt(input.value);
-  if (mins > 0) setExamTimer(mins * 60);
-}
-
-// ============================================================
-// INSTAGRAM-STYLE SEGMENTED PROGRESS BAR
-// ============================================================
-function initSegmentBar(total) {
-  const bar = document.getElementById('exam-segment-bar');
-  if (!bar) return;
-  bar.innerHTML = Array.from({length: total}).map((_, i) => `<div class="segment" id="seg-${i}"></div>`).join('');
-  if (total > 0) document.getElementById(`seg-0`).classList.add('active');
-}
-
-function updateSegmentBar(idx, isCorrect) {
-  const seg = document.getElementById(`seg-${idx}`);
-  if (!seg) return;
-  seg.classList.remove('active');
-  seg.classList.add(isCorrect ? 'correct' : 'incorrect');
-  const nextSeg = document.getElementById(`seg-${idx + 1}`);
-  if (nextSeg) nextSeg.classList.add('active');
-}
-
-const _startExam = startExam;
-startExam = function() {
-  _startExam();
-  if (examDeck.length > 0) initSegmentBar(examDeck.length);
-}
-
-const _recordExamAnswer = recordExamAnswer;
-recordExamAnswer = function(isCorrect, item, userAnswer) {
-  updateSegmentBar(examIdx, isCorrect);
-  _recordExamAnswer(isCorrect, item, userAnswer);
-}
-
-const _finishExam = finishExam;
-finishExam = function() {
-  _finishExam();
-  const sessionMistakes = examAnswers.filter(a => !a.isCorrect && a.type !== 'full_match').map(a => {
-    const rawState = state.wrongQuestions[a.key];
-    if (rawState) return rawState;
-    return { q: a.key, chapter: a.chapter, type: a.type, yourAnswer: 'Unknown', correctAnswer: 'Check notes' };
-  });
-
-  if (sessionMistakes.length > 0) {
-    const resultsDiv = document.querySelector('.quiz-results');
-    if (resultsDiv) {
-      const reviewBtn = document.createElement('button');
-      reviewBtn.className = 'btn';
-      reviewBtn.style.marginTop = '16px';
-      reviewBtn.textContent = `Review ${sessionMistakes.length} Mistake${sessionMistakes.length > 1 ? 's' : ''} →`;
-      reviewBtn.onclick = () => openCarousel(sessionMistakes);
-      resultsDiv.appendChild(reviewBtn);
-    }
-  }
-}
-
-const _toggleModalChapter = toggleModalChapter;
-toggleModalChapter = function(ch) {
-  _toggleModalChapter(ch);
-  if (activeModalMode === 'exam') updateExamTotalCount();
-}
-const _toggleModalAll = toggleModalAll;
-toggleModalAll = function() {
-  _toggleModalAll();
-  if (activeModalMode === 'exam') updateExamTotalCount();
-}
-
-const _flipCard = flipCard;
-window.isSwiping = false;
-flipCard = function() {
-  if (window.isSwiping) return;
-  _flipCard();
-}
-
-// ============================================================
 // MISTAKE CAROUSEL
 // ============================================================
 let carouselMisses = [];
@@ -3274,10 +3164,6 @@ function renderCarouselCard() {
 // ============================================================
 // SWIPE FOR MOBILE FLASHCARDS
 // ============================================================
-let startX = 0, currentX = 0, startY = 0, currentY = 0;
-let isDragging = false, dragStarted = false;
-const flashcardEl = document.getElementById('flashcard');
-
 if (flashcardEl && isAndroid) {
   const frontFace = flashcardEl.querySelector('.card-front');
   const leftHint = document.createElement('div');
@@ -3296,7 +3182,7 @@ if (flashcardEl && isAndroid) {
     startY = e.touches[0].clientY;
     isDragging = false;
     dragStarted = true;
-    window.isSwiping = false;
+    isSwiping = false;
     flashcardEl.style.transition = 'none';
   }, {passive: true});
 
@@ -3314,7 +3200,7 @@ if (flashcardEl && isAndroid) {
 
     if (Math.abs(diffX) > 15) {
       isDragging = true;
-      window.isSwiping = true;
+      isSwiping = true;
       const rotate = diffX * 0.05;
       flashcardEl.style.transform = `translateX(${diffX}px) rotate(${rotate}deg)`;
 
@@ -3329,7 +3215,7 @@ if (flashcardEl && isAndroid) {
     dragStarted = false;
 
     if (!isDragging) {
-       window.isSwiping = false;
+       isSwiping = false;
        return;
     }
 
@@ -3340,19 +3226,19 @@ if (flashcardEl && isAndroid) {
 
     if (diffX > 80) {
       flashcardEl.style.transform = `translateX(150vw) rotate(30deg)`;
-      setTimeout(() => { rateConfidence(2); flashcardEl.style.transform = ''; window.isSwiping = false; }, 250);
+      setTimeout(() => { rateConfidence(2); flashcardEl.style.transform = ''; isSwiping = false; }, 250);
     } else if (diffX < -80) {
       flashcardEl.style.transform = `translateX(-150vw) rotate(-30deg)`;
-      setTimeout(() => { rateConfidence(0); flashcardEl.style.transform = ''; window.isSwiping = false; }, 250);
+      setTimeout(() => { rateConfidence(0); flashcardEl.style.transform = ''; isSwiping = false; }, 250);
     } else {
       flashcardEl.style.transform = '';
-      setTimeout(() => window.isSwiping = false, 50);
+      setTimeout(() => isSwiping = false, 50);
     }
   });
 }
 
 // INIT
-setGreeting(); populateChapterFilters(); populateResetButtons(); buildDeck(); buildFibDeck(); updateAllChapterBars(); setFlashcardHints(); updateHomeStats(); updateExamTotalCount();
+setGreeting(); populateChapterFilters(); populateResetButtons(); buildDeck(); buildFibDeck(); updateAllChapterBars(); setFlashcardHints(); updateHomeStats(); updateExamTotalCount(); trackSession();
 </script>
 </body>
 </html>
