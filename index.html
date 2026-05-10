@@ -101,7 +101,7 @@
   .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); margin-top: 6px; }
 
   .filter-bar { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; padding: 12px 16px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; }
-  .filter-bar.transparent { background: transparent; border: none; padding: 0; margin-bottom: 16px; }
+  .filter-bar.transparent { background: transparent; border: none; padding: 2px 0; margin-bottom: 12px; box-shadow: none; }
   .filter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); font-weight: 500; margin-right: 4px; display: flex; align-items: center; gap: 4px;}
   .chip { font-family: inherit; font-size: 11px; font-weight: 500; padding: 5px 12px; background: var(--bg); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 20px; cursor: pointer; transition: all 0.15s; }
   .chip:hover { border-color: var(--ink-soft); }
@@ -290,11 +290,9 @@
 
 
   /* CHAPTER SELECTION MODAL */
-  .chapter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; flex: 1 0 200px; max-width: 100%; cursor: pointer; font-family: inherit; font-size: 14px; color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; }
+  .chapter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; cursor: pointer; font-family: inherit; font-size: 14px; color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; }
   .chapter-trigger:hover { border-color: var(--ink-soft); transform: translateY(-1px); }
   .chapter-trigger:active { transform: scale(0.98); }
-  .chapter-trigger-left { display: flex; align-items: center; gap: 8px; font-weight: 600; }
-  .chapter-trigger-val { color: var(--ink-muted); font-size: 13px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 150px; text-align: right; }
 
   .ch-modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.4); z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display:flex; align-items:center; justify-content:center; }
   .ch-modal-overlay.active { opacity: 1; pointer-events: auto; }
@@ -377,18 +375,23 @@
   /* MATCH MODE MOBILE OVERHAUL */
     .match-terms-bank {
       top: 90px;
-      padding: 12px 14px;
-      margin: 12px -14px 12px -14px;
+      padding: 12px 16px;
+      margin: 12px -14px 16px -14px;
       background: var(--card);
+      box-sizing: border-box;
 
-      /* Grid layout is bulletproof for double-stacking without fixed heights */
-      display: grid;
-      grid-template-rows: auto auto; /* Forces exactly 2 rows */
-      grid-auto-columns: max-content;
-      grid-auto-flow: column; /* Forces items to fill columns left-to-right */
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+
+      /* These two lines fix the off-screen clipping bug! */
+      align-content: flex-start;
+      justify-content: flex-start;
+
       gap: 10px;
+      /* Math: 24px padding + 72px (two 36px buttons) + 10px gap = 106px */
+      height: 106px;
 
-      height: auto; /* Let the content determine the height */
       overflow-x: auto;
       overflow-y: hidden;
       box-shadow: 0 4px 12px rgba(26,22,19,0.08);
@@ -398,10 +401,17 @@
 
     .match-term {
       font-size: 13px;
-      padding: 8px 14px;
+      padding: 0 16px;
       margin: 0;
       white-space: nowrap;
-      height: auto;
+
+      /* Lock the button height and stop flex from resizing it */
+      height: 36px;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 36px;
     }
 
     /* Prevents the transparent filter bars from clipping the buttons inside them */
@@ -1962,15 +1972,15 @@ function populateChapterFilters() {
     const bar = document.getElementById(cfg.barId);
     if (!bar) return;
 
-    // Added flex-shrink: 0 so the Start/New Round button never gets squished
-    const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 8px; white-space: nowrap; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
+    // flex-shrink: 0 prevents the Start button from being squished
+    const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 8px; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
 
-    // Added flex: 1 1 auto; and min-width: 0; to force the Chapters button to stretch across the remaining space
+    // flex: 1 1 0% forces the button to fill exactly the remaining space without overflowing
     bar.innerHTML = `
-      <button class="chapter-trigger" style="flex: 1 1 auto; min-width: 0;" onclick="openChapterModal('${mode}')">
+      <button class="chapter-trigger" style="flex: 1 1 0%; min-width: 0;" onclick="openChapterModal('${mode}')">
         <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
         <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
-          <span class="chapter-trigger-val" id="trigger-val-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
+          <span class="chapter-trigger-val" id="trigger-val-${mode}">All</span>
           <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
         </div>
       </button>
