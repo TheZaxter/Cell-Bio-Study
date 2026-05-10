@@ -109,7 +109,7 @@
   .btn-bad:hover { background: #8a2424; border-color: #8a2424; }
   .btn-icon { width: 36px; height: 36px; padding: 0; }
 
-  .chip { font-family: inherit; font-size: 11px; font-weight: 500; padding: 5px 12px; background: var(--bg); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 20px; cursor: pointer; transition: all 0.15s; }
+  .chip { font-family: inherit; font-size: 11px; font-weight: 500; padding: 5px 12px; background: var(--bg); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 20px; cursor: pointer; transition: all 0.15s; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
   .chip:hover { border-color: var(--ink-soft); }
   .chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
@@ -119,7 +119,7 @@
   .toggle-pill .toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-muted); flex-shrink: 0; transition: background 0.2s;}
   .toggle-pill.on .toggle-dot { background: var(--good); }
 
-  .exam-input { background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 12px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none; width: 100px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.15s; }
+  .exam-input { background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 12px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none; width: 100px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.15s; height: 38px; box-sizing: border-box; }
   .exam-input::placeholder { color: var(--ink-muted); }
   .exam-input:focus { border-color: var(--ink-soft); }
 
@@ -509,21 +509,28 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Flashcards</h1>
     </div>
 
-    <div class="filter-bar transparent" id="fc-chapter-bar"></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
 
-    <div class="filter-bar transparent">
-      <button class="mobile-filter-trigger" onclick="openBottomSheet('Flashcard Mode', 'fc-mode-chips')" style="margin: 0; width: 100%;">
-        <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Mode Options</span></div>
-        <div style="display:flex; align-items:center; gap: 4px;">
-          <span id="trigger-val-fc-mode" style="color: var(--ink-muted); font-size: 11px;">Standard</span>
-          <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
+      <div id="fc-chapter-bar" style="flex: 1 1 240px; margin: 0;"></div>
+
+      <div class="filter-bar" style="flex: 1 1 300px; margin: 0; padding: 6px 12px; display: flex; align-items: center;">
+
+        <button class="mobile-filter-trigger" onclick="openBottomSheet('Flashcard Mode', 'fc-mode-chips')" style="margin: 0; width: 100%; box-shadow: none; border: none; background: transparent; padding: 4px;">
+          <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Mode Options</span></div>
+          <div style="display:flex; align-items:center; gap: 4px;">
+            <span id="trigger-val-fc-mode" style="color: var(--ink-muted); font-size: 11px;">Standard</span>
+          </div>
+        </button>
+
+      <div id="fc-mode-chips" class="desktop-filter-contents" style="width: 100%; justify-content: space-between;">
+          <span class="filter-label">⚙️ Mode</span>
+          <div style="display: flex; gap: 8px;">
+            <button class="toggle-pill on" id="fc-smart-toggle" onclick="toggleSmartOrder()"><span class="toggle-dot"></span><span>Smart</span></button>
+            <button class="toggle-pill" id="fc-starred-toggle" onclick="toggleStarredOnly()"><span class="toggle-dot"></span><span>Starred</span></button>
+            <button class="toggle-pill" id="fc-reverse-toggle" onclick="toggleReverse()"><span class="toggle-dot"></span><span>Reverse</span></button>
+          </div>
         </div>
-      </button>
-      <div id="fc-mode-chips" class="desktop-filter-contents">
-        <span class="filter-label">⚙️ Mode</span>
-        <button class="toggle-pill on" id="fc-smart-toggle" onclick="toggleSmartOrder()"><span class="toggle-dot"></span><span>Smart shuffle</span></button>
-        <button class="toggle-pill" id="fc-starred-toggle" onclick="toggleStarredOnly()"><span class="toggle-dot"></span><span>Starred only</span></button>
-        <button class="toggle-pill" id="fc-reverse-toggle" onclick="toggleReverse()"><span class="toggle-dot"></span><span>Reverse (def → term)</span></button>
+
       </div>
     </div>
 
@@ -586,7 +593,7 @@
               <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
             </div>
           </button>
-          <div id="exam-fmt-chips" class="desktop-filter-contents chip-grid">
+          <div id="exam-fmt-chips" class="desktop-filter-contents chip-grid" style="align-items:stretch;">
             <button class="chip active" data-e-fmt="mc" onclick="setExamFormat('mc')">Standard MC</button>
             <button class="chip" data-e-fmt="reverse" onclick="setExamFormat('reverse')">Reverse MC</button>
             <button class="chip" data-e-fmt="fib" onclick="setExamFormat('fib')">Fill-in</button>
@@ -1928,8 +1935,13 @@ function updateChapterBar(mode) {
 
   const text = selected.length === total ? "All Chapters" : "Ch. " + selected.join(', ');
 
+  // Updates the PC button
   const valEl = document.getElementById(`cbu-val-${mode}`);
   if (valEl) valEl.textContent = text;
+
+  // Updates the new Mobile button
+  const mobileValEl = document.getElementById(`cbu-val-${mode}-mobile`);
+  if (mobileValEl) mobileValEl.textContent = text;
 }
 
 function getChapterCount(mode, ch) {
@@ -1964,12 +1976,22 @@ function populateChapterFilters() {
     const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 12px; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
 
     if (mode === 'exam') {
-      // Exam Mode (Clean layout without the box-in-a-box redundancy)
       bar.innerHTML = `
-        <span class="filter-label" style="margin-bottom: 8px; color: var(--ink); font-size: 13px;">📚 Chapters</span>
-        <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between; gap: 12px;">
-          <div class="cbu-val" id="cbu-val-${mode}" style="color: var(--ink-muted); font-size: 14px; font-weight: 500; line-height: 1.4;">All</div>
-          <button class="btn" style="width: 100%; justify-content: center;" onclick="openChapterModal('${mode}')">Select Chapters</button>
+        <span class="filter-label desktop-filter-contents">📚 Chapters</span>
+
+        <button class="mobile-filter-trigger" onclick="openChapterModal('${mode}')" style="margin: 0;">
+          <div style="display:flex; align-items:center; gap:8px;"><span>📚</span><span>Chapters</span></div>
+          <div style="display:flex; align-items:center; gap: 4px;">
+            <span id="cbu-val-${mode}-mobile" style="color: var(--ink-muted); font-size: 11px;">All</span>
+            <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
+          </div>
+        </button>
+
+        <div class="desktop-filter-contents" style="flex: 1; align-items: stretch;">
+          <button class="btn" style="width: 100%; justify-content: space-between; font-size: 13px; text-align: left; background: var(--bg);" onclick="openChapterModal('${mode}')">
+            <span id="cbu-val-${mode}" style="color: var(--ink); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
+            <span style="color: var(--ink-muted); font-size: 11px; flex-shrink: 0;">Change →</span>
+          </button>
         </div>
       `;
     } else {
