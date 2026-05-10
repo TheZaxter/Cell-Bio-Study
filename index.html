@@ -168,9 +168,9 @@
     
     .desktop-filter-contents { display: none; }
     .desktop-filter-contents.in-modal { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-    .desktop-filter-contents.in-modal .chip-grid { grid-template-columns: 1fr; }
-    .desktop-filter-contents.in-modal .chip { padding: 14px; font-size: 14px; justify-content: flex-start; }
-    .desktop-filter-contents.in-modal .text-field { padding: 14px; font-size: 14px; }
+    .desktop-filter-contents.in-modal .chip-grid { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+    .desktop-filter-contents.in-modal .chip { width: 100%; justify-content: flex-start; padding: 14px 16px; font-size: 14px; border-radius: 10px; }
+    .desktop-filter-contents.in-modal .count-input { box-sizing: border-box; width: 100%; margin: 0; padding: 14px 16px; font-size: 14px; border-radius: 10px; height: 48px; }
 
     .mobile-filter-trigger { 
       display: flex; align-items: center; justify-content: space-between; gap: 10px; 
@@ -282,6 +282,18 @@
   .match-defs-list .match-item.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); animation: shake 0.4s; }
 
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+  
+  /* FILL IN BLANK */
+  .fib-card { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; }
+  .fib-sentence { font-family: 'Fraunces', serif; font-size: clamp(17px, 2.2vw, 23px); font-weight: 500; line-height: 1.5; margin-bottom: 20px; }
+  .blank-input { display: inline-block; border: 1px solid var(--rule); border-bottom: 3px solid var(--accent); background: var(--card-alt); padding: 4px 12px; font-family: inherit; font-size: inherit; font-weight: 600; color: var(--ink); min-width: 140px; outline: none; border-radius: 8px 8px 4px 4px; text-align: center; margin: 0 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s; }
+  .blank-input:focus { background: var(--bg); border-color: var(--ink-soft); }
+  .blank-input.correct { background: var(--good-bg); color: var(--good); border-bottom-color: var(--good); border-color: var(--good); }
+  .blank-input.incorrect { background: var(--bad-bg); color: var(--bad); border-bottom-color: var(--bad); border-color: var(--bad); }
+  .blank-input.fuzzy { background: var(--amber-bg); color: var(--amber); border-bottom-color: var(--amber); border-color: var(--amber); }
+  .fib-feedback { margin-top: 14px; font-size: 13px; color: var(--ink-muted); display: none; }
+  .fib-feedback.show { display: block; }
+  .fib-feedback strong { color: var(--accent); }
 
   /* BROWSE */
   .search-row { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
@@ -334,25 +346,56 @@
   @media (max-width: 600px) {
     main { padding: 16px 14px 20px; }
     .mode-card { max-width: 100%; }
+    
+    .exam-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
+    .exam-cell { padding: 0; background: transparent; border: none; }
+    
+    .desktop-filter-contents { display: none; }
+    .desktop-filter-contents.in-modal { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .desktop-filter-contents.in-modal .chip-grid { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+    .desktop-filter-contents.in-modal .chip { width: 100%; justify-content: flex-start; padding: 14px 16px; font-size: 14px; border-radius: 10px; }
+    .desktop-filter-contents.in-modal .count-input { box-sizing: border-box; width: 100%; margin: 0; padding: 14px 16px; font-size: 14px; border-radius: 10px; height: 48px; }
+
+    .mobile-filter-trigger { 
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; 
+      background: var(--card); border: 1px solid var(--rule); border-radius: 12px; 
+      padding: 12px 16px; width: 100%; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600;
+      color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; margin: 0;
+    }
+
+    .ch-modal-overlay { align-items: flex-end; }
+    .ch-modal { width: 100%; max-width: 100%; border-radius: 24px 24px 0 0; border-bottom: none; transform: translateY(100%); max-height: 85vh; padding-bottom: env(safe-area-inset-bottom); }
+    .ch-modal-overlay.active .ch-modal { transform: translateY(0); }
+
     .flashcard-wrap { height: 420px; }
-    .quiz-question-block { padding: 16px; }
-    .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
-    .stat-val { font-size: 24px; }
+    .card-face { padding: 28px 22px; }
+    .card-term { font-size: 26px; }
+    .card-def { font-size: 15px; }
+    
+    .quiz-question-block, .fib-card { padding: 16px; }
+    
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; }
+    .stat-val { font-size: 20px; gap: 4px; }
+    .stat-icon { font-size: 16px; }
+    .stat-label { font-size: 9px; }
+    
     header { padding: 12px; }
     .nav-btn { padding: 7px 10px; font-size: 12px; }
     
-    .match-terms-bank { 
-      top: 90px; 
-      padding: 12px 16px; 
-      margin: 16px -14px 16px -14px; 
+    .match-terms-bank {
+      top: 90px;
+      padding: 14px 16px;
+      margin: 16px -14px 16px -14px;
       background: var(--card);
       display: grid;
       grid-template-rows: 1fr 1fr;
       grid-auto-columns: max-content;
       grid-auto-flow: column;
-      justify-content: start; 
+      justify-content: start;
+      align-content: center;
       gap: 10px;
-      overflow-x: auto; 
+      height: 104px;
+      overflow-x: auto;
       overflow-y: hidden;
       box-shadow: 0 4px 12px rgba(26,22,19,0.08);
       -webkit-overflow-scrolling: touch;
@@ -362,6 +405,13 @@
 
     .browse-topic li { grid-template-columns: 1fr; gap: 6px; padding: 14px 0; }
     .browse-li-starred { padding: 14px 12px; margin: 4px -12px; }
+    
+    .test-breakdown { grid-template-columns: repeat(2, 1fr); }
+
+    /* BROWSE MOBILE SEARCH ROW FIX */
+    #browse-search-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    #browse-search-row .text-field { grid-column: 1 / -1; }
+    #browse-search-row .btn { width: 100%; justify-content: center; }
   }
 </style>
 </head>
@@ -521,6 +571,7 @@
               <button class="chip active" data-e-timer="0" onclick="setExamTimer(0)">None</button>
               <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10m</button>
               <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30m</button>
+              <button class="chip" data-e-timer="3600" onclick="setExamTimer(3600)">60m</button>
             </div>
           </div>
         </div>
@@ -626,9 +677,9 @@
 
     <div class="filter-bar transparent" id="browse-chapter-bar" style="padding:0;"></div>
 
-    <div class="search-row">
-      <input type="text" class="text-field" id="browse-search" placeholder="Search terms or definitions…" style="flex: 1 1 200px;" oninput="filterBrowse()" />
-      <button class="btn" id="browse-starred-toggle" onclick="toggleBrowseStarred()" style="height: 44px; gap: 6px;"><span class="toggle-dot" style="width:8px; height:8px; border-radius:50%; background:var(--ink-muted); display:inline-block;"></span> Starred</button>
+    <div class="search-row" id="browse-search-row">
+      <input type="text" class="text-field" id="browse-search" placeholder="Search terms or definitions…" oninput="filterBrowse()" />
+      <button class="btn" id="browse-starred-toggle" onclick="toggleBrowseStarred()" style="height: 44px; gap: 6px;">☆ Starred</button>
       <button class="btn" style="height: 44px;" onclick="expandAllAccordions()">Expand All</button>
     </div>
 
@@ -1855,14 +1906,26 @@ function populateChapterFilters() {
 
     const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 8px; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
 
-    bar.innerHTML = `
-      <button class="chapter-trigger" style="flex: 1 1 0%; min-width: 0;" onclick="openChapterModal('${mode}')">
+    // If it's the exam mode, inject the bold header label to match the other cards
+    const examLabel = mode === 'exam' ? `<span class="filter-label desktop-filter-contents">📚 Chapters</span>` : '';
+
+    bar.innerHTML = examLabel + `
+      <button class="chapter-trigger mobile-filter-trigger" style="display:flex; flex: 1 1 0%; min-width: 0; margin-bottom: 0;" onclick="openChapterModal('${mode}')">
         <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
         <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
-          <span class="chapter-trigger-val" id="trigger-val-${mode}">All</span>
+          <span class="chapter-trigger-val" id="trigger-val-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
           <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
         </div>
       </button>
+      <div class="desktop-filter-contents" style="display:flex; align-items:center; flex: 1 1 0%; min-width: 0;">
+        <button class="chapter-trigger" style="flex: 1 1 0%; min-width: 0;" onclick="openChapterModal('${mode}')">
+          <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
+          <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
+            <span class="chapter-trigger-val" id="trigger-val-desktop-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
+            <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
+          </div>
+        </button>
+      </div>
       ${actionBtn}
     `;
   });
@@ -2319,20 +2382,16 @@ function setExamFormat(f) {
     c.classList.toggle('active', c.dataset.eFmt === f);
   });
 
-  document.getElementById('exam-custom-panel').style.display = f === 'custom' ? 'block' : 'none';
-  document.getElementById('exam-len-bar').style.display = f === 'custom' ? 'none' : 'flex';
-
   const labels = {
     'mc': 'Standard MC',
     'reverse': 'Reverse MC',
     'fib': 'Fill-in',
-    'mixed': 'Mixed',
-    'custom': 'Custom Exam'
+    'mixed': 'Mixed'
   };
 
   const valEl = document.getElementById('trigger-val-exam-fmt');
   if (valEl) {
-    valEl.textContent = labels[f] || 'Select';
+    valEl.textContent = (labels[f] || 'Select') + ' ▼'; /* Added the arrow back */
   }
 
   if (typeof updateExamTotalCount === 'function') {
@@ -2771,8 +2830,89 @@ function highlightMatch(text, query) {
 
 function toggleBrowseStarred() {
   browseStarredOnly = !browseStarredOnly;
-  document.querySelector('#browse-starred-toggle .toggle-dot').style.background = browseStarredOnly ? 'var(--good)' : 'var(--ink-muted)';
+  const btn = document.getElementById('browse-starred-toggle');
+  btn.classList.toggle('btn-primary', browseStarredOnly);
+  btn.textContent = browseStarredOnly ? '★ Starred' : '☆ Starred';
   filterBrowse();
+}
+
+const _filterBrowse = filterBrowse;
+filterBrowse = function() {
+  const q = (document.getElementById('browse-search').value || '').trim().toLowerCase();
+  const chapters = getSelectedChapters('browse');
+
+  let cards = chapters.length === getActiveChapters().length ? [...FLASHCARDS] : FLASHCARDS.filter(c => chapters.includes(c.chapter));
+  if (browseStarredOnly) cards = cards.filter(c => state.starredCards[c.term]);
+  if (q) cards = cards.filter(c => c.term.toLowerCase().includes(q) || c.def.toLowerCase().includes(q) || c.category.toLowerCase().includes(q));
+
+  const meta = document.getElementById('browse-meta');
+  const el = document.getElementById('browse-content');
+
+  if (cards.length === 0) {
+    meta.textContent = 'No matches.';
+    el.innerHTML = '<div class="browse-empty">📭 Nothing matches those filters.</div>';
+    return;
+  }
+
+  meta.textContent = cards.length === FLASHCARDS.length ? `Showing all ${cards.length} cards.` : `Showing ${cards.length} cards.`;
+
+  const byChapter = {};
+  cards.forEach(c => {
+    if (!byChapter[c.chapter]) byChapter[c.chapter] = {};
+    if (!byChapter[c.chapter][c.category]) byChapter[c.chapter][c.category] = [];
+    byChapter[c.chapter][c.category].push(c);
+  });
+
+  const isOpen = q.length > 0 ? 'open' : '';
+
+  el.innerHTML = Object.keys(byChapter).sort().map(chNum =>
+    `<section class="browse-section">
+      <h2 class="browse-chapter-title">
+        <span>Chapter ${chNum}</span>
+        <span class="browse-chapter-num" style="margin-left: 12px;">${escapeHtml(chapterTitle(parseInt(chNum)))}</span>
+      </h2>` +
+      Object.keys(byChapter[chNum]).sort().map(cat => {
+        const catCards = byChapter[chNum][cat];
+        return `<div class="browse-topic ${isOpen}">
+          <div class="browse-topic-title" onclick="this.parentNode.classList.toggle('open')">
+            <span>${escapeHtml(cat)}</span>
+            <span style="color:var(--ink-muted);font-weight:400;font-size:12px;margin-left:auto;margin-right:12px;">${catCards.length} card${catCards.length === 1 ? '' : 's'}</span>
+          </div>
+          <ul>` + catCards.map(c => {
+            const isStarred = !!state.starredCards[c.term];
+            return `<li class="${isStarred ? 'browse-li-starred' : ''}">
+              <div class="browse-term">
+                ${isStarred ? '<span class="browse-star">★</span>' : ''}
+                <span>${highlightMatch(c.term, q)}</span>
+              </div>
+              <div class="browse-def">${highlightMatch(c.def, q)}</div>
+            </li>`;
+          }).join('') + `</ul>
+        </div>`;
+      }).join('') +
+    `</section>`
+  ).join('');
+
+  // Re-run the struggle flag logic after rebuilding HTML
+  const listItems = document.querySelectorAll('.browse-topic li');
+  listItems.forEach(li => {
+    const termEl = li.querySelector('.browse-term span:last-child');
+    if (!termEl) return;
+    const termText = termEl.textContent.replace('.', '').trim();
+
+    const isStruggling = Object.values(state.wrongQuestions).some(wq => {
+      if (wq.type === 'fib') return false;
+      return wq.correctAnswer === termText || wq.yourAnswer === termText;
+    });
+
+    if (isStruggling && !li.querySelector('.struggle-flag')) {
+      const flag = document.createElement('span');
+      flag.className = 'struggle-flag';
+      flag.textContent = '⚠️';
+      flag.title = 'In your Drill Mistakes queue';
+      termEl.parentNode.insertBefore(flag, termEl);
+    }
+  });
 }
 
 function expandAllAccordions() {
