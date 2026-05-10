@@ -379,38 +379,33 @@
       top: 90px;
       padding: 10px 14px;
       margin: -12px -14px 16px -14px;
-      background: var(--card); /* Solid background to prevent overlap transparency issues */
-
-      /* The double-stack horizontal scroll trick */
+      background: var(--card);
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
       align-content: flex-start;
       gap: 8px;
-
-      /* Crucial: Exact height calculation for 2 rows */
-      /* Row 1 (34px) + Gap (8px) + Row 2 (34px) = 76px */
-      height: 96px;
-
+      /* Math: (32px child + 8px gap + 32px child) = 72px total height needed for 2 rows */
+      height: 92px;
       overflow-x: auto;
-      overflow-y: hidden; /* Prevent vertical scrolling */
+      overflow-y: hidden;
       box-shadow: 0 4px 12px rgba(26,22,19,0.08);
       -webkit-overflow-scrolling: touch;
     }
-
     .match-terms-bank::-webkit-scrollbar { display: none; }
 
     .match-term {
       font-size: 12px;
-      padding: 8px 12px;
+      padding: 0 12px;
       margin: 0;
-      white-space: nowrap; /* Forces text onto one line */
-      max-width: none; /* Prevents text wrapping */
-      height: 34px; /* Fixed height forces wrapping to next column */
+      white-space: nowrap;
+      max-width: none;
+      /* Force the height to exactly 32px so two fit perfectly inside the 92px parent */
+      height: 32px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      flex: 0 0 auto; /* Don't grow or shrink */
+      flex: 0 0 auto;
     }
 
     /* MOBILE SETTINGS MODALS (Teleportation Styles) */
@@ -509,7 +504,7 @@
       <span class="filter-label desktop-filter-contents">⚙️ Mode</span>
       <button class="mobile-filter-trigger" onclick="openBottomSheet('Flashcard Mode', 'fc-mode-chips')">
         <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Mode Options</span></div>
-        <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 10px;">Standard MC ▼</span>
+        <span id="trigger-val-fc-mode" style="color: var(--ink-muted); font-size: 10px;">Select ▼</span>
       </button>
       <div id="fc-mode-chips" class="desktop-filter-contents">
         <button class="toggle-pill on" id="fc-smart-toggle" onclick="toggleSmartOrder()"><span class="toggle-dot"></span><span>Smart shuffle</span></button>
@@ -566,10 +561,7 @@
         <span class="filter-label desktop-filter-contents">⚙️ Format</span>
         <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Format', 'exam-fmt-chips')">
           <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Format</span></div>
-          <div style="display:flex; align-items:center; gap: 4px;">
-            <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 11px;">Standard MC</span>
-            <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-          </div>
+          <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 10px;">Standard MC ▼</span>
         </button>
         <div id="exam-fmt-chips" class="desktop-filter-contents">
           <button class="chip active" data-e-fmt="mc" onclick="setExamFormat('mc')">Standard MC</button>
@@ -613,7 +605,7 @@
           <span id="trigger-val-exam-timer" style="color: var(--ink-muted); font-size: 10px;">None ▼</span>
         </button>
         <div id="exam-timer-chips" class="desktop-filter-contents">
-          <input class="count-input" id="exam-timer-input" type="number" min="1" max="999" placeholder="Mins" style="width: 70px;" oninput="setExamTimerFromInput()" />
+          <input class="count-input" id="exam-timer-input" type="number" min="1" max="999" placeholder="Mins" oninput="setExamTimerFromInput()" />
           <button class="chip active" data-e-timer="0" onclick="setExamTimer(0)">None</button>
           <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10m</button>
           <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30m</button>
@@ -2423,10 +2415,10 @@ function setExamFormat(f) {
 
   const valEl = document.getElementById('trigger-val-exam-fmt');
   if (valEl) {
-    valEl.textContent = labels[f] || 'Select';
+    valEl.textContent = labels[f] + ' ▼';
   }
 
-  // Recalculate totals because format changed!
+  // Recalculate totals because format changed
   if (typeof updateExamTotalCount === 'function') {
     updateExamTotalCount();
   }
@@ -3291,7 +3283,7 @@ if (flashcardEl && isAndroid) {
 }
 
 // INIT
-setGreeting(); populateChapterFilters(); populateResetButtons(); buildDeck(); buildFibDeck(); updateAllChapterBars(); setFlashcardHints(); updateHomeStats();
+setGreeting(); populateChapterFilters(); populateResetButtons(); buildDeck(); buildFibDeck(); updateAllChapterBars(); setFlashcardHints(); updateHomeStats(); updateExamTotalCount();
 </script>
 </body>
 </html>
