@@ -127,10 +127,25 @@
   .filter-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; padding: 12px 16px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; }
   .filter-bar.transparent { background: transparent; border: none; padding: 0; margin-bottom: 12px; box-shadow: none; }
   .filter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); font-weight: 600; margin-right: 4px; display: flex; align-items: center; gap: 4px;}
-  
+
   .chapter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-family: inherit; font-size: 13px; color: var(--ink); border: 1px solid var(--rule); transition: all 0.2s; outline: none; text-align: left; }
   .chapter-trigger:hover { border-color: var(--ink-soft); background: var(--card-alt); }
   .chapter-trigger-left { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+
+  /* NEW UNIVERSAL CHAPTER BUTTON */
+  .chapter-btn-universal {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 12px 16px; cursor: pointer; font-family: inherit; font-size: 14px;
+    color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none;
+    width: 100%; text-align: left; box-sizing: border-box;
+  }
+  .chapter-btn-universal:hover { border-color: var(--ink-soft); background: var(--card-alt); transform: translateY(-1px); }
+  .chapter-btn-universal:active { transform: scale(0.98); }
+  .cbu-left { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .cbu-right { display: flex; align-items: center; gap: 8px; overflow: hidden; }
+  .cbu-val { color: var(--ink-muted); font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cbu-arrow { color: var(--ink-muted); font-size: 10px; flex-shrink: 0; }
 
   /* EXAM 2x2 GRID (Desktop) */
   .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
@@ -156,7 +171,7 @@
 
   .flashcard-controls { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
   .fc-progress { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-muted); min-width: 80px; text-align: center; }
-  
+
   .star-btn { background: transparent; border: 1px solid var(--rule); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; font-size: 16px; color: var(--ink-muted); transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center;}
   .star-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
   .star-btn.starred { color: #d4a017; border-color: #d4a017; background: rgba(212, 160, 23, 0.06); }
@@ -177,14 +192,14 @@
   .segment.active { background: var(--ink-muted); }
   .segment.correct { background: var(--good); }
   .segment.incorrect { background: var(--bad); }
-  
+
   .quiz-progress-bar { height: 4px; background: var(--rule-soft); border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
   .quiz-progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; border-radius: 2px; }
 
   .quiz-question-block { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
   .q-type-tag { display: inline-block; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-muted); margin-bottom: 12px; }
   .question-text { font-family: 'Fraunces', serif; font-size: clamp(19px, 2.4vw, 25px); font-weight: 500; line-height: 1.35; letter-spacing: -0.01em; margin-bottom: 16px; }
-  
+
   .choices { display: flex; flex-direction: column; gap: 10px; }
   .choice { text-align: left; background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 16px; font-family: inherit; font-size: 14px; color: var(--ink); cursor: pointer; transition: all 0.15s; display: flex; gap: 14px; align-items: flex-start; }
   .choice:hover:not(:disabled) { border-color: var(--ink-soft); background: var(--card); }
@@ -207,7 +222,7 @@
   .match-container { display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px; }
   .match-terms-bank { position: sticky; top: 74px; z-index: 5; background: rgba(245, 239, 225, 0.95); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 12px 0; border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; margin-bottom: 16px; }
   @media (prefers-color-scheme: dark) { .match-terms-bank { background: rgba(26, 22, 19, 0.95); } }
-  
+
   .match-term { font-family: 'Fraunces', serif; font-weight: 600; font-size: 14px; padding: 8px 16px; background: var(--card-alt); border-radius: 20px; text-align: center; border: 1px solid var(--rule); cursor: pointer; user-select: none; }
   .match-term.selected { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
   .match-term.matched { opacity: 0.3; pointer-events: none; text-decoration: line-through; background: transparent; border-color: transparent; }
@@ -220,7 +235,7 @@
   .match-defs-list .match-item.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); animation: shake 0.4s; }
 
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
-  
+
   /* FILL IN BLANK */
   .fib-card { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; }
   .fib-sentence { font-family: 'Fraunces', serif; font-size: clamp(17px, 2.2vw, 23px); font-weight: 500; line-height: 1.5; margin-bottom: 20px; }
@@ -326,25 +341,25 @@
   @media (max-width: 600px) {
     main { padding: 16px 14px 20px; }
     .mode-card { max-width: 100%; }
-    
+
     .exam-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
     .exam-cell { padding: 0; background: transparent; border: none; box-shadow: none; }
-    
+
     .desktop-filter-contents { display: none; }
-    
+
     /* MODAL TELEPORTATION STYLES FOR MOBILE */
     .desktop-filter-contents.in-modal { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-    .desktop-filter-contents.in-modal .chip, 
-    .desktop-filter-contents.in-modal .toggle-pill { 
-      width: 100%; justify-content: flex-start; padding: 14px 16px; font-size: 14px; border-radius: 10px; box-sizing: border-box; 
+    .desktop-filter-contents.in-modal .chip,
+    .desktop-filter-contents.in-modal .toggle-pill {
+      width: 100%; justify-content: flex-start; padding: 14px 16px; font-size: 14px; border-radius: 10px; box-sizing: border-box;
     }
-    .desktop-filter-contents.in-modal .exam-input { 
-      box-sizing: border-box; width: 100%; padding: 14px 16px; font-size: 14px; border-radius: 10px; height: 48px; 
+    .desktop-filter-contents.in-modal .exam-input {
+      box-sizing: border-box; width: 100%; padding: 14px 16px; font-size: 14px; border-radius: 10px; height: 48px;
     }
 
-    .mobile-filter-trigger { 
-      display: flex; align-items: center; justify-content: space-between; gap: 10px; 
-      background: var(--card); border: 1px solid var(--rule); border-radius: 12px; 
+    .mobile-filter-trigger {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
       padding: 12px 16px; width: 100%; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600;
       color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; margin: 0;
     }
@@ -357,19 +372,19 @@
     .card-face { padding: 28px 22px; }
     .card-term { font-size: 26px; }
     .card-def { font-size: 15px; }
-    
+
     .quiz-question-block, .fib-card { padding: 16px; }
-    
+
     /* MOBILE STATS */
     .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .stat { padding: 16px; }
     .stat-val { font-size: 24px; gap: 4px; }
     .stat-icon { font-size: 16px; }
     .stat-label { font-size: 9px; margin-top: 6px; }
-    
+
     header { padding: 12px; }
     .nav-btn { padding: 7px 10px; font-size: 12px; }
-    
+
     .match-terms-bank {
       top: 90px;
       padding: 16px;
@@ -381,7 +396,7 @@
       grid-auto-flow: column;
       justify-content: start;
       gap: 10px;
-      height: auto; 
+      height: auto;
       overflow-x: auto;
       overflow-y: visible;
       box-shadow: 0 4px 12px rgba(26,22,19,0.08);
@@ -392,7 +407,7 @@
 
     .browse-topic li { grid-template-columns: 1fr; gap: 6px; padding: 14px 0; }
     .browse-li-starred { padding: 14px 12px; margin: 4px -12px; }
-    
+
     .test-breakdown { grid-template-columns: repeat(2, 1fr); }
 
     #browse-search-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -456,7 +471,7 @@
     </div>
 
     <div class="filter-bar transparent" id="fc-chapter-bar"></div>
-    
+
     <div class="filter-bar transparent">
       <button class="mobile-filter-trigger" onclick="openBottomSheet('Flashcard Mode', 'fc-mode-chips')" style="margin: 0; width: 100%;">
         <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Mode Options</span></div>
@@ -515,12 +530,9 @@
 
     <div id="exam-setup">
       <div class="exam-grid">
-        
+
         <!-- 1. Chapters (Top Left) -->
-        <div class="exam-cell">
-          <span class="filter-label desktop-filter-contents">📚 Chapters</span>
-          <div id="exam-chapter-bar" style="margin-bottom: 0;"></div>
-        </div>
+        <div class="exam-cell" id="exam-chapter-bar"></div>
 
         <!-- 2. Format (Top Right) -->
         <div class="exam-cell">
@@ -579,7 +591,7 @@
         </div>
 
       </div>
-      
+
       <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px;" onclick="startExam()">Start Exam →</button>
     </div>
 
@@ -1874,11 +1886,8 @@ function updateChapterBar(mode) {
 
   const text = selected.length === total ? "All Chapters" : "Ch. " + selected.join(', ');
 
-  const mobileValEl = document.getElementById(`trigger-val-${mode}`);
-  if (mobileValEl) mobileValEl.textContent = text;
-
-  const desktopValEl = document.getElementById(`trigger-val-desktop-${mode}`);
-  if (desktopValEl) desktopValEl.textContent = text;
+  const valEl = document.getElementById(`cbu-val-${mode}`);
+  if (valEl) valEl.textContent = text;
 }
 
 function getChapterCount(mode, ch) {
@@ -1901,53 +1910,41 @@ function getChapterCount(mode, ch) {
   return 0;
 }
 
-function updateAllChapterBars() { Object.keys(chapterModeMap).forEach(updateChapterBar); }
+function updateAllChapterBars() {
+  Object.keys(chapterModeMap).forEach(updateChapterBar);
+}
 
 function populateChapterFilters() {
   Object.entries(chapterModeMap).forEach(([mode, cfg]) => {
     const bar = document.getElementById(cfg.barId);
     if (!bar) return;
 
-    const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: auto; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
+    const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 12px; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
 
     if (mode === 'exam') {
-      // Exam mode gets the specific cell format
+      // Exam Mode (Vertical layout matching the other 2x2 grid boxes)
       bar.innerHTML = `
-        <span class="filter-label desktop-filter-contents">📚 Chapters</span>
-        <button class="mobile-filter-trigger" style="display:flex; width:100%; margin:0;" onclick="openChapterModal('${mode}')">
-          <div style="display:flex; align-items:center; gap:8px;"><span>📚</span><span>Chapters</span></div>
-          <div style="display:flex; align-items:center; gap: 4px; overflow: hidden;">
-            <span class="chapter-trigger-val" id="trigger-val-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
-            <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
+        <span class="filter-label" style="margin-bottom: 4px; color: var(--ink); font-size: 13px;">📚 Chapters</span>
+        <button class="chapter-btn-universal" onclick="openChapterModal('${mode}')">
+          <div class="cbu-left"><span>📚</span><span>Chapters</span></div>
+          <div class="cbu-right">
+            <span class="cbu-val" id="cbu-val-${mode}">All</span>
+            <span class="cbu-arrow">▼</span>
           </div>
         </button>
-        <div class="desktop-filter-contents" style="width:100%;">
-          <button class="chapter-trigger" style="flex: 1; width:100%;" onclick="openChapterModal('${mode}')">
-            <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
-            <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
-              <span class="chapter-trigger-val" id="trigger-val-desktop-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
-              <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
-            </div>
-          </button>
-        </div>
       `;
     } else {
-      // Standard filter bar layout for all other modes (Browse, Flashcards, FIB, Match)
+      // All other modes (Horizontal layout spanning the page width)
       bar.style.display = 'flex';
+      bar.style.alignItems = 'center';
+      bar.style.width = '100%';
       bar.innerHTML = `
-        <button class="chapter-trigger mobile-filter-trigger" style="flex: 1 1 0%; min-width: 0; margin-bottom: 0;" onclick="openChapterModal('${mode}')">
-          <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
-          <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
-            <span class="chapter-trigger-val" id="trigger-val-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
-            <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
-          </div>
-        </button>
-        <div class="desktop-filter-contents" style="display:flex; align-items:center; flex: 1 1 0%; min-width: 0;">
-          <button class="chapter-trigger" style="flex: 1 1 0%; min-width: 0;" onclick="openChapterModal('${mode}')">
-            <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
-            <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
-              <span class="chapter-trigger-val" id="trigger-val-desktop-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
-              <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
+        <div style="flex: 1 1 0%; min-width: 0;">
+          <button class="chapter-btn-universal" onclick="openChapterModal('${mode}')">
+            <div class="cbu-left"><span>📚</span><span>Chapters</span></div>
+            <div class="cbu-right">
+              <span class="cbu-val" id="cbu-val-${mode}">All</span>
+              <span class="cbu-arrow">▼</span>
             </div>
           </button>
         </div>
@@ -2211,7 +2208,7 @@ function updateHomeStats() {
 
   let weakest = '—'; let lowestPct = 101;
   Object.entries(chStats).forEach(([ch, s]) => {
-    if (s.t >= 3) { 
+    if (s.t >= 3) {
       const pct = (s.c / s.t) * 100;
       if (pct < lowestPct) { lowestPct = pct; weakest = 'Ch. ' + ch; }
     }
@@ -2344,9 +2341,9 @@ function renderFlashcard() {
 }
 
 let isSwiping = false;
-function flipCard() { 
+function flipCard() {
   if (isSwiping) return;
-  document.getElementById('flashcard').classList.toggle('flipped'); 
+  document.getElementById('flashcard').classList.toggle('flipped');
 }
 function nextCard() { if (fcDeck.length === 0) return; fcIndex = (fcIndex + 1) % fcDeck.length; renderFlashcard(); }
 function prevCard() { if (fcDeck.length === 0) return; fcIndex = (fcIndex - 1 + fcDeck.length) % fcDeck.length; renderFlashcard(); }
@@ -2376,7 +2373,7 @@ function toggleStar() {
 }
 
 // ============================================================
-// EXAM CENTER 
+// EXAM CENTER
 // ============================================================
 let examLen = 20; let examFormat = 'mc'; let examTimer = 0; let examDeck = []; let examIdx = 0; let examCorrect = 0; let examAnswers = []; let examAnswered = false; let examTimerHandle = null; let examTimeRemaining = 0; let examTimedOut = false;
 
@@ -2392,7 +2389,7 @@ function setExamLen(n) {
     if (n === 'all') {
       updateExamTotalCount();
     } else {
-      valEl.textContent = n; 
+      valEl.textContent = n;
     }
   }
 }
@@ -2435,7 +2432,7 @@ function setExamTimer(seconds) {
 
   const labels = { 0: 'None', 600: '10m', 1200: '20m', 1800: '30m', 3600: '60m' };
   const valEl = document.getElementById('trigger-val-exam-timer');
-  if (valEl) valEl.textContent = labels[seconds] || (seconds/60 + 'm'); 
+  if (valEl) valEl.textContent = labels[seconds] || (seconds/60 + 'm');
 }
 
 function setExamTimerFromInput() {
@@ -2631,14 +2628,14 @@ function answerExamFib() {
   if (examAnswered) return; const input = document.getElementById('exam-fib-input'); const raw = input.value.trim(); if (!raw) return;
   examAnswered = true; const item = examDeck[examIdx]; const result = checkFibAnswer(raw, item.answers); const isCorrect = result.match !== 'none';
   const fb = document.getElementById('exam-feedback'); fb.style.display = 'block';
-  if (isCorrect) { 
-    fb.className = 'fib-feedback correct'; 
-    fb.innerHTML = result.match === 'fuzzy' ? '<strong>✓ Correct (close).</strong> Exact: <em>' + escapeHtml(result.canonical) + '</em>' : '<strong>✓ Correct.</strong>'; 
+  if (isCorrect) {
+    fb.className = 'fib-feedback correct';
+    fb.innerHTML = result.match === 'fuzzy' ? '<strong>✓ Correct (close).</strong> Exact: <em>' + escapeHtml(result.canonical) + '</em>' : '<strong>✓ Correct.</strong>';
     input.classList.add(result.match === 'fuzzy' ? 'fuzzy' : 'correct');
   }
-  else { 
-    fb.className = 'fib-feedback incorrect'; 
-    fb.innerHTML = '<strong>✗ Not quite.</strong> Correct: <em>' + escapeHtml(item.answers[0]) + '</em>'; 
+  else {
+    fb.className = 'fib-feedback incorrect';
+    fb.innerHTML = '<strong>✗ Not quite.</strong> Correct: <em>' + escapeHtml(item.answers[0]) + '</em>';
     input.classList.add('incorrect');
   }
   input.disabled = true; document.getElementById('exam-check-btn').style.display = 'none';
@@ -2666,7 +2663,7 @@ function nextExamQ() { if (examIdx < examDeck.length - 1) { examIdx++; renderExa
 function abandonExam() { if (confirm('End early? Only answered questions will be recorded.')) { stopExamTimer(); finishExam(); } }
 
 function finishExam() {
-  stopExamTimer(); 
+  stopExamTimer();
   state.quizHistory.push({ date: new Date().toISOString(), total: examIdx + 1, correct: examCorrect, chapters: getSelectedChapters('exam') }); saveState();
 
   document.getElementById('exam-active').style.display = 'none'; document.getElementById('exam-done').style.display = 'block';
@@ -2874,15 +2871,15 @@ function checkDrillFib() {
   const input = document.getElementById('drill-fib-input'); const raw = input.value.trim(); if (!raw) return;
   const f = drillCurrent.original; const result = checkFibAnswer(raw, f.answers); const isCorrect = result.match !== 'none';
   const fb = document.getElementById('drill-feedback'); fb.style.display = 'block';
-  if (isCorrect) { 
-    fb.className = 'fib-feedback correct'; 
-    fb.innerHTML = result.match === 'fuzzy' ? '<strong>✓ Correct (close).</strong> Exact: <em>' + escapeHtml(result.canonical) + '</em>' : '<strong>✓ Correct.</strong>'; 
-    input.classList.add(result.match === 'fuzzy' ? 'fuzzy' : 'correct'); 
+  if (isCorrect) {
+    fb.className = 'fib-feedback correct';
+    fb.innerHTML = result.match === 'fuzzy' ? '<strong>✓ Correct (close).</strong> Exact: <em>' + escapeHtml(result.canonical) + '</em>' : '<strong>✓ Correct.</strong>';
+    input.classList.add(result.match === 'fuzzy' ? 'fuzzy' : 'correct');
   }
-  else { 
-    fb.className = 'fib-feedback incorrect'; 
-    fb.innerHTML = '<strong>✗ Not quite.</strong> Correct: <em>' + escapeHtml(f.answers[0]) + '</em>'; 
-    input.classList.add('incorrect'); 
+  else {
+    fb.className = 'fib-feedback incorrect';
+    fb.innerHTML = '<strong>✗ Not quite.</strong> Correct: <em>' + escapeHtml(f.answers[0]) + '</em>';
+    input.classList.add('incorrect');
   }
   input.disabled = true; document.getElementById('drill-check-btn').style.display = 'none'; trackDrillResult(isCorrect);
 }
@@ -3186,6 +3183,7 @@ function renderCarouselCard() {
 // ============================================================
 // SWIPE FOR MOBILE FLASHCARDS
 // ============================================================
+const flashcardEl = document.getElementById('flashcard');
 if (flashcardEl && isAndroid) {
   const frontFace = flashcardEl.querySelector('.card-front');
   const leftHint = document.createElement('div');
