@@ -377,8 +377,9 @@
   /* MATCH MODE MOBILE OVERHAUL */
     .match-terms-bank {
       top: 90px;
-      padding: 12px 14px;
+      padding: 10px 14px;
       margin: -12px -14px 16px -14px;
+      background: var(--card); /* Solid background to prevent overlap transparency issues */
 
       /* The double-stack horizontal scroll trick */
       display: flex;
@@ -386,17 +387,30 @@
       flex-wrap: wrap;
       align-content: flex-start;
       gap: 8px;
-      height: 110px; /* Forces items to wrap to a second column instead of going off bottom */
+
+      /* Crucial: Exact height calculation for 2 rows */
+      /* Row 1 (34px) + Gap (8px) + Row 2 (34px) = 76px */
+      height: 96px;
 
       overflow-x: auto;
-      box-shadow: 0 4px 12px rgba(26,22,19,0.05);
+      overflow-y: hidden; /* Prevent vertical scrolling */
+      box-shadow: 0 4px 12px rgba(26,22,19,0.08);
+      -webkit-overflow-scrolling: touch;
     }
+
+    .match-terms-bank::-webkit-scrollbar { display: none; }
+
     .match-term {
       font-size: 12px;
-      padding: 8px 14px;
+      padding: 8px 12px;
       margin: 0;
-      white-space: nowrap; /* Prevents long terms from becoming tall blocks */
-      width: max-content;
+      white-space: nowrap; /* Forces text onto one line */
+      max-width: none; /* Prevents text wrapping */
+      height: 34px; /* Fixed height forces wrapping to next column */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto; /* Don't grow or shrink */
     }
 
     /* MOBILE SETTINGS MODALS (Teleportation Styles) */
@@ -552,12 +566,15 @@
         <span class="filter-label desktop-filter-contents">⚙️ Format</span>
         <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Format', 'exam-fmt-chips')">
           <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Format</span></div>
-          <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 10px;">Standard MC ▼</span>
+          <div style="display:flex; align-items:center; gap: 4px;">
+            <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 11px;">Standard MC</span>
+            <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
+          </div>
         </button>
         <div id="exam-fmt-chips" class="desktop-filter-contents">
-          <button class="chip active" data-e-fmt="mc" onclick="setExamFormat('mc')">Standard Multi-Choice</button>
-          <button class="chip" data-e-fmt="reverse" onclick="setExamFormat('reverse')">Reverse Multi-Choice</button>
-          <button class="chip" data-e-fmt="fib" onclick="setExamFormat('fib')">Fill-in-the-Blanks</button>
+          <button class="chip active" data-e-fmt="mc" onclick="setExamFormat('mc')">Standard MC</button>
+          <button class="chip" data-e-fmt="reverse" onclick="setExamFormat('reverse')">Reverse MC</button>
+          <button class="chip" data-e-fmt="fib" onclick="setExamFormat('fib')">Fill-in</button>
           <button class="chip" data-e-fmt="mixed" onclick="setExamFormat('mixed')">Mixed</button>
           <button class="chip" data-e-fmt="custom" onclick="setExamFormat('custom')">Custom Exam</button>
         </div>
@@ -580,7 +597,6 @@
       </div>
 
       <div class="ge-config" id="exam-custom-panel">
-        <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 12px;">Build a custom multi-format exam. A Match Board provides a full 8-pair board mid-exam.</p>
         <div class="ge-row">
           <div class="ge-input-group"><label>Standard Multi-Choice</label><input type="number" id="e-ge-mc" value="10" min="0"></div>
           <div class="ge-input-group"><label>Reverse Multi-Choice</label><input type="number" id="e-ge-rev" value="5" min="0"></div>
@@ -2356,9 +2372,30 @@ function setExamLenFromInput() {
 
 function setExamFormat(f) {
   examFormat = f;
-  document.querySelectorAll('[data-e-fmt]').forEach(c => c.classList.toggle('active', c.dataset.eFmt === f));
+
+  // Update desktop chips
+  document.querySelectorAll('[data-e-fmt]').forEach(c => {
+    c.classList.toggle('active', c.dataset.eFmt === f);
+  });
+
+  // Show/hide custom panel
   document.getElementById('exam-custom-panel').classList.toggle('show', f === 'custom');
   document.getElementById('exam-len-bar').style.display = f === 'custom' ? 'none' : 'flex';
+
+  // Update mobile button text
+  const labels = {
+    'mc': 'Standard MC',
+    'reverse': 'Reverse MC',
+    'fib': 'Fill-in',
+    'mixed': 'Mixed',
+    'custom': 'Custom Exam'
+  };
+
+  const valEl = document.getElementById('trigger-val-exam-fmt');
+  if (valEl) {
+    valEl.textContent = labels[f] || 'Select';
+  }
+}
 
   // Fix: Ensure labels map correctly to the data-e-fmt values
   const labels = {
