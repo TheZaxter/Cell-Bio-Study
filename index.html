@@ -377,38 +377,27 @@
   /* MATCH MODE MOBILE OVERHAUL */
     .match-terms-bank {
       top: 90px;
-      /* Added more bottom padding (14px top, 14px bottom) */
-      padding: 14px 14px;
+      padding: 14px;
       margin: -12px -14px 16px -14px;
       background: var(--card);
       display: grid;
-      grid-template-rows: 1fr 1fr;
+      /* Using 'auto auto' forces exactly 2 rows, automatically sizing to fit the text/padding perfectly! */
+      grid-template-rows: auto auto;
       grid-auto-columns: max-content;
       grid-auto-flow: column;
-      align-content: start;
-      justify-content: start;
-      gap: 8px;
-      /* Math: 14px padding + 34px row + 8px gap + 34px row + 14px padding = 104px */
-      height: 104px;
+      gap: 10px;
       overflow-x: auto;
       overflow-y: hidden;
       box-shadow: 0 4px 12px rgba(26,22,19,0.08);
       -webkit-overflow-scrolling: touch;
     }
-
     .match-terms-bank::-webkit-scrollbar { display: none; }
 
     .match-term {
-      font-size: 12px;
-      padding: 8px 12px;
+      font-size: 13px;
+      padding: 8px 14px;
       margin: 0;
       white-space: nowrap;
-      max-width: none;
-      height: 34px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 auto;
     }
 
     /* MOBILE SETTINGS MODALS (Teleportation Styles) */
@@ -1970,16 +1959,15 @@ function populateChapterFilters() {
     if (!bar) return;
 
     const actionBtn = cfg.action
-      ? `<button class="btn btn-primary" style="margin-left: 12px; white-space: nowrap;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>`
+      ? `<button class="btn btn-primary" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>`
       : '';
 
-    // The chapter-trigger flex: 1 1 auto; ensures it stretches to fill available space
     bar.innerHTML = `
-      <button class="chapter-trigger" style="flex: 1 1 auto;" onclick="openChapterModal('${mode}')">
+      <button class="chapter-trigger" style="flex: 1; min-width: 0;" onclick="openChapterModal('${mode}')">
         <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
-        <div style="display:flex; align-items:center; gap: 8px;">
+        <div style="display:flex; align-items:center; gap: 8px; overflow:hidden;">
           <span class="chapter-trigger-val" id="trigger-val-${mode}">All</span>
-          <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
+          <span style="color: var(--ink-muted); font-size: 10px; flex-shrink:0;">▼</span>
         </div>
       </button>
       ${actionBtn}
