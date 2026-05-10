@@ -2513,25 +2513,30 @@ function resetExamSetup() { document.getElementById('exam-setup').style.display 
 function startExam() {
   const chapters = getSelectedChapters('exam');
   let mcPool = QUIZ_QUESTIONS.map(q => ({...q, _type: 'mc', _key: q.q}));
-  const cardPool = chapters.length === getActiveChapters().length ? [...FLASHCARDS] : FLASHCARDS.filter(c => chapters.includes(c.chapter));
-
-  // Inject generated MC questions into the pool
-  const generatedMC = cardPool.filter(c => c.def.length < 150).map(c => buildStandardMCFromCard(c, cardPool));
-  mcPool.push(...generatedMC);
   let fibPool = FIB_QUESTIONS.map(f => ({...f, _type: 'fib', _key: 'FIB:' + f.sentence}));
-  let revPool = []; let pool = [];
+  let revPool = [];
+  let pool = [];
+
+  // 1. Establish the Card Pool for this chapter selection
   const cardPool = chapters.length === getActiveChapters().length ? [...FLASHCARDS] : FLASHCARDS.filter(c => chapters.includes(c.chapter));
 
+  // 2. Filter base MC and FIB pools by chapter
   if (chapters.length !== getActiveChapters().length) {
     mcPool = mcPool.filter(q => chapters.includes(q.chapter));
     fibPool = fibPool.filter(f => chapters.includes(f.chapter));
   }
 
+  // 3. Inject auto-generated Standard MC questions from flashcards
+  const generatedMC = cardPool.filter(c => c.def.length < 150).map(c => buildStandardMCFromCard(c, cardPool));
+  mcPool.push(...generatedMC);
+
+  // 4. Inject auto-generated Reverse MC questions from flashcards
   if (examFormat === 'reverse' || examFormat === 'mixed' || examFormat === 'custom') {
     const usable = cardPool.filter(c => c.def.length > 15);
     revPool = usable.map(c => buildReverseQuestion(c, cardPool));
   }
 
+  // 5. Build the final deck based on the selected format
   if (examFormat === 'custom') {
     const mcCount = parseInt(document.getElementById('e-ge-mc').value) || 0;
     const revCount = parseInt(document.getElementById('e-ge-rev').value) || 0;
@@ -2542,7 +2547,7 @@ function startExam() {
     shuffleInPlace(revPool); pool.push(...revPool.slice(0, revCount));
     shuffleInPlace(fibPool); pool.push(...fibPool.slice(0, fibCount));
 
-    for(let i=0; i<matchBoards; i++) {
+    for(let i=0; i < matchBoards; i++) {
        if(cardPool.length >= 8) {
            shuffleInPlace(cardPool);
            const roundCards = cardPool.splice(0, 8);
@@ -2555,18 +2560,36 @@ function startExam() {
     else if (examFormat === 'reverse') pool = revPool;
     else if (examFormat === 'fib') pool = fibPool;
     else pool = [...mcPool, ...fibPool, ...revPool];
+
     shuffleInPlace(pool);
     const limit = examLen === null ? pool.length : examLen;
     pool = pool.slice(0, Math.min(limit, pool.length));
   }
 
   if (pool.length === 0) return toast('📭 No questions available.');
-  examDeck = pool; examIdx = 0; examCorrect = 0; examAnswers = []; examTimedOut = false;
 
-  document.getElementById('exam-setup').style.display = 'none'; document.getElementById('exam-active').style.display = 'block'; document.getElementById('exam-done').style.display = 'none';
-  stopExamTimer(); const timerEl = document.getElementById('exam-timer');
-  if (examTimer > 0) { examTimeRemaining = examTimer; timerEl.style.display = 'inline-block'; timerEl.style.color = 'var(--ink)'; timerEl.textContent = formatTime(examTimeRemaining); examTimerHandle = setInterval(tickExamTimer, 1000); }
-  else { timerEl.style.display = 'none'; }
+  examDeck = pool;
+  examIdx = 0;
+  examCorrect = 0;
+  examAnswers = [];
+  examTimedOut = false;
+
+  document.getElementById('exam-setup').style.display = 'none';
+  document.getElementById('exam-active').style.display = 'block';
+  document.getElementById('exam-done').style.display = 'none';
+
+  stopExamTimer();
+  const timerEl = document.getElementById('exam-timer');
+  if (examTimer > 0) {
+    examTimeRemaining = examTimer;
+    timerEl.style.display = 'inline-block';
+    timerEl.style.color = 'var(--ink)';
+    timerEl.textContent = formatTime(examTimeRemaining);
+    examTimerHandle = setInterval(tickExamTimer, 1000);
+  } else {
+    timerEl.style.display = 'none';
+  }
+
   renderExamQ();
 }
 
