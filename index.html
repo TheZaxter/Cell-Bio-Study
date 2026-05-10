@@ -1932,11 +1932,17 @@ function getChapterCount(mode, ch) {
   } else if (mode === 'fib') {
     return FIB_QUESTIONS.filter(q => q.chapter === ch).length;
   } else if (mode === 'exam') {
-    // Exam mode pulls from MC, FIB, and Reverse MC
+    // Dynamically count based on current exam format
     const mc = QUIZ_QUESTIONS.filter(q => q.chapter === ch).length;
     const fib = FIB_QUESTIONS.filter(q => q.chapter === ch).length;
     const rev = FLASHCARDS.filter(c => c.chapter === ch && c.def.length > 15).length;
-    return mc + fib + rev;
+
+    // Custom mode doesn't have a fixed cap per chapter until you build the test
+    if (examFormat === 'custom') return mc + fib + rev;
+    if (examFormat === 'mc') return mc;
+    if (examFormat === 'reverse') return rev;
+    if (examFormat === 'fib') return fib;
+    if (examFormat === 'mixed') return mc + fib + rev;
   }
   return 0;
 }
@@ -1985,6 +1991,19 @@ function renderModalList() {
   const chapters = getActiveChapters();
   const selected = chapterSelections[activeModalMode];
   const body = document.getElementById('ch-modal-body');
+
+  // Calculate Grand Total for the header
+  let grandTotal = 0;
+  chapters.forEach(ch => {
+    if (selected.has(ch)) grandTotal += getChapterCount(activeModalMode, ch);
+  });
+
+  // Update Modal Title with Total
+  const modalTitle = document.querySelector('.ch-modal-title');
+  if (modalTitle) {
+    const label = activeModalMode === 'fc' ? 'Cards' : 'Tasks';
+    modalTitle.textContent = `Chapters (${grandTotal} ${label})`;
+  }
 
   body.innerHTML = chapters.map(ch => {
     const count = getChapterCount(activeModalMode, ch);
@@ -2354,20 +2373,31 @@ let examLen = 20; let examFormat = 'mc'; let examTimer = 0; let examDeck = []; l
 
 function setExamLen(n) {
   examLen = n === 'all' ? null : Number(n);
-  const input = document.getElementById('exam-len-input'); if (input) input.value = examLen === null ? '' : String(examLen);
+  const input = document.getElementById('exam-len-input');
+  if (input) input.value = examLen === null ? '' : String(examLen);
+
   document.querySelectorAll('[data-e-len]').forEach(c => c.classList.toggle('active', (examLen === null && c.dataset.eLen === 'all') || (examLen !== null && Number(c.dataset.eLen) === examLen)));
 
   // Update mobile button text
   const valEl = document.getElementById('trigger-val-exam-len');
-  if (valEl) valEl.textContent = (n === 'all' ? 'All' : n) + ' ▼';
+  if (valEl) {
+    if (n === 'all') {
+      // Force it to grab the total
+      updateExamTotalCount();
+    } else {
+      valEl.textContent = n;
+    }
+  }
 }
 
 function setExamLenFromInput() {
-  const input = document.getElementById('exam-len-input'); if (!input) return; examLen = normalizeLengthValue(input.value, examLen);
+  const input = document.getElementById('exam-len-input');
+  if (!input) return;
+  examLen = normalizeLengthValue(input.value, examLen);
   document.querySelectorAll('[data-e-len]').forEach(c => c.classList.toggle('active', examLen !== null && Number(c.dataset.eLen) === examLen));
 
   const valEl = document.getElementById('trigger-val-exam-len');
-  if (valEl) valEl.textContent = (examLen || 'All') + ' ▼';
+  if (valEl) valEl.textContent = examLen || 'All';
 }
 
 function setExamFormat(f) {
@@ -2395,18 +2425,11 @@ function setExamFormat(f) {
   if (valEl) {
     valEl.textContent = labels[f] || 'Select';
   }
-}
 
-  // Fix: Ensure labels map correctly to the data-e-fmt values
-  const labels = {
-    'mc': 'Standard MC',
-    'reverse': 'Reverse MC',
-    'fib': 'Fill-in',
-    'mixed': 'Mixed',
-    'custom': 'Custom'
-  };
-  const valEl = document.getElementById('trigger-val-exam-fmt');
-  if (valEl) valEl.textContent = labels[f] + ' ▼';
+  // Recalculate totals because format changed!
+  if (typeof updateExamTotalCount === 'function') {
+    updateExamTotalCount();
+  }
 }
 
 function setExamTimer(seconds) {
@@ -2987,18 +3010,25 @@ document.addEventListener('keydown', (e) => {
 // ============================================================
 // TOTAL QUESTION COUNT UPDATER
 // ============================================================
+// Updates the [All (###)] button in the Exam setup screen
 function updateExamTotalCount() {
   const chapters = getSelectedChapters('exam');
   let total = 0;
-  if (chapters.length === getActiveChapters().length) {
-    total = QUIZ_QUESTIONS.length + FIB_QUESTIONS.length + FLASHCARDS.filter(c => c.def.length > 15).length;
-  } else {
-    total += QUIZ_QUESTIONS.filter(q => chapters.includes(q.chapter)).length;
-    total += FIB_QUESTIONS.filter(q => chapters.includes(q.chapter)).length;
-    total += FLASHCARDS.filter(c => chapters.includes(c.chapter) && c.def.length > 15).length;
-  }
+
+  // Use our format-aware counter
+  chapters.forEach(ch => {
+    total += getChapterCount('exam', ch);
+  });
+
+  // Update desktop chip
   const allBtn = document.querySelector('button[data-e-len="all"]');
   if (allBtn) allBtn.textContent = `All (${total})`;
+
+  // Update mobile button if "All" is currently selected
+  const valEl = document.getElementById('trigger-val-exam-len');
+  if (valEl && examLen === null) {
+    valEl.textContent = `All (${total})`;
+  }
 }
 
 function setExamTimerFromInput() {
