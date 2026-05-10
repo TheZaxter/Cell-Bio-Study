@@ -100,6 +100,7 @@
   .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); margin-top: 6px; }
 
   .filter-bar { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; padding: 12px 16px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; }
+  .filter-bar.transparent { background: transparent; border: none; padding: 0; margin-bottom: 16px; }
   .filter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); font-weight: 500; margin-right: 4px; display: flex; align-items: center; gap: 4px;}
   .chip { font-family: inherit; font-size: 11px; font-weight: 500; padding: 5px 12px; background: var(--bg); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 20px; cursor: pointer; transition: all 0.15s; }
   .chip:hover { border-color: var(--ink-soft); }
@@ -281,6 +282,83 @@
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 100; box-shadow: var(--shadow-lg); }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
+  /* CHAPTER SELECTION MODAL */
+  .chapter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; flex: 1 1 200px; max-width: 100%; cursor: pointer; font-family: inherit; font-size: 14px; color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; }
+  .chapter-trigger:hover { border-color: var(--ink-soft); transform: translateY(-1px); }
+  .chapter-trigger:active { transform: scale(0.98); }
+  .chapter-trigger-left { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .chapter-trigger-val { color: var(--ink-muted); font-size: 13px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 150px; text-align: right; }
+
+  .ch-modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.4); z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display:flex; align-items:center; justify-content:center; }
+  .ch-modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+  .ch-modal { background: var(--bg); border: 1px solid var(--rule); border-radius: 20px; width: 90%; max-width: 440px; max-height: 80vh; display: flex; flex-direction: column; transform: scale(0.95) translateY(10px); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .ch-modal-overlay.active .ch-modal { transform: scale(1) translateY(0); }
+
+  .ch-modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; background: var(--card); }
+  .ch-modal-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px; }
+  .ch-modal-close { background: var(--bg-alt); border: none; width: 32px; height: 32px; border-radius: 16px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-muted); transition: all 0.2s; }
+  .ch-modal-close:hover { background: var(--rule); color: var(--ink); }
+
+  .ch-modal-body { padding: 8px 16px 16px; overflow-y: auto; flex: 1; }
+
+  .ch-option { display: flex; align-items: center; padding: 12px 14px; cursor: pointer; border-radius: 12px; transition: background 0.2s; user-select: none; gap: 14px; }
+  .ch-option:hover { background: var(--card-alt); }
+  .ch-option:active { transform: scale(0.98); }
+  .ch-checkbox { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--rule); display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+  .ch-option input { display: none; }
+  .ch-option input:checked + .ch-checkbox { background: var(--good); border-color: var(--good); }
+  .ch-option input:checked + .ch-checkbox::after { content: '✓'; color: var(--good-bg); font-size: 14px; font-weight: 700; }
+
+  .ch-text { display: flex; flex-direction: column; }
+  .ch-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-muted); margin-bottom: 2px; }
+  .ch-name { font-size: 14px; font-weight: 500; line-height: 1.3; }
+
+  .ch-modal-footer { padding: 16px 24px; border-top: 1px solid var(--rule-soft); background: var(--card); display: flex; justify-content: space-between; align-items: center; }
+
+  .filter-bar.transparent { background: transparent; border: none; padding: 0; margin-bottom: 16px; box-shadow: none; }
+
+  @media (max-width: 600px) {
+    .ch-modal-overlay { align-items: flex-end; }
+    .ch-modal { width: 100%; max-width: 100%; border-radius: 24px 24px 0 0; border-bottom: none; transform: translateY(100%); max-height: 85vh; padding-bottom: env(safe-area-inset-bottom); }
+    .ch-modal-overlay.active .ch-modal { transform: translateY(0); }
+  }
+
+  /* ZEN MODE */
+  body.zen-mode header, body.zen-mode .hero, body.zen-mode .filter-bar, body.zen-mode .fc-meta, body.zen-mode .mode-grid, body.zen-mode .stats-row { display: none !important; }
+  body.zen-mode { padding-top: 5vh; background: var(--bg-alt); }
+  .zen-btn { font-size: 16px; background: transparent; border: 1px solid var(--rule); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; color: var(--ink-muted); display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
+  .zen-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+  /* BINARY FLASHCARD BUTTONS & SWIPE HINTS */
+  .confidence-row.binary { grid-template-columns: 1fr 1fr; max-width: 400px; }
+  #flashcard { touch-action: pan-y; } /* Allows JS to handle horizontal swipes */
+  .swipe-indicator { position: absolute; top: 20px; font-size: 40px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 10; font-family: 'Geist', sans-serif; font-weight: 700; padding: 4px 12px; border-radius: 8px; border: 3px solid; }
+  .swipe-left-hint { left: 20px; color: var(--bad); border-color: var(--bad); transform: rotate(-15deg); content: "FORGOT"; }
+  .swipe-right-hint { right: 20px; color: var(--good); border-color: var(--good); transform: rotate(15deg); content: "GOT IT"; }
+
+  /* INSTAGRAM-STYLE SEGMENTED PROGRESS BAR */
+  .segment-bar { display: flex; gap: 4px; width: 100%; height: 6px; margin-bottom: 16px; }
+  .segment { flex: 1; background: var(--rule-soft); border-radius: 3px; transition: background 0.3s; }
+  .segment.active { background: var(--ink-muted); }
+  .segment.correct { background: var(--good); }
+  .segment.incorrect { background: var(--bad); }
+
+  /* MISTAKE CAROUSEL OVERLAY */
+  .carousel-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); z-index: 3000; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display:flex; align-items:center; justify-content:center; padding: 20px; }
+  .carousel-overlay.active { opacity: 1; pointer-events: auto; }
+  .carousel-content { background: var(--bg); border: 1px solid var(--rule); border-radius: 16px; width: 100%; max-width: 500px; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); overflow: hidden; transform: scale(0.95); transition: transform 0.3s; }
+  .carousel-overlay.active .carousel-content { transform: scale(1); }
+  .carousel-header { padding: 16px 20px; border-bottom: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; background: var(--card); }
+  .carousel-body { padding: 24px 20px; overflow-y: auto; max-height: 60vh; }
+  .carousel-footer { padding: 16px 20px; border-top: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; background: var(--card); }
+  .carousel-nav-btn { background: var(--bg-alt); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 16px; cursor: pointer; font-weight: 500; font-family: 'Geist', sans-serif; transition: all 0.15s; }
+  .carousel-nav-btn:not(:disabled):hover { background: var(--card); border-color: var(--ink-soft); }
+  .carousel-nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .struggle-flag { color: var(--bad); font-size: 13px; margin-right: 6px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
   /* CONFETTI */
   .confetti { position: fixed; top: -10px; width: 8px; height: 16px; z-index: 9999; animation: fall linear forwards; pointer-events: none; }
   @keyframes fall { to { transform: translateY(105vh) rotate(720deg); } }
@@ -371,7 +449,7 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Flashcards</h1>
     </div>
 
-    <div class="filter-bar" id="fc-chapter-bar"></div>
+    <div class="filter-bar transparent" id="fc-chapter-bar"></div>
     <div class="filter-bar">
       <span class="filter-label">⚙️ Mode</span>
       <button class="toggle-pill on" id="fc-smart-toggle" onclick="toggleSmartOrder()"><span class="toggle-dot"></span><span>Smart shuffle</span></button>
@@ -404,12 +482,12 @@
       <button class="btn btn-icon" onclick="nextCard()" title="Next">→</button>
       <button class="star-btn" id="fc-star-btn" onclick="toggleStar()" title="Star this card">☆</button>
       <button class="btn btn-icon" onclick="shuffleCards()" title="Reshuffle">⟳</button>
+      <button class="zen-btn" onclick="toggleZenMode()" title="Zen Mode">⛶</button>
     </div>
 
-    <div class="confidence-row">
-      <button class="conf-btn conf-forgot" onclick="rateConfidence(0)" title="Forgot — comes back soon"><span class="conf-label">Forgot</span></button>
-      <button class="conf-btn conf-hard" onclick="rateConfidence(1)" title="Hard — comes back later"><span class="conf-label">Hard</span></button>
-      <button class="conf-btn conf-easy" onclick="rateConfidence(2)" title="Easy — spaces out further"><span class="conf-label">Easy</span></button>
+    <div class="confidence-row binary">
+      <button class="conf-btn conf-forgot" onclick="rateConfidence(0)" title="Forgot (Swipe Left)"><span class="conf-label">❌ Forgot</span></button>
+      <button class="conf-btn conf-easy" onclick="rateConfidence(2)" title="Got it (Swipe Right)"><span class="conf-label">✅ Got it</span></button>
     </div>
   </section>
 
@@ -420,7 +498,7 @@
     </div>
 
     <div id="exam-setup">
-      <div class="filter-bar" id="exam-chapter-bar"></div>
+     <div class="filter-bar transparent" id="exam-chapter-bar"></div>
 
       <div class="filter-bar">
         <span class="filter-label">⚙️ Format</span>
@@ -452,11 +530,10 @@
 
       <div class="filter-bar">
         <span class="filter-label">⏱️ Timer</span>
+        <input class="count-input" id="exam-timer-input" type="number" min="1" max="999" placeholder="Mins" style="width: 70px;" oninput="setExamTimerFromInput()" />
         <button class="chip active" data-e-timer="0" onclick="setExamTimer(0)">None</button>
-        <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10 min</button>
-        <button class="chip" data-e-timer="1200" onclick="setExamTimer(1200)">20 min</button>
-        <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30 min</button>
-        <button class="chip" data-e-timer="3600" onclick="setExamTimer(3600)">60 min</button>
+        <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10m</button>
+        <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30m</button>
       </div>
 
       <button class="btn btn-primary" style="margin-top: 16px; padding: 12px 24px; font-size: 15px;" onclick="startExam()">Start Exam →</button>
@@ -467,10 +544,13 @@
         <div class="mono" id="exam-status" style="font-size: 13px; color: var(--ink-muted);">Task 1 of 20</div>
         <div style="display: flex; gap: 12px; align-items: center;">
           <div class="mono" id="exam-timer" style="font-size: 14px; font-weight: 600; display: none;">20:00</div>
+          <button class="zen-btn" onclick="toggleZenMode()" title="Zen Mode">⛶</button>
           <button class="btn" onclick="abandonExam()">End early</button>
         </div>
       </div>
-      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="exam-progress-fill" style="width: 5%;"></div></div>
+      <!-- New Instagram-style bar -->
+      <div id="exam-segment-bar" class="segment-bar"></div>
+
       <div id="exam-block"></div>
       <div style="text-align: right; margin-top: 16px;">
         <button class="btn btn-primary" id="exam-next-btn" style="display: none;" onclick="nextExamQ()">Next task →</button>
@@ -486,7 +566,7 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Matching</h1>
     </div>
 
-    <div class="filter-bar" id="match-chapter-bar"></div>
+    <div class="filter-bar transparent" id="match-chapter-bar"></div>
 
     <div class="match-container">
       <div class="match-terms-bank" id="match-terms"></div>
@@ -505,7 +585,7 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Fill-in-the-Blanks</h1>
     </div>
 
-    <div class="filter-bar" id="fib-chapter-bar"></div>
+    <div class="filter-bar transparent" id="fib-chapter-bar"></div>
 
     <div class="fib-card" id="fib-card"></div>
     <div class="flashcard-controls">
@@ -553,7 +633,7 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Browse Notes</h1>
     </div>
 
-    <div class="filter-bar" id="browse-chapter-bar"></div>
+    <div class="filter-bar transparent" id="browse-chapter-bar"></div>
 
     <div class="search-row">
       <input type="text" class="search-input" id="browse-search" placeholder="Search terms or definitions…" oninput="filterBrowse()" />
@@ -644,7 +724,40 @@
 
 </main>
 
+<!-- MISTAKE CAROUSEL OVERLAY -->
+<div class="carousel-overlay" id="carousel-overlay" onclick="if(event.target===this)closeCarousel()">
+  <div class="carousel-content">
+    <div class="carousel-header">
+      <div style="font-family:'Fraunces',serif; font-weight:600; font-size:18px;">Exam Review</div>
+      <button class="ch-modal-close" onclick="closeCarousel()">✕</button>
+    </div>
+    <div class="carousel-body" id="carousel-body"></div>
+    <div class="carousel-footer">
+      <button class="carousel-nav-btn" id="carousel-prev" onclick="navCarousel(-1)">← Prev</button>
+      <div class="mono" id="carousel-status" style="font-size: 12px; color: var(--ink-muted);">1 / 5</div>
+      <button class="carousel-nav-btn" id="carousel-next" onclick="navCarousel(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
+<!-- CHAPTER MODAL -->
+<div class="ch-modal-overlay" id="ch-modal-overlay" onclick="if(event.target===this)closeChapterModal()">
+  <div class="ch-modal">
+    <div class="ch-modal-header">
+      <div class="ch-modal-title">Select Chapters</div>
+      <button class="ch-modal-close" onclick="closeChapterModal()">✕</button>
+    </div>
+    <div class="ch-modal-body" id="ch-modal-body">
+      <!-- Checkboxes injected here -->
+    </div>
+    <div class="ch-modal-footer">
+      <button class="btn" onclick="toggleModalAll()">Toggle All</button>
+      <button class="btn btn-primary" onclick="closeChapterModal()">Done</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ============================================================
@@ -1664,12 +1777,15 @@ function fireConfetti() {
 // ============================================================
 // CHAPTER FILTERS STATE
 // ============================================================
+// ============================================================
+// CHAPTER FILTERS & MODAL STATE
+// ============================================================
 const chapterModeMap = {
-  fc: { barId: 'fc-chapter-bar', label: '📖 Chapter', action: null },
-  exam: { barId: 'exam-chapter-bar', label: '📖 Chapter', action: null },
-  match: { barId: 'match-chapter-bar', label: '📖 Chapter', action: 'startMatching()' },
-  fib: { barId: 'fib-chapter-bar', label: '📖 Chapter', action: null },
-  browse: { barId: 'browse-chapter-bar', label: '📖 Chapter', action: null }
+  fc: { barId: 'fc-chapter-bar', action: null },
+  exam: { barId: 'exam-chapter-bar', action: null },
+  match: { barId: 'match-chapter-bar', action: "startMatching()" },
+  fib: { barId: 'fib-chapter-bar', action: null },
+  browse: { barId: 'browse-chapter-bar', action: null }
 };
 
 const chapterSelections = {};
@@ -1688,57 +1804,117 @@ function getSelectedChapters(mode) {
 function updateChapterBar(mode) {
   const cfg = chapterModeMap[mode];
   if (!cfg) return;
-  const chapters = getActiveChapters();
-  const selected = new Set(getSelectedChapters(mode).map(String));
-  const bar = document.getElementById(cfg.barId);
-  if (!bar) return;
-  bar.querySelectorAll('[data-chapter]').forEach(btn => { btn.classList.toggle('active', selected.has(btn.dataset.chapter)); });
-  const allBtn = bar.querySelector('[data-action="all"]');
-  if (allBtn) allBtn.classList.toggle('active', selected.size === chapters.length);
+  const total = getActiveChapters().length;
+  const selected = getSelectedChapters(mode);
+  const valEl = document.getElementById(`trigger-val-${mode}`);
+  if (!valEl) return;
+
+  if (selected.length === total) {
+    valEl.textContent = "All Chapters";
+  } else {
+    // Lists them out like "Ch. 1, 2, 4"
+    valEl.textContent = "Ch. " + selected.join(', ');
+  }
+}
+
+function getChapterCount(mode, ch) {
+  if (mode === 'fc' || mode === 'match' || mode === 'browse') {
+    return FLASHCARDS.filter(c => c.chapter === ch).length;
+  } else if (mode === 'fib') {
+    return FIB_QUESTIONS.filter(q => q.chapter === ch).length;
+  } else if (mode === 'exam') {
+    // Exam mode pulls from MC, FIB, and Reverse MC
+    const mc = QUIZ_QUESTIONS.filter(q => q.chapter === ch).length;
+    const fib = FIB_QUESTIONS.filter(q => q.chapter === ch).length;
+    const rev = FLASHCARDS.filter(c => c.chapter === ch && c.def.length > 15).length;
+    return mc + fib + rev;
+  }
+  return 0;
 }
 
 function updateAllChapterBars() { Object.keys(chapterModeMap).forEach(updateChapterBar); }
 
-function setAllChapters(mode) {
-  chapterSelections[mode] = new Set(getActiveChapters());
-  updateChapterBar(mode);
-  if (mode === 'fc') { buildDeck(); renderFlashcard(); }
-  else if (mode === 'match') { startMatching(); }
-  else if (mode === 'fib') { buildFibDeck(); renderFib(); }
-  else if (mode === 'browse') { filterBrowse(); }
-}
-
-function toggleChapter(mode, ch) {
-  const chapters = getActiveChapters();
-  const current = chapterSelections[mode] || new Set(chapters);
-
-  // Smart Solo Toggle
-  if (current.size === chapters.length) {
-    chapterSelections[mode] = new Set([ch]);
-  } else if (current.has(ch) && current.size === 1) {
-    chapterSelections[mode] = new Set(chapters);
-  } else {
-    if (current.has(ch)) current.delete(ch); else current.add(ch);
-    if (current.size === 0) chapterSelections[mode] = new Set(chapters); else chapterSelections[mode] = current;
-  }
-  updateChapterBar(mode);
-
-  if (mode === 'fc') { buildDeck(); renderFlashcard(); }
-  else if (mode === 'match') { startMatching(); }
-  else if (mode === 'fib') { buildFibDeck(); renderFib(); }
-  else if (mode === 'browse') { filterBrowse(); }
-}
-
 function populateChapterFilters() {
-  const chapters = getActiveChapters();
   Object.entries(chapterModeMap).forEach(([mode, cfg]) => {
     const bar = document.getElementById(cfg.barId);
     if (!bar) return;
-    const chips = chapters.map(n => `<button class="chip active" data-chapter="${n}" data-mode="${mode}" onclick="toggleChapter('${mode}', ${n})">${chapterLabel(n)}</button>`).join('');
-    const action = cfg.action ? `<button class="btn" style="margin-left: auto;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
-    bar.innerHTML = `<span class="filter-label">${cfg.label}</span><button class="chip active" data-action="all" data-mode="${mode}" onclick="setAllChapters('${mode}')">All</button>${chips}${action}`;
+    const actionBtn = cfg.action ? `<button class="btn btn-primary" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
+    bar.innerHTML = `
+      <button class="chapter-trigger" onclick="openChapterModal('${mode}')">
+        <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
+        <div style="display:flex; align-items:center; gap: 8px;">
+          <span class="chapter-trigger-val" id="trigger-val-${mode}">All</span>
+          <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
+        </div>
+      </button>
+      ${actionBtn}
+    `;
   });
   updateAllChapterBars();
+}
+
+// Modal Logic
+let activeModalMode = null;
+
+function openChapterModal(mode) {
+  activeModalMode = mode;
+  renderModalList();
+  document.getElementById('ch-modal-overlay').classList.add('active');
+}
+
+function closeChapterModal() {
+  document.getElementById('ch-modal-overlay').classList.remove('active');
+  // Trigger appropriate rebuild based on mode when closing
+  updateChapterBar(activeModalMode);
+  if (activeModalMode === 'fc') { buildDeck(); renderFlashcard(); }
+  else if (activeModalMode === 'match') { startMatching(); }
+  else if (activeModalMode === 'fib') { buildFibDeck(); renderFib(); }
+  else if (activeModalMode === 'browse') { filterBrowse(); }
+}
+
+function renderModalList() {
+  const chapters = getActiveChapters();
+  const selected = chapterSelections[activeModalMode];
+  const body = document.getElementById('ch-modal-body');
+
+  body.innerHTML = chapters.map(ch => {
+    const count = getChapterCount(activeModalMode, ch);
+    const label = activeModalMode === 'fc' ? 'cards' : 'tasks';
+    return `
+    <label class="ch-option">
+      <input type="checkbox" onchange="toggleModalChapter(${ch})" ${selected.has(ch) ? 'checked' : ''}>
+      <div class="ch-checkbox"></div>
+      <div class="ch-text">
+        <span class="ch-num">Chapter ${ch} <span style="margin: 0 4px;">•</span> ${count} ${label}</span>
+        <span class="ch-name">${chapterTitle(ch)}</span>
+      </div>
+    </label>
+  `}).join('');
+}
+
+function toggleModalChapter(ch) {
+  const current = chapterSelections[activeModalMode];
+  if (current.has(ch)) current.delete(ch);
+  else current.add(ch);
+
+  // Prevent zero-selection (forces at least one)
+  if (current.size === 0) current.add(ch);
+
+  chapterSelections[activeModalMode] = current;
+  renderModalList();
+}
+
+function toggleModalAll() {
+  const chapters = getActiveChapters();
+  const current = chapterSelections[activeModalMode];
+  if (current.size === chapters.length) {
+    // If all are selected, unselect all EXCEPT chapter 1
+    chapterSelections[activeModalMode] = new Set([chapters[0]]);
+  } else {
+    // Otherwise select all
+    chapterSelections[activeModalMode] = new Set(chapters);
+  }
+  renderModalList();
 }
 
 // ============================================================
@@ -2315,7 +2491,7 @@ function renderFib() {
   if (fibDeck.length === 0) buildFibDeck(); if (fibDeck.length === 0) return;
   const q = fibDeck[fibIdx];
   const sentenceHTML = q.sentence.replace('___', `<input type="text" class="blank-input" id="fib-input" autocomplete="off" spellcheck="false" />`);
-  document.getElementById('fib-card').innerHTML = `<div class="question-num">FILL IN BLANK<span class="question-chapter">Chapter ${q.chapter}</span></div><div class="fib-sentence">${sentenceHTML}</div><div class="fib-feedback" id="fib-feedback"></div>`;
+  document.getElementById('fib-card').innerHTML = `<div class="question-num"> <span class="question-chapter">Chapter ${q.chapter}</span></div><div class="fib-sentence">${sentenceHTML}</div><div class="fib-feedback" id="fib-feedback"></div>`;
   document.getElementById('fib-progress').textContent = (fibIdx + 1) + ' / ' + fibDeck.length;
   document.getElementById('fib-check-btn').style.display = 'inline-block'; document.getElementById('fib-next-btn').style.display = 'none';
 
@@ -2596,6 +2772,306 @@ async function saveDirectToFile() {
       toast("💾 Saved directly to local file");
     } catch (err) { if (err.name !== 'AbortError') toast("Failed to save file."); }
   } else { toast("Direct save not supported in your browser. Use Export Backup."); }
+}
+
+// ============================================================
+// ZEN MODE
+// ============================================================
+let isZenMode = false;
+function toggleZenMode() {
+  isZenMode = !isZenMode;
+  if (isZenMode) {
+    document.body.classList.add('zen-mode');
+    toast('🌿 Zen Mode On (Press Esc to exit)');
+  } else {
+    document.body.classList.remove('zen-mode');
+  }
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && isZenMode) toggleZenMode();
+});
+
+// ============================================================
+// TOTAL QUESTION COUNT UPDATER
+// ============================================================
+// Updates the [All (###)] button in the Exam setup screen
+function updateExamTotalCount() {
+  const chapters = getSelectedChapters('exam');
+  let total = 0;
+  if (chapters.length === getActiveChapters().length) {
+    total = QUIZ_QUESTIONS.length + FIB_QUESTIONS.length + FLASHCARDS.filter(c => c.def.length > 15).length;
+  } else {
+    total += QUIZ_QUESTIONS.filter(q => chapters.includes(q.chapter)).length;
+    total += FIB_QUESTIONS.filter(q => chapters.includes(q.chapter)).length;
+    total += FLASHCARDS.filter(c => chapters.includes(c.chapter) && c.def.length > 15).length;
+  }
+  const allBtn = document.querySelector('button[data-e-len="all"]');
+  if (allBtn) allBtn.textContent = `All (${total})`;
+}
+
+// Ensure it runs whenever chapters change
+const originalToggleModalChapter = toggleModalChapter;
+toggleModalChapter = function(ch) {
+  originalToggleModalChapter(ch);
+  if (activeModalMode === 'exam') updateExamTotalCount();
+}
+const originalToggleModalAll = toggleModalAll;
+toggleModalAll = function() {
+  originalToggleModalAll();
+  if (activeModalMode === 'exam') updateExamTotalCount();
+}
+
+// Add the custom timer input logic
+function setExamTimerFromInput() {
+  const input = document.getElementById('exam-timer-input');
+  if (!input || !input.value) return;
+  const mins = parseInt(input.value);
+  if (mins > 0) setExamTimer(mins * 60);
+}
+
+// ============================================================
+// INSTAGRAM-STYLE SEGMENTED PROGRESS BAR
+// ============================================================
+function initSegmentBar(total) {
+  const bar = document.getElementById('exam-segment-bar');
+  if (!bar) return;
+  bar.innerHTML = Array.from({length: total}).map((_, i) => `<div class="segment" id="seg-${i}"></div>`).join('');
+  if (total > 0) document.getElementById(`seg-0`).classList.add('active');
+}
+
+function updateSegmentBar(idx, isCorrect) {
+  const seg = document.getElementById(`seg-${idx}`);
+  if (!seg) return;
+  seg.classList.remove('active');
+  seg.classList.add(isCorrect ? 'correct' : 'incorrect');
+  const nextSeg = document.getElementById(`seg-${idx + 1}`);
+  if (nextSeg) nextSeg.classList.add('active');
+}
+
+// Hook into Exam start
+const originalStartExam = startExam;
+startExam = function() {
+  originalStartExam();
+  if (examDeck.length > 0) initSegmentBar(examDeck.length);
+}
+
+// Hook into Exam answer
+const originalRecordExamAnswer = recordExamAnswer;
+recordExamAnswer = function(isCorrect, item, userAnswer) {
+  updateSegmentBar(examIdx, isCorrect);
+  originalRecordExamAnswer(isCorrect, item, userAnswer);
+}
+
+// ============================================================
+// MISTAKE CAROUSEL
+// ============================================================
+let carouselMisses = [];
+let carouselIdx = 0;
+
+function openCarousel(missedItems) {
+  if (!missedItems || missedItems.length === 0) return toast('No mistakes to review!');
+  carouselMisses = missedItems;
+  carouselIdx = 0;
+  renderCarouselCard();
+  document.getElementById('carousel-overlay').classList.add('active');
+}
+
+function closeCarousel() {
+  document.getElementById('carousel-overlay').classList.remove('active');
+}
+
+function navCarousel(dir) {
+  carouselIdx += dir;
+  renderCarouselCard();
+}
+
+function renderCarouselCard() {
+  const item = carouselMisses[carouselIdx];
+  const body = document.getElementById('carousel-body');
+
+  // Format the visual display based on question type
+  let contentHtml = '';
+  if (item.type === 'mc' || item.type === 'reverse') {
+    const qObj = item.type === 'reverse' ? {q: item.q, explain: `The correct term was "${item.correctAnswer}".`} : QUIZ_QUESTIONS.find(q => q.q === item.q);
+    contentHtml = `
+      <div class="q-type-tag">${item.type === 'reverse' ? 'Identify term' : 'MC'} · Ch.${item.chapter}</div>
+      <div style="font-family:'Fraunces',serif; font-size:18px; margin-bottom:16px;">${escapeHtml(item.q)}</div>
+      <div style="padding: 12px; background: var(--bad-bg); border: 1px solid var(--bad); border-radius: 8px; color: var(--bad); margin-bottom: 8px;">
+        <span style="font-size: 11px; font-weight: 600; text-transform: uppercase;">You picked:</span><br>
+        <span style="text-decoration: line-through;">${escapeHtml(item.yourAnswer)}</span>
+      </div>
+      <div style="padding: 12px; background: var(--good-bg); border: 1px solid var(--good); border-radius: 8px; color: var(--good); margin-bottom: 16px;">
+        <span style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Correct Answer:</span><br>
+        ${escapeHtml(item.correctAnswer)}
+      </div>
+      <div style="font-size: 13px; color: var(--ink-soft); line-height: 1.5; padding-top: 16px; border-top: 1px solid var(--rule-soft);">
+        <strong>Explanation:</strong> ${qObj ? escapeHtml(qObj.explain) : ''}
+      </div>
+    `;
+  } else {
+    contentHtml = `
+      <div class="q-type-tag">FIB · Ch.${item.chapter}</div>
+      <div style="font-family:'Fraunces',serif; font-size:18px; margin-bottom:16px;">${escapeHtml(item.q)}</div>
+      <div style="padding: 12px; background: var(--bad-bg); border: 1px solid var(--bad); border-radius: 8px; color: var(--bad); margin-bottom: 8px;">
+        <span style="font-size: 11px; font-weight: 600; text-transform: uppercase;">You typed:</span><br>
+        <span style="text-decoration: line-through;">${escapeHtml(item.yourAnswer || '(Blank)')}</span>
+      </div>
+      <div style="padding: 12px; background: var(--good-bg); border: 1px solid var(--good); border-radius: 8px; color: var(--good); margin-bottom: 16px;">
+        <span style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Correct Answer:</span><br>
+        ${escapeHtml(item.correctAnswer)}
+      </div>
+    `;
+  }
+
+  body.innerHTML = contentHtml;
+  document.getElementById('carousel-status').textContent = `${carouselIdx + 1} / ${carouselMisses.length}`;
+  document.getElementById('carousel-prev').disabled = carouselIdx === 0;
+  document.getElementById('carousel-next').disabled = carouselIdx === carouselMisses.length - 1;
+}
+
+// Hook into the Exam Finish logic to display the Review Mistakes button
+const originalFinishExam = finishExam;
+finishExam = function() {
+  originalFinishExam();
+
+  // Extract just the mistakes from this session
+  const sessionMistakes = examAnswers.filter(a => !a.isCorrect && a.type !== 'full_match').map(a => {
+    // Reconstruct the mistake object format for the carousel
+    const rawState = state.wrongQuestions[a.key];
+    if (rawState) return rawState;
+    // Fallback if not tracked properly
+    return { q: a.key, chapter: a.chapter, type: a.type, yourAnswer: 'Unknown', correctAnswer: 'Check notes' };
+  });
+
+  if (sessionMistakes.length > 0) {
+    const resultsDiv = document.querySelector('.quiz-results');
+    if (resultsDiv) {
+      const reviewBtn = document.createElement('button');
+      reviewBtn.className = 'btn';
+      reviewBtn.style.marginTop = '16px';
+      reviewBtn.textContent = `Review ${sessionMistakes.length} Mistake${sessionMistakes.length > 1 ? 's' : ''} →`;
+      reviewBtn.onclick = () => openCarousel(sessionMistakes);
+
+      // Insert it right after the percentage/timer text, before the breakdown
+      resultsDiv.appendChild(reviewBtn);
+    }
+  }
+}
+
+// ============================================================
+// STRUGGLE FLAGS IN BROWSE
+// ============================================================
+// We override the highlightMatch map function inside filterBrowse
+// to inject the ⚠️ flag if the term is in the wrongQuestions queue.
+const originalFilterBrowse = filterBrowse;
+filterBrowse = function() {
+  originalFilterBrowse();
+  // Find all li elements and check if their term matches a wrong question
+  const listItems = document.querySelectorAll('.browse-topic li');
+  listItems.forEach(li => {
+    // Extract the text of the bold term (ignoring the star and dot)
+    const strongEl = li.querySelector('strong');
+    if (!strongEl) return;
+    const termText = strongEl.textContent.replace('.', '').trim();
+
+    // Check if this term is in the wrong questions (either direct MC match, FIB match, or reverse match)
+    const isStruggling = Object.values(state.wrongQuestions).some(wq => {
+      if (wq.type === 'fib') return false; // Hard to map FIB sentences back to terms perfectly
+      // For standard MC, the key is the definition usually.
+      // But for Reverse MC, the term itself is the correctAnswer.
+      return wq.correctAnswer === termText || wq.yourAnswer === termText;
+    });
+
+    if (isStruggling && !li.querySelector('.struggle-flag')) {
+      const flag = document.createElement('span');
+      flag.className = 'struggle-flag';
+      flag.textContent = '⚠️';
+      flag.title = 'In your Drill Mistakes queue';
+      strongEl.parentNode.insertBefore(flag, strongEl);
+    }
+  });
+}
+
+// ============================================================
+// TINDER-STYLE SWIPE FOR MOBILE FLASHCARDS
+// ============================================================
+let touchStartX = 0;
+let touchCurrentX = 0;
+let isDragging = false;
+const flashcardEl = document.getElementById('flashcard');
+
+if (flashcardEl && isAndroid) {
+  // Add visual hints inside the card
+  const frontFace = flashcardEl.querySelector('.card-front');
+  const leftHint = document.createElement('div');
+  leftHint.className = 'swipe-indicator swipe-left-hint';
+  leftHint.textContent = 'FORGOT';
+  frontFace.appendChild(leftHint);
+
+  const rightHint = document.createElement('div');
+  rightHint.className = 'swipe-indicator swipe-right-hint';
+  rightHint.textContent = 'GOT IT';
+  frontFace.appendChild(rightHint);
+
+  flashcardEl.addEventListener('touchstart', e => {
+    if (fcDeck.length === 0) return;
+    touchStartX = e.touches[0].clientX;
+    isDragging = true;
+    flashcardEl.style.transition = 'none'; // Disable transition while dragging
+  }, {passive: true});
+
+  flashcardEl.addEventListener('touchmove', e => {
+    if (!isDragging || flashcardEl.classList.contains('flipped')) return;
+
+    touchCurrentX = e.touches[0].clientX;
+    const diff = touchCurrentX - touchStartX;
+
+    // Physical drag effect (dampened)
+    const rotate = diff * 0.05;
+    flashcardEl.style.transform = `translateX(${diff}px) rotate(${rotate}deg)`;
+
+    // Fade in the text hints based on drag distance
+    const opacity = Math.min(Math.abs(diff) / 100, 1);
+    if (diff > 0) {
+      rightHint.style.opacity = opacity;
+      leftHint.style.opacity = 0;
+    } else {
+      leftHint.style.opacity = opacity;
+      rightHint.style.opacity = 0;
+    }
+  }, {passive: true});
+
+  flashcardEl.addEventListener('touchend', e => {
+    if (!isDragging) return;
+    isDragging = false;
+    flashcardEl.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+
+    const diff = touchCurrentX - touchStartX;
+    leftHint.style.opacity = 0;
+    rightHint.style.opacity = 0;
+
+    if (diff > 100 && !flashcardEl.classList.contains('flipped')) {
+      // Swiped Right -> Got it (Easy)
+      flashcardEl.style.transform = `translateX(200vw) rotate(30deg)`;
+      setTimeout(() => {
+        rateConfidence(2); // 2 = Easy
+        flashcardEl.style.transform = '';
+      }, 200);
+    } else if (diff < -100 && !flashcardEl.classList.contains('flipped')) {
+      // Swiped Left -> Forgot
+      flashcardEl.style.transform = `translateX(-200vw) rotate(-30deg)`;
+      setTimeout(() => {
+        rateConfidence(0); // 0 = Forgot
+        flashcardEl.style.transform = '';
+      }, 200);
+    } else {
+      // Snap back to center if not swiped far enough
+      flashcardEl.style.transform = '';
+    }
+
+    touchStartX = 0;
+    touchCurrentX = 0;
+  });
 }
 
 // INIT
