@@ -377,7 +377,8 @@
   /* MATCH MODE MOBILE OVERHAUL */
     .match-terms-bank {
       top: 90px;
-      padding: 10px 14px;
+      /* Added more bottom padding (14px top, 14px bottom) */
+      padding: 14px 14px;
       margin: -12px -14px 16px -14px;
       background: var(--card);
       display: grid;
@@ -387,7 +388,8 @@
       align-content: start;
       justify-content: start;
       gap: 8px;
-      height: 106px; /* Bumped up from 96px to prevent cutoff */
+      /* Math: 14px padding + 34px row + 8px gap + 34px row + 14px padding = 104px */
+      height: 104px;
       overflow-x: auto;
       overflow-y: hidden;
       box-shadow: 0 4px 12px rgba(26,22,19,0.08);
@@ -1966,9 +1968,14 @@ function populateChapterFilters() {
   Object.entries(chapterModeMap).forEach(([mode, cfg]) => {
     const bar = document.getElementById(cfg.barId);
     if (!bar) return;
-    const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: auto;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
+
+    const actionBtn = cfg.action
+      ? `<button class="btn btn-primary" style="margin-left: 12px; white-space: nowrap;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>`
+      : '';
+
+    // The chapter-trigger flex: 1 1 auto; ensures it stretches to fill available space
     bar.innerHTML = `
-      <button class="chapter-trigger" onclick="openChapterModal('${mode}')">
+      <button class="chapter-trigger" style="flex: 1 1 auto;" onclick="openChapterModal('${mode}')">
         <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
         <div style="display:flex; align-items:center; gap: 8px;">
           <span class="chapter-trigger-val" id="trigger-val-${mode}">All</span>
