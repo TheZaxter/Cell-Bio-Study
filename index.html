@@ -2955,8 +2955,8 @@ function filterBrowse() {
   el.innerHTML = Object.keys(byChapter).sort().map(chNum =>
     `<section class="browse-section">
       <h2 class="browse-chapter-title">
-        <span class="browse-chapter-num">Chapter ${chNum}</span>
-        <span>${escapeHtml(chapterTitle(parseInt(chNum)))}</span>
+        <span>Chapter ${chNum}</span>
+        <span class="browse-chapter-num" style="margin-left: 12px;">${escapeHtml(chapterTitle(parseInt(chNum)))}</span>
       </h2>` +
       Object.keys(byChapter[chNum]).sort().map(cat => {
         const catCards = byChapter[chNum][cat];
@@ -2979,6 +2979,27 @@ function filterBrowse() {
       }).join('') +
     `</section>`
   ).join('');
+
+  // Inject Struggle Flags directly after building the HTML
+  const listItems = document.querySelectorAll('.browse-topic li');
+  listItems.forEach(li => {
+    const termEl = li.querySelector('.browse-term span:last-child');
+    if (!termEl) return;
+    const termText = termEl.textContent.replace('.', '').trim();
+
+    const isStruggling = Object.values(state.wrongQuestions).some(wq => {
+      if (wq.type === 'fib') return false;
+      return wq.correctAnswer === termText || wq.yourAnswer === termText;
+    });
+
+    if (isStruggling && !li.querySelector('.struggle-flag')) {
+      const flag = document.createElement('span');
+      flag.className = 'struggle-flag';
+      flag.textContent = '⚠️';
+      flag.title = 'In your Drill Mistakes queue';
+      termEl.parentNode.insertBefore(flag, termEl);
+    }
+  });
 }
 
 // ============================================================
@@ -3251,34 +3272,7 @@ function renderCarouselCard() {
 }
 
 // ============================================================
-// STRUGGLE FLAGS IN BROWSE
-// ============================================================
-const _filterBrowse = filterBrowse;
-filterBrowse = function() {
-  _filterBrowse();
-  const listItems = document.querySelectorAll('.browse-topic li');
-  listItems.forEach(li => {
-    const strongEl = li.querySelector('strong');
-    if (!strongEl) return;
-    const termText = strongEl.textContent.replace('.', '').trim();
-
-    const isStruggling = Object.values(state.wrongQuestions).some(wq => {
-      if (wq.type === 'fib') return false;
-      return wq.correctAnswer === termText || wq.yourAnswer === termText;
-    });
-
-    if (isStruggling && !li.querySelector('.struggle-flag')) {
-      const flag = document.createElement('span');
-      flag.className = 'struggle-flag';
-      flag.textContent = '⚠️';
-      flag.title = 'In your Drill Mistakes queue';
-      strongEl.parentNode.insertBefore(flag, strongEl);
-    }
-  });
-}
-
-// ============================================================
-// TINDER-STYLE SWIPE FOR MOBILE FLASHCARDS
+// SWIPE FOR MOBILE FLASHCARDS
 // ============================================================
 let startX = 0, currentX = 0, startY = 0, currentY = 0;
 let isDragging = false, dragStarted = false;
