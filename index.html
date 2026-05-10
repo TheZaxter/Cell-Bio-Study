@@ -160,16 +160,22 @@
   .conf-easy { border-color: rgba(80, 160, 100, 0.4); } .conf-easy:hover { background: rgba(80, 160, 100, 0.08); border-color: var(--good); }
 
   /* EXAM CENTER */
-  .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
-  .exam-cell { align-items: flex-start !important; flex-direction: column; gap: 12px !important; padding: 16px !important; border-radius: 12px; background: var(--card) !important; border: 1px solid var(--rule) !important; }
-  .exam-cell .filter-label { color: var(--ink); font-size: 15px; font-weight: 600; text-transform: none; letter-spacing: 0; margin: 0; }
+  .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .exam-cell {
+    display: flex; flex-direction: column; gap: 12px;
+    padding: 18px 20px !important;
+    background: var(--card) !important;
+    border: 1px solid var(--rule) !important;
+    border-radius: 12px; margin: 0 !important;
+  }
+  .exam-cell .filter-label { color: var(--ink); font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; margin: 0; }
 
-  .ge-config.exam-cell { display: none; margin: 0; }
-  .exam-grid .ge-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; width: 100%; }
+  /* Make chips inside the grid slightly larger to fill the space better */
+  .exam-cell .chip { padding: 8px 16px; font-size: 13px; }
+  .exam-cell .count-input { min-height: 38px; padding: 8px 12px; font-size: 14px; width: 100%; flex: 1; }
 
   @media (max-width: 600px) {
     .exam-grid { grid-template-columns: 1fr; gap: 0; }
-    /* Strips the PC card look on mobile so the sleek native mobile buttons show correctly */
     .exam-cell { padding: 0 !important; background: transparent !important; border: none !important; margin-bottom: 0 !important; }
     .exam-cell .desktop-filter-contents { display: none !important; }
   }
@@ -571,108 +577,71 @@
     </div>
 
     <div id="exam-setup">
-      <div style="background: var(--bg); border: 1px solid var(--rule); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow);">
-        <div style="font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--rule-soft);">Configure Exam</div>
+      <div class="exam-grid">
+        <!-- 1. Chapters (Top Left) -->
+        <div class="filter-bar exam-cell" id="exam-chapter-bar"></div>
 
-        <div class="exam-grid">
-
-          <!-- 1. Chapters (Top Left) -->
-          <div class="filter-bar exam-cell" id="exam-chapter-bar" style="margin-bottom: 0;">
-            <span class="filter-label desktop-filter-contents">📚 Chapters</span>
-            <!-- Mobile Trigger -->
-            <button class="mobile-filter-trigger" onclick="openChapterModal('exam')">
-              <div style="display:flex; align-items:center; gap:8px;"><span>📚</span><span>Chapters</span></div>
-              <div style="display:flex; align-items:center; gap: 4px;">
-                <span id="trigger-val-exam-mobile" style="color: var(--ink-muted); font-size: 11px;">All</span>
-                <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-              </div>
-            </button>
-            <!-- Desktop Content -->
-            <div class="desktop-filter-contents">
-              <button class="chip active" id="trigger-val-exam" style="font-size: 13px; padding: 8px 16px; background: var(--bg-alt);" onclick="openChapterModal('exam')">All</button>
+        <!-- 2. Format (Top Right) -->
+        <div class="filter-bar exam-cell">
+          <span class="filter-label desktop-filter-contents">⚙️ Format</span>
+          <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Format', 'exam-fmt-chips')">
+            <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Format</span></div>
+            <div style="display:flex; align-items:center; gap: 4px;">
+              <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 11px;">Standard MC</span>
+              <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
             </div>
+          </button>
+          <div id="exam-fmt-chips" class="desktop-filter-contents">
+            <button class="chip active" data-e-fmt="mc" onclick="setExamFormat('mc')">Standard MC</button>
+            <button class="chip" data-e-fmt="reverse" onclick="setExamFormat('reverse')">Reverse MC</button>
+            <button class="chip" data-e-fmt="fib" onclick="setExamFormat('fib')">Fill-in</button>
+            <button class="chip" data-e-fmt="mixed" onclick="setExamFormat('mixed')">Mixed</button>
           </div>
+        </div>
 
-          <!-- 2. Format (Top Right) -->
-          <div class="filter-bar exam-cell" style="margin-bottom: 0;">
-            <span class="filter-label desktop-filter-contents">⚙️ Format</span>
-            <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Format', 'exam-fmt-chips')">
-              <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Format</span></div>
-              <div style="display:flex; align-items:center; gap: 4px;">
-                <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 11px;">Standard MC</span>
-                <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-              </div>
-            </button>
-            <div id="exam-fmt-chips" class="desktop-filter-contents">
-              <button class="chip active" data-e-fmt="mc" onclick="setExamFormat('mc')">Standard MC</button>
-              <button class="chip" data-e-fmt="reverse" onclick="setExamFormat('reverse')">Reverse MC</button>
-              <button class="chip" data-e-fmt="fib" onclick="setExamFormat('fib')">Fill-in</button>
-              <button class="chip" data-e-fmt="mixed" onclick="setExamFormat('mixed')">Mixed</button>
-              <button class="chip" data-e-fmt="custom" onclick="setExamFormat('custom')">Custom</button>
+        <!-- 3. Length (Bottom Left) -->
+        <div class="filter-bar exam-cell" id="exam-len-bar">
+          <span class="filter-label desktop-filter-contents">📏 Length</span>
+          <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Length', 'exam-len-chips')">
+            <div style="display:flex; align-items:center; gap:8px;"><span>📏</span><span>Length</span></div>
+            <div style="display:flex; align-items:center; gap: 4px;">
+              <span id="trigger-val-exam-len" style="color: var(--ink-muted); font-size: 11px;">20</span>
+              <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
             </div>
-          </div>
-
-          <!-- 3. Length (Bottom Left - Default) -->
-          <div class="filter-bar exam-cell" id="exam-len-bar" style="margin-bottom: 0;">
-            <span class="filter-label desktop-filter-contents">📏 Length</span>
-            <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Length', 'exam-len-chips')">
-              <div style="display:flex; align-items:center; gap:8px;"><span>📏</span><span>Length</span></div>
-              <div style="display:flex; align-items:center; gap: 4px;">
-                <span id="trigger-val-exam-len" style="color: var(--ink-muted); font-size: 11px;">20</span>
-                <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-              </div>
-            </button>
-            <div id="exam-len-chips" class="desktop-filter-contents">
-              <input class="count-input" id="exam-len-input" type="number" min="1" max="999" inputmode="numeric" value="20" oninput="setExamLenFromInput()" placeholder="Custom..." />
+          </button>
+          <div id="exam-len-chips" class="desktop-filter-contents" style="display: flex; width: 100%;">
+            <input class="count-input" id="exam-len-input" type="number" min="1" max="999" inputmode="numeric" value="20" oninput="setExamLenFromInput()" placeholder="Custom..." style="max-width: 110px;" />
+            <div style="display: flex; gap: 7px; flex-wrap: wrap;">
               <button class="chip" data-e-len="10" onclick="setExamLen(10)">10</button>
               <button class="chip active" data-e-len="20" onclick="setExamLen(20)">20</button>
               <button class="chip" data-e-len="50" onclick="setExamLen(50)">50</button>
               <button class="chip" data-e-len="all" onclick="setExamLen('all')">All</button>
             </div>
           </div>
+        </div>
 
-          <!-- 3b. Custom Setup (Replaces Length when Custom is chosen) -->
-          <div class="ge-config exam-cell" id="exam-custom-panel">
-            <span class="filter-label desktop-filter-contents">🛠️ Custom Setup</span>
-            <button class="mobile-filter-trigger" onclick="openBottomSheet('Custom Exam', 'exam-custom-chips')">
-              <div style="display:flex; align-items:center; gap:8px;"><span>🛠️</span><span>Custom Setup</span></div>
-              <div style="display:flex; align-items:center; gap: 4px;">
-                <span style="color: var(--ink-muted); font-size: 11px;">Edit</span>
-                <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-              </div>
-            </button>
-            <div id="exam-custom-chips" class="desktop-filter-contents" style="width: 100%;">
-              <div class="ge-row">
-                <div class="ge-input-group"><label>Standard MC</label><input type="number" id="e-ge-mc" value="10" min="0"></div>
-                <div class="ge-input-group"><label>Reverse MC</label><input type="number" id="e-ge-rev" value="5" min="0"></div>
-                <div class="ge-input-group"><label>Fill-in</label><input type="number" id="e-ge-fib" value="5" min="0"></div>
-                <div class="ge-input-group"><label>Match Boards</label><input type="number" id="e-ge-match" value="1" min="0" max="10"></div>
-              </div>
+        <!-- 4. Timer (Bottom Right) -->
+        <div class="filter-bar exam-cell">
+          <span class="filter-label desktop-filter-contents">⏱️ Timer</span>
+          <button class="mobile-filter-trigger" onclick="openBottomSheet('Time Limit', 'exam-timer-chips')">
+            <div style="display:flex; align-items:center; gap:8px;"><span>⏱️</span><span>Timer</span></div>
+            <div style="display:flex; align-items:center; gap: 4px;">
+              <span id="trigger-val-exam-timer" style="color: var(--ink-muted); font-size: 11px;">None</span>
+              <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
             </div>
-          </div>
-
-          <!-- 4. Timer (Bottom Right) -->
-          <div class="filter-bar exam-cell" id="exam-timer-bar" style="margin-bottom: 0;">
-            <span class="filter-label desktop-filter-contents">⏱️ Timer</span>
-            <button class="mobile-filter-trigger" onclick="openBottomSheet('Time Limit', 'exam-timer-chips')">
-              <div style="display:flex; align-items:center; gap:8px;"><span>⏱️</span><span>Timer</span></div>
-              <div style="display:flex; align-items:center; gap: 4px;">
-                <span id="trigger-val-exam-timer" style="color: var(--ink-muted); font-size: 11px;">None</span>
-                <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-              </div>
-            </button>
-            <div id="exam-timer-chips" class="desktop-filter-contents">
-              <input class="count-input" id="exam-timer-input" type="number" min="1" max="999" placeholder="Mins" oninput="setExamTimerFromInput()" />
+          </button>
+          <div id="exam-timer-chips" class="desktop-filter-contents" style="display: flex; width: 100%;">
+            <input class="count-input" id="exam-timer-input" type="number" min="1" max="999" placeholder="Mins" oninput="setExamTimerFromInput()" style="max-width: 110px;" />
+            <div style="display: flex; gap: 7px; flex-wrap: wrap;">
               <button class="chip active" data-e-timer="0" onclick="setExamTimer(0)">None</button>
               <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10m</button>
               <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30m</button>
             </div>
           </div>
-
-        </div> <!-- End Grid -->
-
-        <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px; margin-top: 8px;" onclick="startExam()">Start Exam →</button>
+        </div>
       </div>
+
+      <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px; margin-top: 8px;" onclick="startExam()">Start Exam →</button>
     </div>
 
     <div id="exam-active" style="display: none;">
@@ -1943,7 +1912,7 @@ function fireConfetti() {
 // ============================================================
 const chapterModeMap = {
   fc: { barId: 'fc-chapter-bar', action: null },
-  exam: { barId: 'exam-chapter-bar', action: null, noInject: true },
+  exam: { barId: 'exam-chapter-bar', action: null }, /* Restored */
   match: { barId: 'match-chapter-bar', action: 'startMatching()' },
   fib: { barId: 'fib-chapter-bar', action: null },
   browse: { barId: 'browse-chapter-bar', action: null }
@@ -2498,22 +2467,17 @@ function setExamFormat(f) {
     c.classList.toggle('active', c.dataset.eFmt === f);
   });
 
-  // Show/hide custom panel
-  document.getElementById('exam-custom-panel').style.display = f === 'custom' ? 'flex' : 'none';
-  document.getElementById('exam-len-bar').style.display = f === 'custom' ? 'none' : 'flex';
-
   // Update mobile button text
   const labels = {
     'mc': 'Standard MC',
     'reverse': 'Reverse MC',
     'fib': 'Fill-in',
-    'mixed': 'Mixed',
-    'custom': 'Custom Exam'
+    'mixed': 'Mixed'
   };
 
   const valEl = document.getElementById('trigger-val-exam-fmt');
   if (valEl) {
-    valEl.textContent = labels[f] || 'Select'; /* REMOVED THE + ' ▼' */
+    valEl.textContent = labels[f] || 'Select';
   }
 
   // Recalculate totals because format changed
@@ -2588,40 +2552,19 @@ function startExam() {
   mcPool.push(...generatedMC);
 
   // 4. Inject auto-generated Reverse MC questions from flashcards
-  if (examFormat === 'reverse' || examFormat === 'mixed' || examFormat === 'custom') {
+  if (examFormat === 'reverse' || examFormat === 'mixed') {
     const usable = cardPool.filter(c => c.def.length > 15);
     revPool = usable.map(c => buildReverseQuestion(c, cardPool));
   }
 
-  // 5. Build the final deck based on the selected format
-  if (examFormat === 'custom') {
-    const mcCount = parseInt(document.getElementById('e-ge-mc').value) || 0;
-    const revCount = parseInt(document.getElementById('e-ge-rev').value) || 0;
-    const fibCount = parseInt(document.getElementById('e-ge-fib').value) || 0;
-    const matchBoards = parseInt(document.getElementById('e-ge-match').value) || 0;
+  if (examFormat === 'mc') pool = mcPool;
+  else if (examFormat === 'reverse') pool = revPool;
+  else if (examFormat === 'fib') pool = fibPool;
+  else pool = [...mcPool, ...fibPool, ...revPool];
 
-    shuffleInPlace(mcPool); pool.push(...mcPool.slice(0, mcCount));
-    shuffleInPlace(revPool); pool.push(...revPool.slice(0, revCount));
-    shuffleInPlace(fibPool); pool.push(...fibPool.slice(0, fibCount));
-
-    for(let i=0; i < matchBoards; i++) {
-       if(cardPool.length >= 8) {
-           shuffleInPlace(cardPool);
-           const roundCards = cardPool.splice(0, 8);
-           pool.push({ _type: 'full_match', data: roundCards, pool: cardPool, chapter: 'Mixed' });
-       }
-    }
-    shuffleInPlace(pool);
-  } else {
-    if (examFormat === 'mc') pool = mcPool;
-    else if (examFormat === 'reverse') pool = revPool;
-    else if (examFormat === 'fib') pool = fibPool;
-    else pool = [...mcPool, ...fibPool, ...revPool];
-
-    shuffleInPlace(pool);
-    const limit = examLen === null ? pool.length : examLen;
-    pool = pool.slice(0, Math.min(limit, pool.length));
-  }
+  shuffleInPlace(pool);
+  const limit = examLen === null ? pool.length : examLen;
+  pool = pool.slice(0, Math.min(limit, pool.length));
 
   if (pool.length === 0) return toast('📭 No questions available.');
 
