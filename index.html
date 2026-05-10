@@ -377,21 +377,17 @@
   /* MATCH MODE MOBILE OVERHAUL */
     .match-terms-bank {
       top: 90px;
-      /* Reduced bottom padding to shrink the cushion */
-      padding: 10px 14px 6px 14px;
-      /* Added 12px top margin for cushion under Chapter button, reduced bottom margin */
+      padding: 12px 14px;
       margin: 12px -14px 12px -14px;
       background: var(--card);
-
-      /* Reverting to Flexbox fixes the left-edge cutoff bug */
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
       align-content: flex-start;
       gap: 10px;
 
-      /* Exact height for 2 rows: 10px top + 34px row + 10px gap + 34px row + 6px bottom = 94px */
-      height: 94px;
+      /* EXACT MATH: 24px padding + (36px item * 2) + 10px gap = 106px */
+      height: 106px;
 
       overflow-x: auto;
       overflow-y: hidden;
@@ -660,9 +656,7 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Matching</h1>
     </div>
 
-    <div class="filter-bar transparent" id="match-chapter-bar" style="flex-wrap: nowrap;"></div>
-      <button class="btn btn-primary" onclick="startMatching()">New round</button>
-    </div>
+    <div class="filter-bar transparent" id="match-chapter-bar" style="flex-wrap: nowrap; margin-bottom: 0;"></div>
 
     <div class="match-container">
       <div class="match-terms-bank" id="match-terms"></div>
