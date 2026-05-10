@@ -324,18 +324,18 @@
     .ch-modal-overlay.active .ch-modal { transform: translateY(0); }
   }
 
-  /* ZEN MODE */
+  /* ZEN MODE & ICON CONSISTENCY */
   body.zen-mode header, body.zen-mode .hero, body.zen-mode .filter-bar, body.zen-mode .fc-meta, body.zen-mode .mode-grid, body.zen-mode .stats-row { display: none !important; }
   body.zen-mode { padding-top: 5vh; background: var(--bg-alt); }
-  .zen-btn { font-size: 16px; background: transparent; border: 1px solid var(--rule); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; color: var(--ink-muted); display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
-  .zen-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+  .btn-icon.starred { color: #d4a017; border-color: #d4a017; background: rgba(212, 160, 23, 0.1); }
 
   /* BINARY FLASHCARD BUTTONS & SWIPE HINTS */
   .confidence-row.binary { grid-template-columns: 1fr 1fr; max-width: 400px; }
-  #flashcard { touch-action: pan-y; } /* Allows JS to handle horizontal swipes */
+  #flashcard { touch-action: pan-y; will-change: transform; }
   .swipe-indicator { position: absolute; top: 20px; font-size: 40px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 10; font-family: 'Geist', sans-serif; font-weight: 700; padding: 4px 12px; border-radius: 8px; border: 3px solid; }
-  .swipe-left-hint { left: 20px; color: var(--bad); border-color: var(--bad); transform: rotate(-15deg); content: "FORGOT"; }
-  .swipe-right-hint { right: 20px; color: var(--good); border-color: var(--good); transform: rotate(15deg); content: "GOT IT"; }
+  .swipe-left-hint { left: 20px; color: var(--bad); border-color: var(--bad); transform: rotate(-15deg); }
+  .swipe-right-hint { right: 20px; color: var(--good); border-color: var(--good); transform: rotate(15deg); }
 
   /* INSTAGRAM-STYLE SEGMENTED PROGRESS BAR */
   .segment-bar { display: flex; gap: 4px; width: 100%; height: 6px; margin-bottom: 16px; }
@@ -480,9 +480,9 @@
       <button class="btn btn-icon" onclick="prevCard()" title="Previous">←</button>
       <span class="fc-progress mono" id="fc-progress">1 / 100</span>
       <button class="btn btn-icon" onclick="nextCard()" title="Next">→</button>
-      <button class="star-btn" id="fc-star-btn" onclick="toggleStar()" title="Star this card">☆</button>
+      <button class="btn btn-icon" id="fc-star-btn" onclick="toggleStar()" title="Star this card">☆</button>
       <button class="btn btn-icon" onclick="shuffleCards()" title="Reshuffle">⟳</button>
-      <button class="zen-btn" onclick="toggleZenMode()" title="Zen Mode">⛶</button>
+      <button class="btn btn-icon" onclick="toggleZenMode()" title="Zen Mode">⛶</button>
     </div>
 
     <div class="confidence-row binary">
@@ -544,7 +544,7 @@
         <div class="mono" id="exam-status" style="font-size: 13px; color: var(--ink-muted);">Task 1 of 20</div>
         <div style="display: flex; gap: 12px; align-items: center;">
           <div class="mono" id="exam-timer" style="font-size: 14px; font-weight: 600; display: none;">20:00</div>
-          <button class="zen-btn" onclick="toggleZenMode()" title="Zen Mode">⛶</button>
+          <button class="btn btn-icon" onclick="toggleZenMode()" title="Zen Mode" style="width: 32px; height: 32px;">⛶</button>
           <button class="btn" onclick="abandonExam()">End early</button>
         </div>
       </div>
@@ -2774,16 +2774,18 @@ async function saveDirectToFile() {
 }
 
 // ============================================================
-// ZEN MODE
+// ZEN MODE (Fullscreen API)
 // ============================================================
 let isZenMode = false;
 function toggleZenMode() {
   isZenMode = !isZenMode;
   if (isZenMode) {
     document.body.classList.add('zen-mode');
+    if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
     toast('🌿 Zen Mode On (Press Esc to exit)');
   } else {
     document.body.classList.remove('zen-mode');
+    if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
   }
 }
 document.addEventListener('keydown', (e) => {
@@ -2793,7 +2795,6 @@ document.addEventListener('keydown', (e) => {
 // ============================================================
 // TOTAL QUESTION COUNT UPDATER
 // ============================================================
-// Updates the [All (###)] button in the Exam setup screen
 function updateExamTotalCount() {
   const chapters = getSelectedChapters('exam');
   let total = 0;
@@ -2808,19 +2809,6 @@ function updateExamTotalCount() {
   if (allBtn) allBtn.textContent = `All (${total})`;
 }
 
-// Ensure it runs whenever chapters change
-const originalToggleModalChapter = toggleModalChapter;
-toggleModalChapter = function(ch) {
-  originalToggleModalChapter(ch);
-  if (activeModalMode === 'exam') updateExamTotalCount();
-}
-const originalToggleModalAll = toggleModalAll;
-toggleModalAll = function() {
-  originalToggleModalAll();
-  if (activeModalMode === 'exam') updateExamTotalCount();
-}
-
-// Add the custom timer input logic
 function setExamTimerFromInput() {
   const input = document.getElementById('exam-timer-input');
   if (!input || !input.value) return;
@@ -2847,18 +2835,59 @@ function updateSegmentBar(idx, isCorrect) {
   if (nextSeg) nextSeg.classList.add('active');
 }
 
-// Hook into Exam start
-const originalStartExam = startExam;
+// Safe function overrides for Exam tracking
+const _startExam = startExam;
 startExam = function() {
-  originalStartExam();
+  _startExam();
   if (examDeck.length > 0) initSegmentBar(examDeck.length);
 }
 
-// Hook into Exam answer
-const originalRecordExamAnswer = recordExamAnswer;
+const _recordExamAnswer = recordExamAnswer;
 recordExamAnswer = function(isCorrect, item, userAnswer) {
   updateSegmentBar(examIdx, isCorrect);
-  originalRecordExamAnswer(isCorrect, item, userAnswer);
+  _recordExamAnswer(isCorrect, item, userAnswer);
+}
+
+const _finishExam = finishExam;
+finishExam = function() {
+  _finishExam();
+  const sessionMistakes = examAnswers.filter(a => !a.isCorrect && a.type !== 'full_match').map(a => {
+    const rawState = state.wrongQuestions[a.key];
+    if (rawState) return rawState;
+    return { q: a.key, chapter: a.chapter, type: a.type, yourAnswer: 'Unknown', correctAnswer: 'Check notes' };
+  });
+
+  if (sessionMistakes.length > 0) {
+    const resultsDiv = document.querySelector('.quiz-results');
+    if (resultsDiv) {
+      const reviewBtn = document.createElement('button');
+      reviewBtn.className = 'btn';
+      reviewBtn.style.marginTop = '16px';
+      reviewBtn.textContent = `Review ${sessionMistakes.length} Mistake${sessionMistakes.length > 1 ? 's' : ''} →`;
+      reviewBtn.onclick = () => openCarousel(sessionMistakes);
+      resultsDiv.appendChild(reviewBtn);
+    }
+  }
+}
+
+// Safely update total count when chapters change
+const _toggleModalChapter = toggleModalChapter;
+toggleModalChapter = function(ch) {
+  _toggleModalChapter(ch);
+  if (activeModalMode === 'exam') updateExamTotalCount();
+}
+const _toggleModalAll = toggleModalAll;
+toggleModalAll = function() {
+  _toggleModalAll();
+  if (activeModalMode === 'exam') updateExamTotalCount();
+}
+
+// Protect flipCard from firing during a swipe
+const _flipCard = flipCard;
+window.isSwiping = false;
+flipCard = function() {
+  if (window.isSwiping) return;
+  _flipCard();
 }
 
 // ============================================================
@@ -2888,7 +2917,6 @@ function renderCarouselCard() {
   const item = carouselMisses[carouselIdx];
   const body = document.getElementById('carousel-body');
 
-  // Format the visual display based on question type
   let contentHtml = '';
   if (item.type === 'mc' || item.type === 'reverse') {
     const qObj = item.type === 'reverse' ? {q: item.q, explain: `The correct term was "${item.correctAnswer}".`} : QUIZ_QUESTIONS.find(q => q.q === item.q);
@@ -2928,56 +2956,20 @@ function renderCarouselCard() {
   document.getElementById('carousel-next').disabled = carouselIdx === carouselMisses.length - 1;
 }
 
-// Hook into the Exam Finish logic to display the Review Mistakes button
-const originalFinishExam = finishExam;
-finishExam = function() {
-  originalFinishExam();
-
-  // Extract just the mistakes from this session
-  const sessionMistakes = examAnswers.filter(a => !a.isCorrect && a.type !== 'full_match').map(a => {
-    // Reconstruct the mistake object format for the carousel
-    const rawState = state.wrongQuestions[a.key];
-    if (rawState) return rawState;
-    // Fallback if not tracked properly
-    return { q: a.key, chapter: a.chapter, type: a.type, yourAnswer: 'Unknown', correctAnswer: 'Check notes' };
-  });
-
-  if (sessionMistakes.length > 0) {
-    const resultsDiv = document.querySelector('.quiz-results');
-    if (resultsDiv) {
-      const reviewBtn = document.createElement('button');
-      reviewBtn.className = 'btn';
-      reviewBtn.style.marginTop = '16px';
-      reviewBtn.textContent = `Review ${sessionMistakes.length} Mistake${sessionMistakes.length > 1 ? 's' : ''} →`;
-      reviewBtn.onclick = () => openCarousel(sessionMistakes);
-
-      // Insert it right after the percentage/timer text, before the breakdown
-      resultsDiv.appendChild(reviewBtn);
-    }
-  }
-}
-
 // ============================================================
 // STRUGGLE FLAGS IN BROWSE
 // ============================================================
-// We override the highlightMatch map function inside filterBrowse
-// to inject the ⚠️ flag if the term is in the wrongQuestions queue.
-const originalFilterBrowse = filterBrowse;
+const _filterBrowse = filterBrowse;
 filterBrowse = function() {
-  originalFilterBrowse();
-  // Find all li elements and check if their term matches a wrong question
+  _filterBrowse();
   const listItems = document.querySelectorAll('.browse-topic li');
   listItems.forEach(li => {
-    // Extract the text of the bold term (ignoring the star and dot)
     const strongEl = li.querySelector('strong');
     if (!strongEl) return;
     const termText = strongEl.textContent.replace('.', '').trim();
 
-    // Check if this term is in the wrong questions (either direct MC match, FIB match, or reverse match)
     const isStruggling = Object.values(state.wrongQuestions).some(wq => {
-      if (wq.type === 'fib') return false; // Hard to map FIB sentences back to terms perfectly
-      // For standard MC, the key is the definition usually.
-      // But for Reverse MC, the term itself is the correctAnswer.
+      if (wq.type === 'fib') return false;
       return wq.correctAnswer === termText || wq.yourAnswer === termText;
     });
 
@@ -2994,13 +2986,11 @@ filterBrowse = function() {
 // ============================================================
 // TINDER-STYLE SWIPE FOR MOBILE FLASHCARDS
 // ============================================================
-let touchStartX = 0;
-let touchCurrentX = 0;
-let isDragging = false;
+let startX = 0, currentX = 0, startY = 0, currentY = 0;
+let isDragging = false, dragStarted = false;
 const flashcardEl = document.getElementById('flashcard');
 
 if (flashcardEl && isAndroid) {
-  // Add visual hints inside the card
   const frontFace = flashcardEl.querySelector('.card-front');
   const leftHint = document.createElement('div');
   leftHint.className = 'swipe-indicator swipe-left-hint';
@@ -3013,63 +3003,68 @@ if (flashcardEl && isAndroid) {
   frontFace.appendChild(rightHint);
 
   flashcardEl.addEventListener('touchstart', e => {
-    if (fcDeck.length === 0) return;
-    touchStartX = e.touches[0].clientX;
-    isDragging = true;
-    flashcardEl.style.transition = 'none'; // Disable transition while dragging
+    if (fcDeck.length === 0 || flashcardEl.classList.contains('flipped')) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    isDragging = false;
+    dragStarted = true;
+    window.isSwiping = false;
+    flashcardEl.style.transition = 'none';
   }, {passive: true});
 
   flashcardEl.addEventListener('touchmove', e => {
-    if (!isDragging || flashcardEl.classList.contains('flipped')) return;
+    if (!dragStarted) return;
+    currentX = e.touches[0].clientX;
+    currentY = e.touches[0].clientY;
+    const diffX = currentX - startX;
+    const diffY = currentY - startY;
 
-    touchCurrentX = e.touches[0].clientX;
-    const diff = touchCurrentX - touchStartX;
+    // If they are scrolling vertically, cancel the swipe drag
+    if (!isDragging && Math.abs(diffY) > Math.abs(diffX)) {
+       dragStarted = false;
+       return;
+    }
 
-    // Physical drag effect (dampened)
-    const rotate = diff * 0.05;
-    flashcardEl.style.transform = `translateX(${diff}px) rotate(${rotate}deg)`;
+    // Only engage drag if they moved far enough horizontally (avoids tap conflicts)
+    if (Math.abs(diffX) > 15) {
+      isDragging = true;
+      window.isSwiping = true;
+      const rotate = diffX * 0.05;
+      flashcardEl.style.transform = `translateX(${diffX}px) rotate(${rotate}deg)`;
 
-    // Fade in the text hints based on drag distance
-    const opacity = Math.min(Math.abs(diff) / 100, 1);
-    if (diff > 0) {
-      rightHint.style.opacity = opacity;
-      leftHint.style.opacity = 0;
-    } else {
-      leftHint.style.opacity = opacity;
-      rightHint.style.opacity = 0;
+      const opacity = Math.min(Math.abs(diffX) / 120, 1);
+      if (diffX > 0) { rightHint.style.opacity = opacity; leftHint.style.opacity = 0; }
+      else { leftHint.style.opacity = opacity; rightHint.style.opacity = 0; }
     }
   }, {passive: true});
 
   flashcardEl.addEventListener('touchend', e => {
-    if (!isDragging) return;
-    isDragging = false;
-    flashcardEl.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    if (!dragStarted) return;
+    dragStarted = false;
 
-    const diff = touchCurrentX - touchStartX;
+    if (!isDragging) {
+       // It was just a tap. Let the onclick handler flip it.
+       window.isSwiping = false;
+       return;
+    }
+
+    flashcardEl.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    const diffX = currentX - startX;
     leftHint.style.opacity = 0;
     rightHint.style.opacity = 0;
 
-    if (diff > 100 && !flashcardEl.classList.contains('flipped')) {
-      // Swiped Right -> Got it (Easy)
-      flashcardEl.style.transform = `translateX(200vw) rotate(30deg)`;
-      setTimeout(() => {
-        rateConfidence(2); // 2 = Easy
-        flashcardEl.style.transform = '';
-      }, 200);
-    } else if (diff < -100 && !flashcardEl.classList.contains('flipped')) {
-      // Swiped Left -> Forgot
-      flashcardEl.style.transform = `translateX(-200vw) rotate(-30deg)`;
-      setTimeout(() => {
-        rateConfidence(0); // 0 = Forgot
-        flashcardEl.style.transform = '';
-      }, 200);
+    // Increased threshold so it doesn't swipe too easily
+    if (diffX > 140) {
+      flashcardEl.style.transform = `translateX(150vw) rotate(30deg)`;
+      setTimeout(() => { rateConfidence(2); flashcardEl.style.transform = ''; window.isSwiping = false; }, 250);
+    } else if (diffX < -140) {
+      flashcardEl.style.transform = `translateX(-150vw) rotate(-30deg)`;
+      setTimeout(() => { rateConfidence(0); flashcardEl.style.transform = ''; window.isSwiping = false; }, 250);
     } else {
-      // Snap back to center if not swiped far enough
+      // Snap back to center
       flashcardEl.style.transform = '';
+      setTimeout(() => window.isSwiping = false, 50);
     }
-
-    touchStartX = 0;
-    touchCurrentX = 0;
   });
 }
 
