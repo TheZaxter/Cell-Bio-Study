@@ -39,18 +39,25 @@
       --amber: #d9a85c; --amber-bg: #3a2e18;
     }
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
   body {
-    font-family: 'Geist', -apple-system, sans-serif; background: var(--bg); color: var(--ink);
-    line-height: 1.55; min-height: 100vh; -webkit-font-smoothing: antialiased;
-    overflow-x: hidden; /* <--- THIS FIXES THE SCROLL/LAG */
+    font-family: 'Geist', -apple-system, sans-serif; 
+    background: var(--bg); 
+    color: var(--ink);
+    line-height: 1.55; 
+    min-height: 100vh; 
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; 
     background-image: radial-gradient(circle at 20% 10%, rgba(139,38,53,0.03) 0%, transparent 40%),
                       radial-gradient(circle at 80% 80%, rgba(163,107,12,0.03) 0%, transparent 40%);
   }
+
   .display { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; letter-spacing: -0.01em; }
   .mono { font-family: 'JetBrains Mono', monospace; }
 
+  /* HEADER & NAV */
   header {
     border-bottom: 1px solid var(--rule); padding: 16px 24px; background: rgba(245, 239, 225, 0.88);
     position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -66,8 +73,8 @@
   .nav-btn:hover { background: var(--card); color: var(--ink); }
   .nav-btn.active { background: var(--ink); color: var(--bg); }
 
-  /* App-feel Squish Interactions */
-  .btn:active, .chip:active, .choice:not(:disabled):active, .conf-btn:active, .match-item:not(:disabled):active, .mode-card:active, .toggle-pill:active, .nav-btn:active {
+  /* UNIVERSAL SQUISH */
+  .btn:active, .chip:active, .choice:not(:disabled):active, .conf-btn:active, .match-item:not(:disabled):active, .mode-card:active, .toggle-pill:active, .nav-btn:active, .chapter-trigger:active, .mobile-filter-trigger:active {
     transform: scale(0.96) !important;
     transition: transform 0.05s ease;
   }
@@ -83,7 +90,7 @@
   h1.display em { font-style: italic; color: var(--accent); font-weight: 600; }
   .hero-sub { font-size: 15px; color: var(--ink-soft); max-width: 560px; }
 
-  /* HOME GRID: Flex layout to center bottom row */
+  /* HOME GRID */
   .mode-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-bottom: 20px; }
   .mode-card { flex: 1 1 220px; max-width: 250px; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 22px 22px 20px; cursor: pointer; transition: all 0.2s; text-align: left; position: relative; overflow: hidden; color: inherit; }
   .mode-card:hover { border-color: var(--ink-soft); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
@@ -94,248 +101,106 @@
   .mode-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
   .mode-badge { display: inline-block; background: var(--bad); color: white; border-radius: 999px; font-size: 9px; font-weight: 700; padding: 2px 8px; margin-left: 8px; vertical-align: middle; font-family: 'JetBrains Mono', monospace; }
 
-  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; padding: 16px 20px; background: var(--card-alt); border-radius: 10px; border: 1px solid var(--rule); }
-  .stat { text-align: left; }
-  .stat-val { font-family: 'Fraunces', serif; font-weight: 700; font-size: 28px; letter-spacing: -0.02em; line-height: 1; color: var(--ink); display: flex; align-items: center; gap: 6px;}
-  .stat-icon { font-size: 20px; }
-  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); margin-top: 6px; }
+  /* BUTTONS & CHIPS */
+  .btn { font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 500; padding: 10px 16px; background: var(--card); color: var(--ink); border: 1px solid var(--rule); border-radius: 8px; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn:hover { background: var(--card-alt); border-color: var(--ink-soft); }
+  .btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn-primary:hover { background: var(--ink-soft); border-color: var(--ink-soft); }
+  .btn-icon { width: 38px; height: 38px; padding: 0; }
 
-  .filter-bar { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; padding: 12px 16px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; }
-  .filter-bar.transparent { background: transparent; border: none; padding: 2px 0; margin-bottom: 12px; box-shadow: none; }
-  .filter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); font-weight: 500; margin-right: 4px; display: flex; align-items: center; gap: 4px;}
-  .chip { font-family: inherit; font-size: 11px; font-weight: 500; padding: 5px 12px; background: var(--bg); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 20px; cursor: pointer; transition: all 0.15s; }
-  .chip:hover { border-color: var(--ink-soft); }
+  .chip { font-family: inherit; font-size: 12px; font-weight: 500; padding: 8px 14px; background: var(--bg); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 8px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;}
+  .chip:hover { border-color: var(--ink-soft); color: var(--ink); }
   .chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
-  .toggle-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 14px 6px 10px; cursor: pointer; user-select: none; font-size: 11px; color: var(--ink-muted); transition: all 0.15s; min-height: 32px; }
+  .toggle-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 14px 6px 10px; cursor: pointer; user-select: none; font-size: 12px; color: var(--ink-muted); transition: all 0.15s; min-height: 32px; }
   .toggle-pill:hover { color: var(--ink); border-color: var(--ink-soft); }
   .toggle-pill.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .toggle-pill .toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-muted); flex-shrink: 0; }
   .toggle-pill.on .toggle-dot { background: var(--good); }
 
-  .count-input { width: 110px; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 11px 12px; font-family: inherit; font-size: 13px; color: var(--ink); min-height: 44px; outline: none; }
-  .count-input:focus { border-color: var(--ink-soft); }
+  /* TEXT INPUTS */
+  .text-field { 
+    background: var(--bg-alt); 
+    border: 1px solid var(--rule-soft); 
+    border-radius: 8px; 
+    padding: 10px 14px; 
+    font-family: inherit; 
+    font-size: 13px; 
+    color: var(--ink); 
+    width: 100%; 
+    outline: none; 
+    transition: all 0.15s; 
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .text-field::placeholder { color: var(--ink-muted); }
+  .text-field:focus { border-color: var(--ink-soft); background: var(--bg); }
 
-  /* GRAND EXAM CONFIG */
-  .ge-config { background: var(--card-alt); border: 1px dashed var(--rule); border-radius: 12px; padding: 16px; margin-bottom: 12px; display: none; }
-  .ge-config.show { display: block; animation: fadeIn 0.3s; }
-  .ge-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 8px; }
-  .ge-input-group { display: flex; flex-direction: column; gap: 6px; }
-  .ge-input-group label { font-size: 11px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; }
-  .ge-input-group input { padding: 10px 12px; font-family: inherit; font-size: 14px; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg); color: var(--ink); outline: none; transition: border-color 0.2s; }
-  .ge-input-group input:focus { border-color: var(--ink-soft); }
+  /* FILTER BARS (Top-level layout) */
+  .filter-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+  .filter-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); font-weight: 600; margin-right: 4px; display: flex; align-items: center; gap: 6px;}
+  
+  .chapter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 10px 16px; cursor: pointer; font-family: inherit; font-size: 14px; color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; }
+  .chapter-trigger:hover { border-color: var(--ink-soft); transform: translateY(-1px); }
+  .chapter-trigger-left { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .chapter-trigger-val { color: var(--ink-muted); font-size: 13px; font-weight: 500; }
 
-  /* FLASHCARDS */
-  .flashcard-wrap { perspective: 1800px; height: clamp(240px, 35vh, 320px); margin-bottom: 16px; }
-  .flashcard { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: pointer; }
-  .flashcard.flipped { transform: rotateY(180deg); }
-  .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 24px 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: var(--shadow); overflow-y: auto; overflow-x: hidden; }
-  .card-back { transform: rotateY(180deg); background: var(--card-alt); }
-  .card-chapter-tag { position: absolute; top: 16px; left: 16px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); font-weight: 500; }
-  .card-side-label { position: absolute; top: 16px; right: 16px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; }
-  .card-term { font-family: 'Fraunces', serif; font-weight: 600; font-size: clamp(22px, 3.5vw, 34px); letter-spacing: -0.02em; line-height: 1.15; }
-  .card-def { font-size: clamp(14px, 1.6vw, 16px); line-height: 1.55; color: var(--ink-soft); max-width: 720px; }
-  .card-hint { position: absolute; bottom: 12px; font-size: 10px; color: var(--ink-muted); letter-spacing: 0.04em; }
+  /* EXAM 2x2 GRID (Desktop) */
+  .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .exam-cell { 
+    display: flex; flex-direction: column; gap: 12px; 
+    padding: 20px; 
+    background: var(--card); 
+    border: 1px solid var(--rule); 
+    border-radius: 12px; 
+  }
+  .exam-cell .filter-label { color: var(--ink); margin-bottom: 4px; font-size: 14px; }
+  
+  .chip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; width: 100%; }
+  .chip-grid.dense { grid-template-columns: repeat(4, 1fr); }
 
-  .flashcard-controls { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
-  .fc-progress { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-muted); min-width: 80px; text-align: center; }
-  .btn { font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 500; padding: 9px 16px; background: var(--card); color: var(--ink); border: 1px solid var(--rule); border-radius: 7px; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-  .btn:hover { background: var(--card-alt); border-color: var(--ink-soft); }
-  .btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-  .btn-primary:hover { background: var(--ink-soft); border-color: var(--ink-soft); }
-  .btn-icon { width: 36px; height: 36px; padding: 0; }
-
-  .star-btn { background: transparent; border: 1px solid var(--rule); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; font-size: 16px; color: var(--ink-muted); transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center;}
-  .star-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
-  .star-btn.starred { color: #d4a017; border-color: #d4a017; background: rgba(212, 160, 23, 0.06); }
-  .card-star-indicator { position: absolute; bottom: 16px; right: 16px; color: #d4a017; font-size: 18px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 2;}
-  .card-star-indicator.shown { opacity: 1; }
-
-  .confidence-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 4px; max-width: 500px; margin-left: auto; margin-right: auto; }
-  .conf-btn { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 12px; cursor: pointer; color: var(--ink); transition: all 0.15s ease; display: flex; justify-content: center; align-items: center; min-height: 48px; }
-  .conf-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
-  .conf-btn .conf-label { font-weight: 600; font-size: 14px; letter-spacing: 0.02em; }
-  .conf-forgot { border-color: rgba(220, 80, 80, 0.4); } .conf-forgot:hover { background: rgba(220, 80, 80, 0.08); border-color: var(--bad); }
-  .conf-hard { border-color: rgba(200, 150, 50, 0.4); } .conf-hard:hover { background: rgba(200, 150, 50, 0.08); border-color: rgb(200, 150, 50); }
-  .conf-easy { border-color: rgba(80, 160, 100, 0.4); } .conf-easy:hover { background: rgba(80, 160, 100, 0.08); border-color: var(--good); }
-
-  /* EXAM CENTER */
-   .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-
-  /* Make the text inputs look exactly like inactive chips until focused */
-  .chip-input { background: transparent; border: 1px solid var(--rule); border-radius: 20px; padding: 5px 12px; font-family: inherit; font-size: 11px; font-weight: 500; color: var(--ink); width: 70px; text-align: center; outline: none; transition: all 0.15s; }
-  .chip-input::placeholder { color: var(--ink-muted); }
-  .chip-input:focus { border-color: var(--ink-soft); background: var(--bg); }
+  /* MOBILE FILTER MENUS (Teleportation) */
+  .mobile-filter-trigger { display: none; }
+  .desktop-filter-contents { display: flex; gap: 8px; align-items: center; width: 100%; }
 
   @media (max-width: 600px) {
     .exam-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
-    /* Hide the desktop chips on mobile inside the grid */
-    .exam-grid .desktop-filter-contents { display: none !important; }
-    /* Hide the extra transparent wrapper padding on mobile to match the other screens */
-    .exam-grid .filter-bar.transparent { margin-bottom: 0; }
+    .exam-cell { padding: 0; background: transparent; border: none; }
+    
+    .desktop-filter-contents { display: none; }
+    .desktop-filter-contents.in-modal { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .desktop-filter-contents.in-modal .chip-grid { grid-template-columns: 1fr; }
+    .desktop-filter-contents.in-modal .chip { padding: 14px; font-size: 14px; justify-content: flex-start; }
+    .desktop-filter-contents.in-modal .text-field { padding: 14px; font-size: 14px; }
+
+    .mobile-filter-trigger { 
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; 
+      background: var(--card); border: 1px solid var(--rule); border-radius: 12px; 
+      padding: 12px 16px; width: 100%; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600;
+      color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; margin: 0;
+    }
   }
-  .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px; }
-  .quiz-progress-bar { height: 4px; background: var(--rule-soft); border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
-  .quiz-progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; border-radius: 2px; }
-  .quiz-question-block { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; }
-  .question-text { font-family: 'Fraunces', serif; font-size: clamp(19px, 2.4vw, 25px); font-weight: 500; line-height: 1.35; letter-spacing: -0.01em; margin-bottom: 16px; }
-  .choices { display: flex; flex-direction: column; gap: 10px; }
-  .choice { text-align: left; background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 16px; font-family: inherit; font-size: 14px; color: var(--ink); cursor: pointer; transition: all 0.15s; display: flex; gap: 14px; align-items: flex-start; }
-  .choice:hover:not(:disabled) { border-color: var(--ink-soft); background: var(--card); }
-  .choice-letter { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; color: var(--ink-muted); background: var(--card-alt); border-radius: 4px; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-  .choice.correct { background: var(--good-bg); border-color: var(--good); color: var(--good); }
-  .choice.correct .choice-letter { background: var(--good); color: var(--good-bg); }
-  .choice.incorrect { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
-  .choice.incorrect .choice-letter { background: var(--bad); color: var(--bad-bg); }
-  .choice:disabled { cursor: default; }
-
-  .q-type-tag { display: inline-block; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 8px; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-muted); margin-bottom: 10px; }
-
-  .explanation { margin-top: 18px; padding: 16px 20px; background: var(--amber-bg); border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0; font-size: 13px; color: var(--ink-soft); line-height: 1.55; display: none; }
-  .explanation.show { display: block; animation: fadeIn 0.3s; }
-  .explanation-label { font-weight: 600; color: var(--amber); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
-
-  .quiz-results { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 40px; text-align: center; }
-  .results-score { font-family: 'Fraunces', serif; font-weight: 700; font-size: clamp(55px, 10vw, 95px); line-height: 1; letter-spacing: -0.03em; margin-bottom: 8px; }
-  .results-score span { color: var(--ink-muted); font-size: 0.5em; font-weight: 400; }
-  .results-label { font-size: 13px; color: var(--ink-muted); margin-bottom: 24px; }
-
-  .test-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 16px; }
-  .test-breakdown-cell { padding: 12px; background: var(--card); border: 1px solid var(--rule); border-radius: 8px; text-align: center; }
-  .test-breakdown-cell .num { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 600; line-height: 1.2; }
-  .test-breakdown-cell .lbl { font-size: 10px; color: var(--ink-muted); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
-
-  /* MATCHING (Sticky Bank) */
-  .match-container { display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px; }
-  .match-terms-bank { position: sticky; top: 74px; z-index: 5; background: rgba(245, 239, 225, 0.95); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 12px 0; border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; margin-bottom: 16px; }
-  @media (prefers-color-scheme: dark) { .match-terms-bank { background: rgba(26, 22, 19, 0.95); } }
-  .match-defs-list { display: flex; flex-direction: column; gap: 10px; }
-  .match-item { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 18px; cursor: pointer; transition: all 0.15s; font-size: 14px; font-family: inherit; color: inherit; text-align: left; line-height: 1.45; }
-  .match-item:hover:not(:disabled) { border-color: var(--ink-soft); background: var(--card-alt); }
-
-  .match-term { font-family: 'Fraunces', serif; font-weight: 600; font-size: 14px; padding: 8px 14px; background: var(--card-alt); border-radius: 20px; text-align: center; }
-  .match-term.selected { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
-  .match-term.matched { opacity: 0.3; pointer-events: none; text-decoration: line-through; background: transparent; }
-
-.match-term.matched { opacity: 0.3; pointer-events: none; text-decoration: line-through; background: transparent; border-color: transparent; }
-
-  .match-defs-list .match-item { border-left: 4px solid var(--rule); }
-  .match-defs-list .match-item.selected { border-color: var(--accent); border-left-color: var(--accent); background: var(--card-alt); }
-  .match-defs-list .match-item.matched { display: none; }
-  .match-item.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); animation: shake 0.4s; }
-
-  .mobile-filter-trigger { display: none; }
-  .desktop-filter-contents { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
-
-  /* FILL IN BLANK */
-  .fib-card { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; }
-  .fib-sentence { font-family: 'Fraunces', serif; font-size: clamp(17px, 2.2vw, 23px); font-weight: 500; line-height: 1.5; margin-bottom: 20px; }
-  .blank-input { display: inline-block; border: none; border-bottom: 2px solid var(--accent); background: var(--accent-bg); padding: 2px 10px; font-family: inherit; font-size: inherit; font-weight: 500; color: var(--ink); min-width: 140px; outline: none; border-radius: 4px 4px 0 0; }
-  .blank-input:focus { background: var(--card-alt); }
-  .blank-input.correct { background: var(--good-bg); color: var(--good); border-bottom-color: var(--good); }
-  .blank-input.incorrect { background: var(--bad-bg); color: var(--bad); border-bottom-color: var(--bad); }
-  .blank-input.fuzzy { background: var(--amber-bg); color: var(--amber); border-bottom-color: var(--amber); }
-  .fib-feedback { margin-top: 14px; font-size: 13px; color: var(--ink-muted); display: none; }
-  .fib-feedback.show { display: block; }
-  .fib-feedback strong { color: var(--accent); }
-
-  /* BROWSE (Accordion) */
-  .search-row { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
-  .search-input { flex: 1 1 220px; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 16px; font-family: inherit; font-size: 14px; color: var(--ink); transition: border-color 0.15s; outline: none; }
-  .search-input:focus { border-color: var(--ink-soft); }
-  .search-input::placeholder { color: var(--ink-muted); }
-  .search-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-muted); margin-bottom: 14px; }
-
-  .browse-section { margin-bottom: 40px; }
-  .browse-chapter-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 31px; letter-spacing: -0.02em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--ink); display: flex; align-items: baseline; gap: 12px; }
-  .browse-chapter-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); font-weight: 500; letter-spacing: 0.04em; }
-  .browse-topic { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; transition: background 0.2s; }
-
-  .browse-topic-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; letter-spacing: -0.01em; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
-  .browse-topic-title::after { content: '+'; font-family: 'JetBrains Mono', monospace; font-size: 20px; color: var(--ink-muted); font-weight: 400; }
-  .browse-topic.open { background: var(--card-alt); }
-  .browse-topic.open .browse-topic-title::after { content: '−'; }
-  .browse-topic ul { list-style: none; padding: 0; display: none; margin-top: 16px; }
-  .browse-topic.open ul { display: block; cursor: default; }
-
-  .browse-topic li { padding: 16px 0; border-bottom: 1px solid var(--rule-soft); display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start; }
-  .browse-topic li:last-child { border-bottom: none; }
-
-  .browse-term { font-family: 'Fraunces', serif; font-weight: 600; font-size: 15px; color: var(--ink); display: flex; gap: 6px; line-height: 1.4; }
-  .browse-def { font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
-  .browse-star { color: #d4a017; font-size: 13px; margin-right: 4px; }
-  .browse-li-starred { background: rgba(212, 160, 23, 0.06); padding: 16px 16px; border-radius: 8px; margin: 4px -16px; border-bottom: none !important; }
-  .browse-empty { text-align: center; color: var(--ink-muted); padding: 40px 20px; font-style: italic; }
-
-  /* STATS VIEW */
-  .streak-display { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; margin-bottom: 18px; }
-  .streak-num { font-family: 'Fraunces', serif; font-size: 34px; font-weight: 700; color: #d4a017; line-height: 1; }
-  .streak-label { font-size: 13px; color: var(--ink-muted); line-height: 1.4; }
-
-  .stats-section { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 24px; margin-bottom: 20px; }
-  .stats-section h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em; }
-
-  .stats-table, .cat-stats-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .stats-table td, .stats-table th, .cat-stats-table td, .cat-stats-table th { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); text-align: left; }
-  .stats-table th, .cat-stats-table th { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); }
-  .stats-bar { height: 8px; background: var(--rule-soft); border-radius: 4px; overflow: hidden; min-width: 120px; }
-  .stats-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; }
-
-  .missed-card { padding: 12px 14px; background: var(--card); border: 1px solid var(--rule); border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .missed-q { font-family: 'Fraunces', serif; font-weight: 500; flex: 1; font-size: 14px; line-height: 1.4; }
-  .missed-stats { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--bad); white-space: nowrap; }
-
-  .settings-card { padding: 18px 20px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; margin-bottom: 16px; }
-  .settings-card h3 { font-family: 'Fraunces', serif; font-size: 18px; margin-bottom: 6px; }
-  .settings-card p { color: var(--ink-muted); font-size: 13px; margin-bottom: 12px; }
-  .settings-row { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  .danger-btn { background: transparent; color: var(--bad); border: 1px solid var(--bad); }
-  .danger-btn:hover { background: var(--bad-bg); }
-  .file-input-hidden { display: none; }
-
-  /* DRILL */
-  .drill-empty { text-align: center; padding: 60px 20px; color: var(--ink-muted); }
-  .drill-empty-icon { font-size: 48px; margin-bottom: 16px; font-family: 'Fraunces', serif; }
-  .drill-empty h3 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 8px; color: var(--ink); }
-
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 100; box-shadow: var(--shadow-lg); }
-  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
 
   /* CHAPTER SELECTION MODAL */
-  .chapter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; cursor: pointer; font-family: inherit; font-size: 14px; color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; }
-  .chapter-trigger:hover { border-color: var(--ink-soft); transform: translateY(-1px); }
-  .chapter-trigger:active { transform: scale(0.98); }
-
   .ch-modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.4); z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display:flex; align-items:center; justify-content:center; }
   .ch-modal-overlay.active { opacity: 1; pointer-events: auto; }
-
   .ch-modal { background: var(--bg); border: 1px solid var(--rule); border-radius: 20px; width: 90%; max-width: 440px; max-height: 80vh; display: flex; flex-direction: column; transform: scale(0.95) translateY(10px); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: var(--shadow-lg); overflow: hidden; }
   .ch-modal-overlay.active .ch-modal { transform: scale(1) translateY(0); }
-
   .ch-modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; background: var(--card); }
   .ch-modal-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px; }
   .ch-modal-close { background: var(--bg-alt); border: none; width: 32px; height: 32px; border-radius: 16px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-muted); transition: all 0.2s; }
   .ch-modal-close:hover { background: var(--rule); color: var(--ink); }
-
   .ch-modal-body { padding: 16px; overflow-y: auto; flex: 1; }
+  .ch-modal-footer { padding: 16px 24px; border-top: 1px solid var(--rule-soft); background: var(--card); display: flex; justify-content: space-between; align-items: center; }
 
   .ch-option { display: flex; align-items: center; padding: 12px 14px; cursor: pointer; border-radius: 12px; transition: background 0.2s; user-select: none; gap: 14px; }
   .ch-option:hover { background: var(--card-alt); }
-  .ch-option:active { transform: scale(0.98); }
   .ch-checkbox { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--rule); display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
   .ch-option input { display: none; }
   .ch-option input:checked + .ch-checkbox { background: var(--good); border-color: var(--good); }
   .ch-option input:checked + .ch-checkbox::after { content: '✓'; color: var(--good-bg); font-size: 14px; font-weight: 700; }
-
   .ch-text { display: flex; flex-direction: column; }
   .ch-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-muted); margin-bottom: 2px; }
   .ch-name { font-size: 14px; font-weight: 500; line-height: 1.3; }
-
-  .ch-modal-footer { padding: 16px 24px; border-top: 1px solid var(--rule-soft); background: var(--card); display: flex; justify-content: space-between; align-items: center; }
-
-  .filter-bar.transparent { background: transparent; border: none; padding: 0; margin-bottom: 12px; box-shadow: none; }
 
   @media (max-width: 600px) {
     .ch-modal-overlay { align-items: flex-end; }
@@ -343,27 +208,112 @@
     .ch-modal-overlay.active .ch-modal { transform: translateY(0); }
   }
 
-  /* ZEN MODE & ICON CONSISTENCY */
-  body.zen-mode header, body.zen-mode .hero, body.zen-mode .filter-bar, body.zen-mode .fc-meta, body.zen-mode .mode-grid, body.zen-mode .stats-row { display: none !important; }
-  body.zen-mode { padding-top: 5vh; background: var(--bg-alt); }
+  /* FLASHCARDS */
+  .flashcard-wrap { perspective: 1800px; height: clamp(240px, 35vh, 320px); margin-bottom: 16px; }
+  .flashcard { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: pointer; touch-action: pan-y; will-change: transform; }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 24px 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: var(--shadow); overflow-y: auto; overflow-x: hidden; }
+  .card-back { transform: rotateY(180deg); background: var(--card-alt); }
+  
+  .card-chapter-tag { position: absolute; top: 16px; left: 16px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); font-weight: 500; }
+  .card-side-label { position: absolute; top: 16px; right: 16px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; }
+  .card-star-indicator { position: absolute; bottom: 16px; right: 16px; color: #d4a017; font-size: 18px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 2;}
+  .card-star-indicator.shown { opacity: 1; }
+  .card-hint { position: absolute; bottom: 12px; font-size: 10px; color: var(--ink-muted); letter-spacing: 0.04em; }
 
-  .btn-icon.starred { color: #d4a017; border-color: #d4a017; background: rgba(212, 160, 23, 0.1); }
+  .card-term { font-family: 'Fraunces', serif; font-weight: 600; font-size: clamp(22px, 3.5vw, 34px); letter-spacing: -0.02em; line-height: 1.15; }
+  .card-def { font-size: clamp(14px, 1.6vw, 16px); line-height: 1.55; color: var(--ink-soft); max-width: 720px; }
 
-  /* BINARY FLASHCARD BUTTONS & SWIPE HINTS */
-  .confidence-row.binary { grid-template-columns: 1fr 1fr; max-width: 400px; }
-  #flashcard { touch-action: pan-y; will-change: transform; }
+  .flashcard-controls { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+  .fc-progress { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-muted); min-width: 80px; text-align: center; }
+  .star-btn.starred { color: #d4a017; border-color: #d4a017; background: rgba(212, 160, 23, 0.1); }
+
+  .confidence-row.binary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 400px; margin: 0 auto; }
+  .conf-btn { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 14px; cursor: pointer; color: var(--ink); transition: all 0.15s ease; display: flex; justify-content: center; align-items: center; min-height: 48px; }
+  .conf-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+  .conf-btn .conf-label { font-weight: 600; font-size: 14px; letter-spacing: 0.02em; }
+  .conf-forgot { border-color: rgba(220, 80, 80, 0.4); } .conf-forgot:hover { background: rgba(220, 80, 80, 0.08); border-color: var(--bad); }
+  .conf-easy { border-color: rgba(80, 160, 100, 0.4); } .conf-easy:hover { background: rgba(80, 160, 100, 0.08); border-color: var(--good); }
+
   .swipe-indicator { position: absolute; top: 20px; font-size: 40px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 10; font-family: 'Geist', sans-serif; font-weight: 700; padding: 4px 12px; border-radius: 8px; border: 3px solid; }
   .swipe-left-hint { left: 20px; color: var(--bad); border-color: var(--bad); transform: rotate(-15deg); }
   .swipe-right-hint { right: 20px; color: var(--good); border-color: var(--good); transform: rotate(15deg); }
 
-  /* INSTAGRAM-STYLE SEGMENTED PROGRESS BAR */
+  /* QUIZ / EXAM BLOCK */
+  .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px; }
   .segment-bar { display: flex; gap: 4px; width: 100%; height: 6px; margin-bottom: 16px; }
   .segment { flex: 1; background: var(--rule-soft); border-radius: 3px; transition: background 0.3s; }
   .segment.active { background: var(--ink-muted); }
   .segment.correct { background: var(--good); }
   .segment.incorrect { background: var(--bad); }
 
-  /* MISTAKE CAROUSEL OVERLAY */
+  .quiz-question-block { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+  .q-type-tag { display: inline-block; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-muted); margin-bottom: 12px; }
+  .question-text { font-family: 'Fraunces', serif; font-size: clamp(18px, 2.4vw, 22px); font-weight: 500; line-height: 1.4; margin-bottom: 20px; }
+  
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice { text-align: left; background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 16px; font-family: inherit; font-size: 14px; color: var(--ink); cursor: pointer; transition: all 0.15s; display: flex; gap: 14px; align-items: flex-start; }
+  .choice:hover:not(:disabled) { border-color: var(--ink-soft); background: var(--card); }
+  .choice.correct { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+  .choice.incorrect { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+  .choice:disabled { cursor: default; }
+
+  .q-explanation { margin-top: 18px; padding: 16px 20px; background: var(--amber-bg); border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0; font-size: 13px; color: var(--ink-soft); line-height: 1.55; display: none; }
+  .q-explanation.show { display: block; animation: fadeIn 0.3s; }
+
+  .quiz-results { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 40px 20px; text-align: center; }
+  .test-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 16px; }
+  .test-breakdown-cell { padding: 12px; background: var(--card); border: 1px solid var(--rule); border-radius: 8px; text-align: center; }
+
+  /* MATCHING */
+  .match-container { display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px; }
+  .match-terms-bank { position: sticky; top: 74px; z-index: 5; background: rgba(245, 239, 225, 0.95); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 12px 0; border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 16px 0; }
+  @media (prefers-color-scheme: dark) { .match-terms-bank { background: rgba(26, 22, 19, 0.95); } }
+  
+  .match-term { font-family: 'Fraunces', serif; font-weight: 600; font-size: 14px; padding: 8px 16px; background: var(--card-alt); border-radius: 20px; text-align: center; border: 1px solid var(--rule); cursor: pointer; user-select: none; }
+  .match-term.selected { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+  .match-term.matched { opacity: 0.3; pointer-events: none; text-decoration: line-through; background: transparent; border-color: transparent; }
+
+  .match-defs-list { display: flex; flex-direction: column; gap: 10px; }
+  .match-defs-list .match-item { background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--rule); border-radius: 8px; padding: 14px 18px; cursor: pointer; font-size: 14px; font-family: inherit; line-height: 1.45; }
+  .match-defs-list .match-item:hover { background: var(--card-alt); border-color: var(--ink-soft); border-left-color: var(--ink-soft); }
+  .match-defs-list .match-item.selected { border-color: var(--accent); border-left-color: var(--accent); background: var(--card-alt); }
+  .match-defs-list .match-item.matched { display: none; }
+  .match-defs-list .match-item.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); animation: shake 0.4s; }
+
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+  /* BROWSE */
+  .search-row { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
+  .search-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-muted); margin-bottom: 14px; }
+  .browse-section { margin-bottom: 40px; }
+  .browse-chapter-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 31px; letter-spacing: -0.02em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--ink); display: flex; align-items: baseline; gap: 12px; }
+  .browse-chapter-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); font-weight: 500; letter-spacing: 0.04em; }
+  .browse-topic { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; }
+  .browse-topic-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+  .browse-topic-title::after { content: '+'; font-family: 'JetBrains Mono', monospace; font-size: 20px; color: var(--ink-muted); font-weight: 400; }
+  .browse-topic.open { background: var(--card-alt); }
+  .browse-topic.open .browse-topic-title::after { content: '−'; }
+  .browse-topic ul { list-style: none; padding: 0; display: none; margin-top: 16px; }
+  .browse-topic.open ul { display: block; }
+  .browse-topic li { padding: 16px 0; border-bottom: 1px solid var(--rule-soft); display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start; }
+  .browse-topic li:last-child { border-bottom: none; }
+  .browse-term { font-family: 'Fraunces', serif; font-weight: 600; font-size: 15px; display: flex; gap: 6px; line-height: 1.4; }
+  .browse-def { font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
+  .browse-li-starred { background: rgba(212, 160, 23, 0.06); padding: 16px; border-radius: 8px; margin: 4px -16px; border-bottom: none !important; }
+
+  /* STATS */
+  .stats-section { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 24px; margin-bottom: 20px; }
+  .stats-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 32px; }
+  .stats-table th, .stats-table td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); text-align: left; }
+  .stats-table th { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 11px; text-transform: uppercase; color: var(--ink-muted); }
+  .stats-bar { height: 8px; background: var(--rule-soft); border-radius: 4px; overflow: hidden; min-width: 100px; }
+  .stats-bar-fill { height: 100%; background: var(--accent); }
+
+  .settings-card { padding: 18px 20px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; margin-bottom: 16px; }
+  .settings-card h3 { font-family: 'Fraunces', serif; font-size: 18px; margin-bottom: 6px; }
+
+  /* CAROUSEL */
   .carousel-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); z-index: 3000; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display:flex; align-items:center; justify-content:center; padding: 20px; }
   .carousel-overlay.active { opacity: 1; pointer-events: auto; }
   .carousel-content { background: var(--bg); border: 1px solid var(--rule); border-radius: 16px; width: 100%; max-width: 500px; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); overflow: hidden; transform: scale(0.95); transition: transform 0.3s; }
@@ -371,100 +321,47 @@
   .carousel-header { padding: 16px 20px; border-bottom: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; background: var(--card); }
   .carousel-body { padding: 24px 20px; overflow-y: auto; max-height: 60vh; }
   .carousel-footer { padding: 16px 20px; border-top: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; background: var(--card); }
-  .carousel-nav-btn { background: var(--bg-alt); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 16px; cursor: pointer; font-weight: 500; font-family: 'Geist', sans-serif; transition: all 0.15s; }
-  .carousel-nav-btn:not(:disabled):hover { background: var(--card); border-color: var(--ink-soft); }
-  .carousel-nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
+  
   .struggle-flag { color: var(--bad); font-size: 13px; margin-right: 6px; animation: pulse 2s infinite; }
   @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-  /* CONFETTI */
   .confetti { position: fixed; top: -10px; width: 8px; height: 16px; z-index: 9999; animation: fall linear forwards; pointer-events: none; }
   @keyframes fall { to { transform: translateY(105vh) rotate(720deg); } }
 
-  .mobile-filter-trigger { display: none; }
-  .desktop-filter-contents { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  body.zen-mode header, body.zen-mode .hero, body.zen-mode .filter-bar, body.zen-mode .exam-grid, body.zen-mode .stats-row { display: none !important; }
+  body.zen-mode { padding-top: 5vh; background: var(--bg-alt); }
 
   @media (max-width: 600px) {
-  /* MATCH MODE MOBILE OVERHAUL */
-    .match-terms-bank {
-      top: 90px;
-      padding: 12px 16px;
-      /* Added positive top margin to space it from the mobile buttons */
-      margin: 16px -14px 16px -14px;
+    main { padding: 16px 14px 20px; }
+    .mode-card { max-width: 100%; }
+    .flashcard-wrap { height: 420px; }
+    .quiz-question-block { padding: 16px; }
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
+    .stat-val { font-size: 24px; }
+    header { padding: 12px; }
+    .nav-btn { padding: 7px 10px; font-size: 12px; }
+    
+    .match-terms-bank { 
+      top: 90px; 
+      padding: 12px 16px; 
+      margin: 16px -14px 16px -14px; 
       background: var(--card);
-
-      /* Grid is bulletproof: Forces exactly 2 rows, automatically sizes columns */
       display: grid;
       grid-template-rows: 1fr 1fr;
       grid-auto-columns: max-content;
       grid-auto-flow: column;
-
-      justify-content: start;
-
+      justify-content: start; 
       gap: 10px;
-      height: auto; /* Removes the buggy hardcoded height */
-
-      overflow-x: auto;
+      overflow-x: auto; 
       overflow-y: hidden;
       box-shadow: 0 4px 12px rgba(26,22,19,0.08);
       -webkit-overflow-scrolling: touch;
     }
     .match-terms-bank::-webkit-scrollbar { display: none; }
+    .match-term { font-size: 13px; padding: 0 16px; margin: 0; white-space: nowrap; height: 36px; display: inline-flex; align-items: center; justify-content: center; }
 
-    .match-term {
-      font-size: 13px;
-      padding: 0 16px;
-      margin: 0;
-      white-space: nowrap;
-      height: 36px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Prevents the transparent filter bars from clipping the buttons inside them */
-    .filter-bar.transparent { overflow: visible !important; }
-
-    /* MOBILE SETTINGS MODALS (Teleportation Styles) */
-    .mobile-filter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; width: 100%; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; margin-bottom: 12px; }
-    .mobile-filter-trigger:active { transform: scale(0.98); }
-    .desktop-filter-contents { display: none; }
-    .desktop-filter-contents.in-modal { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-    .desktop-filter-contents.in-modal .chip, .desktop-filter-contents.in-modal .toggle-pill { width: 100%; justify-content: flex-start; padding: 14px 16px; font-size: 14px; border-radius: 10px; }
-    .desktop-filter-contents.in-modal .count-input { box-sizing: border-box; width: 100%; margin: 0; padding: 14px 16px; font-size: 14px; border-radius: 10px; height: 48px; }
-    .mode-card { max-width: 100%; }
-    main { padding: 16px 14px 20px; }
-    .flashcard-wrap { height: 420px; }
-    .card-face { padding: 28px 22px; }
-    .card-term { font-size: 26px; }
-    .card-def { font-size: 15px; }
-    .quiz-question-block, .fib-card { padding: 14px; }
-    .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
-    .stat-val { font-size: 24px; }
-    header { padding: 12px 12px 10px; }
-    .header-inner { gap: 10px; }
-    nav { width: 100%; justify-content: flex-start; }
-    .nav-btn { padding: 7px 10px; font-size: 12px; }
-    .filter-bar { padding: 10px 12px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
-    .chip { padding: 7px 12px; font-size: 12px; min-height: 32px; flex: 0 0 auto; }
-    .count-input { width: 96px; flex: 0 0 auto; }
-    .btn { min-height: 38px; padding: 9px 14px; }
-    .choice { padding: 10px 14px; min-height: 44px; }
-    .match-item { padding: 14px 14px; min-height: 44px; font-size: 13.5px; }
-    .filter-label { width: auto; margin-right: 6px; }
-    .confidence-row { grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 0; }
-    .conf-btn { min-height: 44px; padding: 10px 4px; }
-    .conf-btn .conf-label { font-size: 12px; }
-    .streak-display { padding: 14px; }
-    .streak-num { font-size: 30px; }
     .browse-topic li { grid-template-columns: 1fr; gap: 6px; padding: 14px 0; }
     .browse-li-starred { padding: 14px 12px; margin: 4px -12px; }
-    .test-breakdown { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (hover: none) {
-    .chip:hover { border-color: var(--rule); }
-    .btn:hover { background: var(--card); border-color: var(--rule); }
   }
 </style>
 </head>
@@ -496,12 +393,12 @@
 
     <div class="mode-grid">
       <button class="mode-card" onclick="showView('flashcards')"><div class="mode-icon">Aa</div><div class="mode-title">Flashcards</div><div class="mode-desc">Smart shuffle puts cards you forgot back in front. Star important ones to focus.</div></button>
-      <button class="mode-card" onclick="showView('exam')"><div class="mode-icon">?</div><div class="mode-title">Exam Center</div><div class="mode-desc">Standard Multi-Choice, Reverse Multi-Choice, Mixed modes, and Custom Grand Exam builder.</div></button>
+      <button class="mode-card" onclick="showView('exam')"><div class="mode-icon">?</div><div class="mode-title">Exam Center</div><div class="mode-desc">Standard MC, Reverse MC, and Mixed modes. Timed tracking available.</div></button>
       <button class="mode-card" onclick="showView('matching')"><div class="mode-icon">⇌</div><div class="mode-title">Matching</div><div class="mode-desc">Click to match terms with definitions. Good for building fast recognition.</div></button>
       <button class="mode-card" onclick="showView('fib')"><div class="mode-icon">__</div><div class="mode-title">Fill-in-the-Blank</div><div class="mode-desc">Active recall beats passive review. Type it out to lock it in.</div></button>
       <button class="mode-card" onclick="showView('drill')"><div class="mode-icon">⚠</div><div class="mode-title">Drill Mistakes<span class="mode-badge" id="drill-badge" style="display:none;">0</span></div><div class="mode-desc">Replay only the questions you've gotten wrong. Get them right to clear them.</div></button>
       <button class="mode-card" onclick="showView('browse')"><div class="mode-icon">§</div><div class="mode-title">Browse Notes</div><div class="mode-desc">All cards organized by chapter and topic. Search across everything.</div></button>
-      <button class="mode-card" onclick="showView('stats')"><div class="mode-icon">Σ</div><div class="mode-title">Progress</div><div class="mode-desc">Streak, weakest categories, most-missed cards, and backup/restore.</div></button>
+      <button class="mode-card" onclick="showView('stats')"><div class="mode-icon">Σ</div><div class="mode-title">Progress</div><div class="mode-desc">Accuracy trends, weakest categories, most-missed cards, and backups.</div></button>
     </div>
 
     <div class="stats-row">
@@ -518,11 +415,12 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Flashcards</h1>
     </div>
 
-    <div class="filter-bar transparent">
-      <span class="filter-label desktop-filter-contents">⚙️ Mode</span>
+    <div class="filter-bar" id="fc-chapter-bar" style="padding: 0; background: transparent; border: none; box-shadow: none;"></div>
+    
+    <div class="filter-bar" style="padding: 0; background: transparent; border: none; box-shadow: none;">
       <button class="mobile-filter-trigger" onclick="openBottomSheet('Flashcard Mode', 'fc-mode-chips')">
         <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Mode Options</span></div>
-        <span id="trigger-val-fc-mode" style="color: var(--ink-muted); font-size: 10px;">Select ▼</span>
+        <span id="trigger-val-fc-mode" style="color: var(--ink-muted); font-size: 11px;">Standard ▼</span>
       </button>
       <div id="fc-mode-chips" class="desktop-filter-contents">
         <button class="toggle-pill on" id="fc-smart-toggle" onclick="toggleSmartOrder()"><span class="toggle-dot"></span><span>Smart shuffle</span></button>
@@ -568,27 +466,23 @@
   <!-- EXAM CENTER -->
   <section id="view-exam" class="view">
     <div class="hero">
-      <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Exam</h1>
+      <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Exam Center</h1>
     </div>
 
     <div id="exam-setup">
       <div class="exam-grid">
-
+        
         <!-- 1. Chapters (Top Left) -->
-        <!-- Just uses the standard empty transparent bar, JS does the rest perfectly -->
-        <div class="filter-bar transparent" id="exam-chapter-bar" style="margin-bottom: 0;"></div>
+        <div id="exam-chapter-bar" class="exam-cell"></div>
 
         <!-- 2. Format (Top Right) -->
-        <div class="filter-bar transparent" style="margin-bottom: 0;">
+        <div class="exam-cell">
           <span class="filter-label desktop-filter-contents">⚙️ Format</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Format', 'exam-fmt-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Format</span></div>
-            <div style="display:flex; align-items:center; gap: 4px;">
-              <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 11px;">Standard MC</span>
-              <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-            </div>
+            <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 11px;">Standard MC ▼</span>
           </button>
-          <div id="exam-fmt-chips" class="desktop-filter-contents">
+          <div id="exam-fmt-chips" class="desktop-filter-contents chip-grid">
             <button class="chip active" data-e-fmt="mc" onclick="setExamFormat('mc')">Standard MC</button>
             <button class="chip" data-e-fmt="reverse" onclick="setExamFormat('reverse')">Reverse MC</button>
             <button class="chip" data-e-fmt="fib" onclick="setExamFormat('fib')">Fill-in</button>
@@ -597,44 +491,42 @@
         </div>
 
         <!-- 3. Length (Bottom Left) -->
-        <div class="filter-bar transparent" id="exam-len-bar" style="margin-bottom: 0;">
+        <div class="exam-cell">
           <span class="filter-label desktop-filter-contents">📏 Length</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Length', 'exam-len-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>📏</span><span>Length</span></div>
-            <div style="display:flex; align-items:center; gap: 4px;">
-              <span id="trigger-val-exam-len" style="color: var(--ink-muted); font-size: 11px;">20</span>
-              <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-            </div>
+            <span id="trigger-val-exam-len" style="color: var(--ink-muted); font-size: 11px;">20 ▼</span>
           </button>
-          <div id="exam-len-chips" class="desktop-filter-contents">
-            <input class="chip-input" id="exam-len-input" type="number" min="1" max="999" inputmode="numeric" value="20" oninput="setExamLenFromInput()" placeholder="Custom" />
-            <button class="chip" data-e-len="10" onclick="setExamLen(10)">10</button>
-            <button class="chip active" data-e-len="20" onclick="setExamLen(20)">20</button>
-            <button class="chip" data-e-len="50" onclick="setExamLen(50)">50</button>
-            <button class="chip" data-e-len="all" onclick="setExamLen('all')">All</button>
+          <div id="exam-len-chips" class="desktop-filter-contents" style="flex-direction:column; gap:8px; width:100%; align-items:stretch;">
+            <input class="text-field" id="exam-len-input" type="number" min="1" max="999" inputmode="numeric" value="20" oninput="setExamLenFromInput()" placeholder="Custom length..." />
+            <div class="chip-grid dense">
+              <button class="chip" data-e-len="10" onclick="setExamLen(10)">10</button>
+              <button class="chip active" data-e-len="20" onclick="setExamLen(20)">20</button>
+              <button class="chip" data-e-len="50" onclick="setExamLen(50)">50</button>
+              <button class="chip" data-e-len="all" onclick="setExamLen('all')">All</button>
+            </div>
           </div>
         </div>
 
         <!-- 4. Timer (Bottom Right) -->
-        <div class="filter-bar transparent" style="margin-bottom: 0;">
+        <div class="exam-cell">
           <span class="filter-label desktop-filter-contents">⏱️ Timer</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Time Limit', 'exam-timer-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>⏱️</span><span>Timer</span></div>
-            <div style="display:flex; align-items:center; gap: 4px;">
-              <span id="trigger-val-exam-timer" style="color: var(--ink-muted); font-size: 11px;">None</span>
-              <span style="color: var(--ink-muted); font-size: 10px;">▼</span>
-            </div>
+            <span id="trigger-val-exam-timer" style="color: var(--ink-muted); font-size: 11px;">None ▼</span>
           </button>
-          <div id="exam-timer-chips" class="desktop-filter-contents">
-            <input class="chip-input" id="exam-timer-input" type="number" min="1" max="999" placeholder="Custom" oninput="setExamTimerFromInput()" />
-            <button class="chip active" data-e-timer="0" onclick="setExamTimer(0)">None</button>
-            <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10m</button>
-            <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30m</button>
+          <div id="exam-timer-chips" class="desktop-filter-contents" style="flex-direction:column; gap:8px; width:100%; align-items:stretch;">
+            <input class="text-field" id="exam-timer-input" type="number" min="1" max="999" placeholder="Custom minutes..." oninput="setExamTimerFromInput()" />
+            <div class="chip-grid">
+              <button class="chip active" data-e-timer="0" onclick="setExamTimer(0)">None</button>
+              <button class="chip" data-e-timer="600" onclick="setExamTimer(600)">10m</button>
+              <button class="chip" data-e-timer="1800" onclick="setExamTimer(1800)">30m</button>
+            </div>
           </div>
         </div>
 
-      </div> <!-- End Grid -->
-
+      </div>
+      
       <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px;" onclick="startExam()">Start Exam →</button>
     </div>
 
@@ -643,13 +535,11 @@
         <div class="mono" id="exam-status" style="font-size: 13px; color: var(--ink-muted);">Task 1 of 20</div>
         <div style="display: flex; gap: 12px; align-items: center;">
           <div class="mono" id="exam-timer" style="font-size: 14px; font-weight: 600; display: none;">20:00</div>
-          <button class="btn btn-icon" onclick="toggleZenMode()" title="Zen Mode" style="width: 32px; height: 32px;">⛶</button>
+          <button class="btn btn-icon" onclick="toggleZenMode()" title="Zen Mode">⛶</button>
           <button class="btn" onclick="abandonExam()">End early</button>
         </div>
       </div>
-      <!-- New Instagram-style bar -->
       <div id="exam-segment-bar" class="segment-bar"></div>
-
       <div id="exam-block"></div>
       <div style="text-align: right; margin-top: 16px;">
         <button class="btn btn-primary" id="exam-next-btn" style="display: none;" onclick="nextExamQ()">Next task →</button>
@@ -665,7 +555,7 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Matching</h1>
     </div>
 
-    <div class="filter-bar transparent" id="match-chapter-bar" style="flex-wrap: nowrap; margin-bottom: 0;"></div>
+    <div class="filter-bar transparent" id="match-chapter-bar" style="padding:0;"></div>
 
     <div class="match-container">
       <div class="match-terms-bank" id="match-terms"></div>
@@ -684,14 +574,14 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Fill-in-the-Blanks</h1>
     </div>
 
-    <div class="filter-bar transparent" id="fib-chapter-bar"></div>
+    <div class="filter-bar transparent" id="fib-chapter-bar" style="padding:0;"></div>
 
     <div class="fib-card" id="fib-card"></div>
     <div class="flashcard-controls">
       <button class="btn btn-icon" onclick="prevFib()">←</button>
       <span class="fc-progress mono" id="fib-progress">1 / 25</span>
       <button class="btn btn-icon" onclick="nextFib()">→</button>
-      <button class="btn" onclick="shuffleFib()">Shuffle</button>
+      <button class="btn btn-icon" onclick="shuffleFib()" title="Shuffle">⟳</button>
       <button class="btn btn-primary" id="fib-check-btn" onclick="checkFib()">Check</button>
       <button class="btn btn-primary" id="fib-next-btn" style="display: none;" onclick="nextFib()">Next →</button>
     </div>
@@ -719,8 +609,10 @@
         <button class="btn" onclick="showView('home')">End drill</button>
       </div>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="drill-progress-fill" style="width: 0%;"></div></div>
-      <div class="quiz-question-block" id="drill-block"></div>
-      <button class="btn btn-primary" id="drill-next-btn" style="display: none;" onclick="nextDrill()">Next →</button>
+      <div id="drill-block"></div>
+      <div style="text-align: right; margin-top: 16px;">
+        <button class="btn btn-primary" id="drill-next-btn" style="display: none;" onclick="nextDrill()">Next →</button>
+      </div>
     </div>
 
     <div id="drill-done" style="display: none;"></div>
@@ -732,12 +624,12 @@
       <h1 class="display" style="font-size: clamp(28px, 4vw, 42px);">Browse Notes</h1>
     </div>
 
-    <div class="filter-bar transparent" id="browse-chapter-bar"></div>
+    <div class="filter-bar transparent" id="browse-chapter-bar" style="padding:0;"></div>
 
     <div class="search-row">
-      <input type="text" class="search-input" id="browse-search" placeholder="Search terms or definitions…" oninput="filterBrowse()" />
-      <button class="btn" id="browse-starred-toggle" onclick="toggleBrowseStarred()" style="height: 44px; gap: 6px;"><span class="toggle-dot" style="width:8px; height:8px; border-radius:50%; background:var(--ink-muted); display:inline-block;"></span> Starred only</button>
-      <button class="btn" style="margin-left:auto; height: 44px;" onclick="expandAllAccordions()">Expand All</button>
+      <input type="text" class="text-field" id="browse-search" placeholder="Search terms or definitions…" style="flex: 1 1 200px;" oninput="filterBrowse()" />
+      <button class="btn" id="browse-starred-toggle" onclick="toggleBrowseStarred()" style="height: 44px; gap: 6px;"><span class="toggle-dot" style="width:8px; height:8px; border-radius:50%; background:var(--ink-muted); display:inline-block;"></span> Starred</button>
+      <button class="btn" style="height: 44px;" onclick="expandAllAccordions()">Expand All</button>
     </div>
 
     <div class="search-meta" id="browse-meta">Showing all cards.</div>
@@ -815,7 +707,7 @@
     </div>
     <div class="settings-card">
       <h3>Reset everything</h3>
-      <p>Nuclear option. Wipes confidence ratings, stars, mistakes, exam history, streak.</p>
+      <p>Nuclear option. Wipes confidence ratings, stars, mistakes, exam history.</p>
       <div class="settings-row"><button class="btn btn-bad" onclick="resetAll()">Reset all progress</button></div>
     </div>
   </section>
@@ -838,8 +730,6 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <!-- CHAPTER MODAL -->
 <div class="ch-modal-overlay" id="ch-modal-overlay" onclick="if(event.target===this)closeChapterModal()">
   <div class="ch-modal">
@@ -847,9 +737,7 @@
       <div class="ch-modal-title">Select Chapters</div>
       <button class="ch-modal-close" onclick="closeChapterModal()">✕</button>
     </div>
-    <div class="ch-modal-body" id="ch-modal-body">
-      <!-- Checkboxes injected here -->
-    </div>
+    <div class="ch-modal-body" id="ch-modal-body"></div>
     <div class="ch-modal-footer">
       <button class="btn" onclick="toggleModalAll()">Toggle All</button>
       <button class="btn btn-primary" onclick="closeChapterModal()">Done</button>
@@ -857,21 +745,21 @@
   </div>
 </div>
 
-<!-- GENERIC OPTIONS MODAL (For mobile filters) -->
+<!-- GENERIC OPTIONS MODAL -->
 <div class="ch-modal-overlay" id="options-modal-overlay" onclick="if(event.target===this)closeBottomSheet()">
   <div class="ch-modal">
     <div class="ch-modal-header">
       <div class="ch-modal-title" id="options-modal-title">Settings</div>
       <button class="ch-modal-close" onclick="closeBottomSheet()">✕</button>
     </div>
-    <div class="ch-modal-body" id="options-modal-body">
-      <!-- Content Teleported Here -->
-    </div>
+    <div class="ch-modal-body" id="options-modal-body"></div>
     <div class="ch-modal-footer" style="justify-content: flex-end;">
       <button class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="closeBottomSheet()">Done</button>
     </div>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 // ============================================================
@@ -1573,8 +1461,8 @@ const QUIZ_QUESTIONS = [
   {q: "Meiosis differs from mitosis most fundamentally because:", choices: ["Meiosis occurs only in prokaryotes", "Meiosis involves two rounds of division and produces 4 haploid cells; mitosis involves one division and produces 2 diploid cells", "Meiosis requires no interphase", "Meiosis produces genetically identical cells"], correct: 1, explain: "Key differences: meiosis = 2 divisions → 4 haploid genetically unique cells. Mitosis = 1 division → 2 diploid identical cells.", chapter: 7},
   {q: "Where does crossing over occur during meiosis?", choices: ["During S phase", "During Metaphase I", "During Prophase I (at synapsis)", "During Anaphase II"], correct: 2, explain: "Crossing over occurs during Prophase I when homologous chromosomes pair up (synapsis) and non-sister chromatids exchange segments. The physical connections are called chiasmata.", chapter: 7},
   {q: "A tetrad consists of:", choices: ["4 separate chromosomes", "One homologous pair of chromosomes (4 chromatids total)", "4 haploid cells", "2 sister chromatids joined at the centromere"], correct: 1, explain: "A tetrad = two homologous chromosomes (each consisting of 2 sister chromatids) paired during prophase I = 4 chromatids total.", chapter: 7},
-  {q: "Independent assortment produces genetic variation because:", choices: ["Genes mutate more rapidly during meiosis", "Homologous chromosomes orient randomly at the metaphase plate, giving different possible gametes", "Sister chromatids exchange segments", "The cell skips G1 during meiosis"], correct: 1, explain: "Independent assortment: during metaphase I, each homologous pair orients randomly. With 23 pairs in humans, this creates 2²³ (>8 million) possible chromosome combinations.", chapter: 7},
-  {q: "Which event occurs during Meiosis I but NOT during Meiosis II?", choices: ["Chromosomes condense", "A metaphase plate forms", "Separation of homologous chromosomes (reduction division)", "Spindle fibers form"], correct: 2, explain: "Meiosis I is 'Reduction Division' — homologous chromosomes are separated, reducing the cell from diploid to haploid. In Meiosis II, sister chromatids are separated (similar to mitosis).", chapter: 7},
+  {q: "Independent assortment produces genetic variation because:", choices: ["Genes mutate more rapidly during meiosis", "Homologous chromosomes orient randomly at the metaphase plate", "giving different possible gametes", "Sister chromatids exchange segments", "The cell skips G1 during meiosis"], correct: 1, explain: "Independent assortment: during metaphase I, each homologous pair orients randomly. With 23 pairs in humans, this creates 2²³ (>8 million) possible chromosome combinations.", chapter: 7},
+   {q: "Which event occurs during Meiosis I but NOT during Meiosis II?", choices: ["Chromosomes condense", "A metaphase plate forms", "Separation of homologous chromosomes (reduction division)", "Spindle fibers form"], correct: 2, explain: "Meiosis I is 'Reduction Division' — homologous chromosomes are separated, reducing the cell from diploid to haploid. In Meiosis II, sister chromatids are separated (similar to mitosis).", chapter: 7},
   {q: "Nondisjunction during meiosis I results in:", choices: ["Gametes with the correct chromosome number", "Some gametes with both homologs and some with neither homolog", "Only one cell with extra chromosomes", "Gametes with extra sister chromatids only"], correct: 1, explain: "If homologs fail to separate in meiosis I, one cell gets BOTH members of a pair and the other gets NONE — leading to aneuploid gametes.", chapter: 7},
   {q: "Trisomy 21 (Down Syndrome) results from:", choices: ["Deletion of chromosome 21", "An extra copy of chromosome 21 due to nondisjunction", "Inversion of chromosome 21", "Translocation between chromosomes 21 and 13"], correct: 1, explain: "Trisomy 21: three copies of chromosome 21 due to nondisjunction. It is the most common viable trisomy. Risk increases with maternal age.", chapter: 7},
   {q: "X inactivation in females results in the formation of a:", choices: ["Chiasmata", "Barr body", "Tetrad", "Karyogram"], correct: 1, explain: "During early female development, one X chromosome per cell is inactivated and condensed into a structure called a Barr body. Its genes are not expressed.", chapter: 7},
@@ -1899,9 +1787,6 @@ function fireConfetti() {
 }
 
 // ============================================================
-// CHAPTER FILTERS STATE
-// ============================================================
-// ============================================================
 // CHAPTER FILTERS & MODAL STATE
 // ============================================================
 const chapterModeMap = {
@@ -1946,15 +1831,12 @@ function getChapterCount(mode, ch) {
   } else if (mode === 'fib') {
     return FIB_QUESTIONS.filter(q => q.chapter === ch).length;
   } else if (mode === 'exam') {
-    // Dynamically count based on current exam format
-    // Exam mode pulls from MC, Generated MC, FIB, and Reverse MC
     const mcBase = QUIZ_QUESTIONS.filter(q => q.chapter === ch).length;
     const mcGen = FLASHCARDS.filter(c => c.chapter === ch && c.def.length < 150).length;
     const mc = mcBase + mcGen;
     const fib = FIB_QUESTIONS.filter(q => q.chapter === ch).length;
     const rev = FLASHCARDS.filter(c => c.chapter === ch && c.def.length > 15).length;
 
-    // Custom mode doesn't have a fixed cap per chapter until you build the test
     if (examFormat === 'custom') return mc + fib + rev;
     if (examFormat === 'mc') return mc;
     if (examFormat === 'reverse') return rev;
@@ -1971,27 +1853,16 @@ function populateChapterFilters() {
     const bar = document.getElementById(cfg.barId);
     if (!bar) return;
 
-    // flex-shrink: 0 prevents the Start button from being squished
     const actionBtn = cfg.action ? `<button class="btn btn-primary" style="margin-left: 8px; flex-shrink: 0;" onclick="${cfg.action}">${mode === 'match' ? 'New round' : 'Start'}</button>` : '';
 
-    // Added mobile-filter-trigger class so it gets the correct Android styling
     bar.innerHTML = `
-      <button class="chapter-trigger mobile-filter-trigger" style="display:flex; flex: 1 1 0%; min-width: 0; margin-bottom: 0;" onclick="openChapterModal('${mode}')">
+      <button class="chapter-trigger" style="flex: 1 1 0%; min-width: 0;" onclick="openChapterModal('${mode}')">
         <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
         <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
-          <span class="chapter-trigger-val" id="trigger-val-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
+          <span class="chapter-trigger-val" id="trigger-val-${mode}">All</span>
           <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
         </div>
       </button>
-      <div class="desktop-filter-contents" style="display:flex; align-items:center;">
-        <button class="chapter-trigger" style="flex: 1 1 0%; min-width: 0;" onclick="openChapterModal('${mode}')">
-          <div class="chapter-trigger-left"><span>📚</span><span>Chapters</span></div>
-          <div style="display:flex; align-items:center; gap: 8px; overflow: hidden;">
-            <span class="chapter-trigger-val" id="trigger-val-desktop-${mode}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
-            <span style="color: var(--ink-muted); font-size: 10px; flex-shrink: 0;">▼</span>
-          </div>
-        </button>
-      </div>
       ${actionBtn}
     `;
   });
@@ -2009,12 +1880,12 @@ function openChapterModal(mode) {
 
 function closeChapterModal() {
   document.getElementById('ch-modal-overlay').classList.remove('active');
-  // Trigger appropriate rebuild based on mode when closing
   updateChapterBar(activeModalMode);
   if (activeModalMode === 'fc') { buildDeck(); renderFlashcard(); }
   else if (activeModalMode === 'match') { startMatching(); }
   else if (activeModalMode === 'fib') { buildFibDeck(); renderFib(); }
   else if (activeModalMode === 'browse') { filterBrowse(); }
+  else if (activeModalMode === 'exam') { updateExamTotalCount(); }
 }
 
 function renderModalList() {
@@ -2022,13 +1893,11 @@ function renderModalList() {
   const selected = chapterSelections[activeModalMode];
   const body = document.getElementById('ch-modal-body');
 
-  // Calculate Grand Total for the header
   let grandTotal = 0;
   chapters.forEach(ch => {
     if (selected.has(ch)) grandTotal += getChapterCount(activeModalMode, ch);
   });
 
-  // Update Modal Title with Total
   const modalTitle = document.querySelector('.ch-modal-title');
   if (modalTitle) {
     const label = activeModalMode === 'fc' ? 'Cards' : 'Tasks';
@@ -2055,7 +1924,6 @@ function toggleModalChapter(ch) {
   if (current.has(ch)) current.delete(ch);
   else current.add(ch);
 
-  // Prevent zero-selection (forces at least one)
   if (current.size === 0) current.add(ch);
 
   chapterSelections[activeModalMode] = current;
@@ -2066,10 +1934,8 @@ function toggleModalAll() {
   const chapters = getActiveChapters();
   const current = chapterSelections[activeModalMode];
   if (current.size === chapters.length) {
-    // If all are selected, unselect all EXCEPT chapter 1
     chapterSelections[activeModalMode] = new Set([chapters[0]]);
   } else {
-    // Otherwise select all
     chapterSelections[activeModalMode] = new Set(chapters);
   }
   renderModalList();
@@ -2085,16 +1951,13 @@ function openBottomSheet(title, contentId) {
   const content = document.getElementById(contentId);
   const modalBody = document.getElementById('options-modal-body');
 
-  // Save where it came from so we can put it back
   currentTeleportOriginalParent = content.parentNode;
   currentTeleportContainer = content;
 
-  // Update Title and move DOM elements
   document.getElementById('options-modal-title').textContent = title;
   modalBody.innerHTML = '';
   modalBody.appendChild(content);
 
-  // Style for modal display
   content.classList.add('in-modal');
 
   document.getElementById('options-modal-overlay').classList.add('active');
@@ -2102,7 +1965,6 @@ function openBottomSheet(title, contentId) {
 
 function closeBottomSheet() {
   if (currentTeleportContainer && currentTeleportOriginalParent) {
-     // Put the chips back where they belong in the actual page HTML
      currentTeleportContainer.classList.remove('in-modal');
      currentTeleportOriginalParent.appendChild(currentTeleportContainer);
   }
@@ -2238,31 +2100,27 @@ function showView(name) {
 }
 
 function updateHomeStats() {
-  // 1. Deck Mastery
   const mastered = Object.values(state.cardConfidence).filter(c => c === 2).length;
   const masteryPct = FLASHCARDS.length ? Math.round((mastered / FLASHCARDS.length) * 100) : 0;
   document.getElementById('home-stat-mastery').innerHTML = `<span class="stat-icon">📈</span><span>${masteryPct}%</span>`;
   document.getElementById('st-stat-mastery').innerHTML = `<span class="stat-icon">📈</span><span>${masteryPct}%</span>`;
 
-  // 2. Exam Accuracy
   const totalAns = Object.values(state.questionStats).reduce((s, o) => s + o.total, 0);
   const correctAns = Object.values(state.questionStats).reduce((s, o) => s + o.correct, 0);
   const accText = totalAns === 0 ? '—' : Math.round(100 * correctAns / totalAns) + '%';
   document.getElementById('home-stat-accuracy').innerHTML = `<span class="stat-icon">🎯</span><span>${accText}</span>`;
   document.getElementById('st-stat-accuracy').innerHTML = `<span class="stat-icon">🎯</span><span>${accText}</span>`;
 
-  // 3. Pending Mistakes
   const mistakeCount = Object.keys(state.wrongQuestions).length;
   document.getElementById('home-stat-mistakes').innerHTML = `<span class="stat-icon">⚠️</span><span>${mistakeCount}</span>`;
   document.getElementById('st-stat-mistakes').innerHTML = `<span class="stat-icon">⚠️</span><span>${mistakeCount}</span>`;
 
-  // 4. Weakest Chapter
   const chStats = {}; getActiveChapters().forEach(n => chStats[n] = {c: 0, t: 0});
   Object.values(state.questionStats).forEach(s => { if (chStats[s.chapter]) { chStats[s.chapter].c += s.correct; chStats[s.chapter].t += s.total; } });
 
   let weakest = '—'; let lowestPct = 101;
   Object.entries(chStats).forEach(([ch, s]) => {
-    if (s.t >= 3) { // Require at least 3 questions answered in a chapter to judge it
+    if (s.t >= 3) { 
       const pct = (s.c / s.t) * 100;
       if (pct < lowestPct) { lowestPct = pct; weakest = 'Ch. ' + ch; }
     }
@@ -2270,7 +2128,6 @@ function updateHomeStats() {
   document.getElementById('home-stat-weakest').innerHTML = `<span class="stat-icon">📘</span><span>${weakest}</span>`;
   document.getElementById('st-stat-weakest').innerHTML = `<span class="stat-icon">📘</span><span>${weakest}</span>`;
 
-  // Update Drill Badge on Home Screen
   const badge = document.getElementById('drill-badge');
   if (badge) {
     if (mistakeCount > 0) { badge.style.display = 'inline-block'; badge.textContent = mistakeCount; }
@@ -2354,7 +2211,7 @@ function toggleReverse() {
   document.getElementById('fc-reverse-toggle').classList.toggle('on', fcReverse);
   renderFlashcard();
   updateMobileFlashcardLabels();
-  toast(fcReverse ? 'Reverse mode ON — def shown first' : 'Reverse mode OFF — term shown first');
+  toast(fcReverse ? 'Reverse mode ON' : 'Reverse mode OFF');
 }
 
 function renderFlashcard() {
@@ -2424,7 +2281,7 @@ function toggleStar() {
 }
 
 // ============================================================
-// EXAM CENTER (Unified Quiz + Test Mode)
+// EXAM CENTER 
 // ============================================================
 let examLen = 20; let examFormat = 'mc'; let examTimer = 0; let examDeck = []; let examIdx = 0; let examCorrect = 0; let examAnswers = []; let examAnswered = false; let examTimerHandle = null; let examTimeRemaining = 0; let examTimedOut = false;
 
@@ -2435,13 +2292,12 @@ function setExamLen(n) {
 
   document.querySelectorAll('[data-e-len]').forEach(c => c.classList.toggle('active', (examLen === null && c.dataset.eLen === 'all') || (examLen !== null && Number(c.dataset.eLen) === examLen)));
 
-  // Update mobile button text
   const valEl = document.getElementById('trigger-val-exam-len');
   if (valEl) {
     if (n === 'all') {
       updateExamTotalCount();
     } else {
-      valEl.textContent = n; /* REMOVED THE + ' ▼' */
+      valEl.textContent = n; 
     }
   }
 }
@@ -2459,17 +2315,19 @@ function setExamLenFromInput() {
 function setExamFormat(f) {
   examFormat = f;
 
-  // Update desktop chips
   document.querySelectorAll('[data-e-fmt]').forEach(c => {
     c.classList.toggle('active', c.dataset.eFmt === f);
   });
 
-  // Update mobile button text
+  document.getElementById('exam-custom-panel').style.display = f === 'custom' ? 'block' : 'none';
+  document.getElementById('exam-len-bar').style.display = f === 'custom' ? 'none' : 'flex';
+
   const labels = {
     'mc': 'Standard MC',
     'reverse': 'Reverse MC',
     'fib': 'Fill-in',
-    'mixed': 'Mixed'
+    'mixed': 'Mixed',
+    'custom': 'Custom Exam'
   };
 
   const valEl = document.getElementById('trigger-val-exam-fmt');
@@ -2477,7 +2335,6 @@ function setExamFormat(f) {
     valEl.textContent = labels[f] || 'Select';
   }
 
-  // Recalculate totals because format changed
   if (typeof updateExamTotalCount === 'function') {
     updateExamTotalCount();
   }
@@ -2489,7 +2346,7 @@ function setExamTimer(seconds) {
 
   const labels = { 0: 'None', 600: '10m', 1200: '20m', 1800: '30m', 3600: '60m' };
   const valEl = document.getElementById('trigger-val-exam-timer');
-  if (valEl) valEl.textContent = labels[seconds] || (seconds/60 + 'm'); /* REMOVED THE + ' ▼' */
+  if (valEl) valEl.textContent = labels[seconds] || (seconds/60 + 'm'); 
 }
 
 function formatTime(s) { return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
@@ -2501,7 +2358,6 @@ function tickExamTimer() {
 }
 function stopExamTimer() { if (examTimerHandle) { clearInterval(examTimerHandle); examTimerHandle = null; } }
 
-// Auto-generates: Prompt = Definition, Choices = Terms
 function buildReverseQuestion(card, allCards) {
   const sameCatSameCh = allCards.filter(c => c.chapter === card.chapter && c.category === card.category && c.term !== card.term);
   const sameChDiff = allCards.filter(c => c.chapter === card.chapter && c.category !== card.category);
@@ -2512,9 +2368,7 @@ function buildReverseQuestion(card, allCards) {
   return { q: card.def, choices: [card.term, ...pool.slice(0, 3).map(c => c.term)], correct: 0, explain: `The correct term is "${card.term}".`, chapter: card.chapter, _type: 'reverse', _key: 'REV:' + card.term };
 }
 
-// Auto-generates: Prompt = Term, Choices = Definitions
 function buildStandardMCFromCard(card, allCards) {
-  // Only use cards with definitions short enough to be readable as A/B/C/D choices
   const validCards = allCards.filter(c => c.def.length < 150);
   const sameCh = validCards.filter(c => c.chapter === card.chapter && c.term !== card.term);
   const anyOther = validCards.filter(c => c.term !== card.term);
@@ -2535,33 +2389,49 @@ function startExam() {
   let revPool = [];
   let pool = [];
 
-  // 1. Establish the Card Pool for this chapter selection
   const cardPool = chapters.length === getActiveChapters().length ? [...FLASHCARDS] : FLASHCARDS.filter(c => chapters.includes(c.chapter));
 
-  // 2. Filter base MC and FIB pools by chapter
   if (chapters.length !== getActiveChapters().length) {
     mcPool = mcPool.filter(q => chapters.includes(q.chapter));
     fibPool = fibPool.filter(f => chapters.includes(f.chapter));
   }
 
-  // 3. Inject auto-generated Standard MC questions from flashcards
   const generatedMC = cardPool.filter(c => c.def.length < 150).map(c => buildStandardMCFromCard(c, cardPool));
   mcPool.push(...generatedMC);
 
-  // 4. Inject auto-generated Reverse MC questions from flashcards
-  if (examFormat === 'reverse' || examFormat === 'mixed') {
+  if (examFormat === 'reverse' || examFormat === 'mixed' || examFormat === 'custom') {
     const usable = cardPool.filter(c => c.def.length > 15);
     revPool = usable.map(c => buildReverseQuestion(c, cardPool));
   }
 
-  if (examFormat === 'mc') pool = mcPool;
-  else if (examFormat === 'reverse') pool = revPool;
-  else if (examFormat === 'fib') pool = fibPool;
-  else pool = [...mcPool, ...fibPool, ...revPool];
+  if (examFormat === 'custom') {
+    const mcCount = parseInt(document.getElementById('e-ge-mc').value) || 0;
+    const revCount = parseInt(document.getElementById('e-ge-rev').value) || 0;
+    const fibCount = parseInt(document.getElementById('e-ge-fib').value) || 0;
+    const matchBoards = parseInt(document.getElementById('e-ge-match').value) || 0;
 
-  shuffleInPlace(pool);
-  const limit = examLen === null ? pool.length : examLen;
-  pool = pool.slice(0, Math.min(limit, pool.length));
+    shuffleInPlace(mcPool); pool.push(...mcPool.slice(0, mcCount));
+    shuffleInPlace(revPool); pool.push(...revPool.slice(0, revCount));
+    shuffleInPlace(fibPool); pool.push(...fibPool.slice(0, fibCount));
+
+    for(let i=0; i < matchBoards; i++) {
+       if(cardPool.length >= 8) {
+           shuffleInPlace(cardPool);
+           const roundCards = cardPool.splice(0, 8);
+           pool.push({ _type: 'full_match', data: roundCards, pool: cardPool, chapter: 'Mixed' });
+       }
+    }
+    shuffleInPlace(pool);
+  } else {
+    if (examFormat === 'mc') pool = mcPool;
+    else if (examFormat === 'reverse') pool = revPool;
+    else if (examFormat === 'fib') pool = fibPool;
+    else pool = [...mcPool, ...fibPool, ...revPool];
+
+    shuffleInPlace(pool);
+    const limit = examLen === null ? pool.length : examLen;
+    pool = pool.slice(0, Math.min(limit, pool.length));
+  }
 
   if (pool.length === 0) return toast('📭 No questions available.');
 
@@ -2890,9 +2760,6 @@ function finishDrill() {
 // ============================================================
 // BROWSE
 // ============================================================
-// ============================================================
-// BROWSE
-// ============================================================
 let browseStarredOnly = false;
 
 function highlightMatch(text, query) {
@@ -2905,6 +2772,7 @@ function highlightMatch(text, query) {
 function toggleBrowseStarred() {
   browseStarredOnly = !browseStarredOnly;
   document.querySelector('#browse-starred-toggle .toggle-dot').style.background = browseStarredOnly ? 'var(--good)' : 'var(--ink-muted)';
+  filterBrowse();
 }
 
 function expandAllAccordions() {
@@ -3081,21 +2949,17 @@ document.addEventListener('keydown', (e) => {
 // ============================================================
 // TOTAL QUESTION COUNT UPDATER
 // ============================================================
-// Updates the [All (###)] button in the Exam setup screen
 function updateExamTotalCount() {
   const chapters = getSelectedChapters('exam');
   let total = 0;
 
-  // Use our format-aware counter
   chapters.forEach(ch => {
     total += getChapterCount('exam', ch);
   });
 
-  // Update desktop chip
   const allBtn = document.querySelector('button[data-e-len="all"]');
   if (allBtn) allBtn.textContent = `All (${total})`;
 
-  // Update mobile button if "All" is currently selected
   const valEl = document.getElementById('trigger-val-exam-len');
   if (valEl && examLen === null) {
     valEl.textContent = `All (${total})`;
@@ -3128,7 +2992,6 @@ function updateSegmentBar(idx, isCorrect) {
   if (nextSeg) nextSeg.classList.add('active');
 }
 
-// Safe function overrides for Exam tracking
 const _startExam = startExam;
 startExam = function() {
   _startExam();
@@ -3163,7 +3026,6 @@ finishExam = function() {
   }
 }
 
-// Safely update total count when chapters change
 const _toggleModalChapter = toggleModalChapter;
 toggleModalChapter = function(ch) {
   _toggleModalChapter(ch);
@@ -3175,7 +3037,6 @@ toggleModalAll = function() {
   if (activeModalMode === 'exam') updateExamTotalCount();
 }
 
-// Protect flipCard from firing during a swipe
 const _flipCard = flipCard;
 window.isSwiping = false;
 flipCard = function() {
@@ -3312,13 +3173,11 @@ if (flashcardEl && isAndroid) {
     const diffX = currentX - startX;
     const diffY = currentY - startY;
 
-    // If they are scrolling vertically, cancel the swipe drag
     if (!isDragging && Math.abs(diffY) > Math.abs(diffX)) {
        dragStarted = false;
        return;
     }
 
-    // Only engage drag if they moved far enough horizontally (avoids tap conflicts)
     if (Math.abs(diffX) > 15) {
       isDragging = true;
       window.isSwiping = true;
@@ -3336,7 +3195,6 @@ if (flashcardEl && isAndroid) {
     dragStarted = false;
 
     if (!isDragging) {
-       // It was just a tap. Let the onclick handler flip it.
        window.isSwiping = false;
        return;
     }
@@ -3346,7 +3204,6 @@ if (flashcardEl && isAndroid) {
     leftHint.style.opacity = 0;
     rightHint.style.opacity = 0;
 
-    // Adjusted threshold for a more comfortable thumb flick
     if (diffX > 80) {
       flashcardEl.style.transform = `translateX(150vw) rotate(30deg)`;
       setTimeout(() => { rateConfidence(2); flashcardEl.style.transform = ''; window.isSwiping = false; }, 250);
@@ -3354,7 +3211,6 @@ if (flashcardEl && isAndroid) {
       flashcardEl.style.transform = `translateX(-150vw) rotate(-30deg)`;
       setTimeout(() => { rateConfidence(0); flashcardEl.style.transform = ''; window.isSwiping = false; }, 250);
     } else {
-      // Snap back to center
       flashcardEl.style.transform = '';
       setTimeout(() => window.isSwiping = false, 50);
     }
