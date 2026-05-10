@@ -192,7 +192,7 @@
 
   /* MATCHING (Sticky Bank) */
   .match-container { display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px; }
-  .match-terms-bank { position: sticky; top: 60px; z-index: 5; background: rgba(245, 239, 225, 0.95); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 12px 0; border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: -12px; }
+  .match-terms-bank { position: sticky; top: 74px; z-index: 5; background: rgba(245, 239, 225, 0.95); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 12px 0; border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: -12px; }
   @media (prefers-color-scheme: dark) { .match-terms-bank { background: rgba(26, 22, 19, 0.95); } }
   .match-defs-list { display: flex; flex-direction: column; gap: 10px; }
   .match-item { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 18px; cursor: pointer; transition: all 0.15s; font-size: 14px; font-family: inherit; color: inherit; text-align: left; line-height: 1.45; }
@@ -322,7 +322,7 @@
 
   .ch-modal-footer { padding: 16px 24px; border-top: 1px solid var(--rule-soft); background: var(--card); display: flex; justify-content: space-between; align-items: center; }
 
-  .filter-bar.transparent { background: transparent; border: none; padding: 0; margin-bottom: 16px; box-shadow: none; }
+  .filter-bar.transparent { background: transparent; border: none; padding: 0; margin-bottom: 12px; box-shadow: none; }
 
   @media (max-width: 600px) {
     .ch-modal-overlay { align-items: flex-end; }
@@ -335,41 +335,6 @@
   body.zen-mode { padding-top: 5vh; background: var(--bg-alt); }
 
   .btn-icon.starred { color: #d4a017; border-color: #d4a017; background: rgba(212, 160, 23, 0.1); }
-
-  /* MATCH MODE MOBILE OVERHAUL */
-    .match-terms-bank {
-      top: 90px; /* Clears the taller mobile header perfectly */
-      padding: 10px;
-      margin: -12px -14px 16px -14px; /* Bleeds to screen edges */
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(26,22,19,0.05);
-    }
-    .match-term {
-      font-size: 12px; /* Smaller text to fit beautifully */
-      padding: 6px 12px;
-    }
-
-    /* MOBILE SETTINGS MODALS (Teleportation Styles) */
-    .mobile-filter-trigger {
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
-      padding: 12px 16px; width: 100%; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500;
-      color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; margin-bottom: 8px;
-    }
-    .mobile-filter-trigger:active { transform: scale(0.98); }
-
-    .desktop-filter-contents { display: none; }
-    .desktop-filter-contents.in-modal {
-      display: flex; flex-direction: column; gap: 8px; width: 100%;
-    }
-    .desktop-filter-contents.in-modal .chip,
-    .desktop-filter-contents.in-modal .toggle-pill {
-      width: 100%; justify-content: flex-start; padding: 14px 16px; font-size: 14px; border-radius: 10px;
-    }
-    /* Fixed inconsistent text inputs in mobile modal */
-    .desktop-filter-contents.in-modal .count-input {
-      box-sizing: border-box; width: 100%; margin: 0; padding: 14px 16px; font-size: 14px; border-radius: 10px; height: 48px;
-    }
 
   /* BINARY FLASHCARD BUTTONS & SWIPE HINTS */
   .confidence-row.binary { grid-template-columns: 1fr 1fr; max-width: 400px; }
@@ -404,7 +369,21 @@
   .confetti { position: fixed; top: -10px; width: 8px; height: 16px; z-index: 9999; animation: fall linear forwards; pointer-events: none; }
   @keyframes fall { to { transform: translateY(105vh) rotate(720deg); } }
 
+  .mobile-filter-trigger { display: none; }
+  .desktop-filter-contents { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+
   @media (max-width: 600px) {
+  /* MATCH MODE MOBILE OVERHAUL */
+    .match-terms-bank { top: 90px; padding: 10px; margin: -12px -14px 16px -14px; gap: 6px; box-shadow: 0 4px 12px rgba(26,22,19,0.05); }
+    .match-term { font-size: 12px; padding: 6px 12px; }
+
+    /* MOBILE SETTINGS MODALS (Teleportation Styles) */
+    .mobile-filter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; width: 100%; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; margin-bottom: 8px; }
+    .mobile-filter-trigger:active { transform: scale(0.98); }
+    .desktop-filter-contents { display: none; }
+    .desktop-filter-contents.in-modal { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+    .desktop-filter-contents.in-modal .chip, .desktop-filter-contents.in-modal .toggle-pill { width: 100%; justify-content: flex-start; padding: 14px 16px; font-size: 14px; border-radius: 10px; }
+    .desktop-filter-contents.in-modal .count-input { box-sizing: border-box; width: 100%; margin: 0; padding: 14px 16px; font-size: 14px; border-radius: 10px; height: 48px; }
     .mode-card { max-width: 100%; }
     main { padding: 16px 14px 20px; }
     .flashcard-wrap { height: 420px; }
@@ -494,7 +473,7 @@
       <span class="filter-label desktop-filter-contents">⚙️ Mode</span>
       <button class="mobile-filter-trigger" onclick="openBottomSheet('Flashcard Mode', 'fc-mode-chips')">
         <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Mode Options</span></div>
-        <span style="color: var(--ink-muted); font-size: 10px;">Select ▼</span>
+        <span id="trigger-val-exam-fmt" style="color: var(--ink-muted); font-size: 10px;">Standard MC ▼</span>
       </button>
       <div id="fc-mode-chips" class="desktop-filter-contents">
         <button class="toggle-pill on" id="fc-smart-toggle" onclick="toggleSmartOrder()"><span class="toggle-dot"></span><span>Smart shuffle</span></button>
@@ -551,7 +530,7 @@
         <span class="filter-label desktop-filter-contents">⚙️ Format</span>
         <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Format', 'exam-fmt-chips')">
           <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Format</span></div>
-          <span style="color: var(--ink-muted); font-size: 10px;">Select ▼</span>
+          <span id="trigger-val-exam-len" style="color: var(--ink-muted); font-size: 10px;">20 ▼</span>
         </button>
         <div id="exam-fmt-chips" class="desktop-filter-contents">
           <button class="chip active" data-e-fmt="mc" onclick="setExamFormat('mc')">Standard Multi-Choice</button>
@@ -567,7 +546,7 @@
         <span class="filter-label desktop-filter-contents">📏 Length</span>
         <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Length', 'exam-len-chips')">
           <div style="display:flex; align-items:center; gap:8px;"><span>📏</span><span>Length</span></div>
-          <span style="color: var(--ink-muted); font-size: 10px;">Select ▼</span>
+          <span id="trigger-val-exam-timer" style="color: var(--ink-muted); font-size: 10px;">None ▼</span>
         </button>
         <div id="exam-len-chips" class="desktop-filter-contents">
           <input class="count-input" id="exam-len-input" type="number" min="1" max="999" inputmode="numeric" value="20" oninput="setExamLenFromInput()" placeholder="Custom..." />
@@ -2339,21 +2318,42 @@ function setExamLen(n) {
   examLen = n === 'all' ? null : Number(n);
   const input = document.getElementById('exam-len-input'); if (input) input.value = examLen === null ? '' : String(examLen);
   document.querySelectorAll('[data-e-len]').forEach(c => c.classList.toggle('active', (examLen === null && c.dataset.eLen === 'all') || (examLen !== null && Number(c.dataset.eLen) === examLen)));
+
+  // Update mobile button text
+  const valEl = document.getElementById('trigger-val-exam-len');
+  if (valEl) valEl.textContent = (n === 'all' ? 'All' : n) + ' ▼';
 }
+
 function setExamLenFromInput() {
   const input = document.getElementById('exam-len-input'); if (!input) return; examLen = normalizeLengthValue(input.value, examLen);
   document.querySelectorAll('[data-e-len]').forEach(c => c.classList.toggle('active', examLen !== null && Number(c.dataset.eLen) === examLen));
+
+  const valEl = document.getElementById('trigger-val-exam-len');
+  if (valEl) valEl.textContent = (examLen || 'All') + ' ▼';
 }
+
 function setExamFormat(f) {
   examFormat = f;
   document.querySelectorAll('[data-e-fmt]').forEach(c => c.classList.toggle('active', c.dataset.eFmt === f));
   document.getElementById('exam-custom-panel').classList.toggle('show', f === 'custom');
   document.getElementById('exam-len-bar').style.display = f === 'custom' ? 'none' : 'flex';
+
+  // Update mobile button text
+  const labels = { 'mc': 'Standard MC', 'reverse': 'Reverse MC', 'fib': 'Fill-in', 'mixed': 'Mixed', 'custom': 'Custom' };
+  const valEl = document.getElementById('trigger-val-exam-fmt');
+  if (valEl) valEl.textContent = labels[f] + ' ▼';
 }
+
 function setExamTimer(seconds) {
   examTimer = seconds;
   document.querySelectorAll('[data-e-timer]').forEach(c => c.classList.toggle('active', +c.dataset.eTimer === seconds));
+
+  // Update mobile button text
+  const labels = { 0: 'None', 600: '10m', 1200: '20m', 1800: '30m', 3600: '60m' };
+  const valEl = document.getElementById('trigger-val-exam-timer');
+  if (valEl) valEl.textContent = (labels[seconds] || (seconds/60 + 'm')) + ' ▼';
 }
+
 function formatTime(s) { return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
 
 function tickExamTimer() {
