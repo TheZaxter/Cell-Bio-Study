@@ -117,12 +117,13 @@
   .count-input:focus { border-color: var(--ink-soft); }
 
   /* GRAND EXAM CONFIG */
-  .ge-config { background: var(--card-alt); border: 1px dashed var(--rule); border-radius: 8px; padding: 16px; margin-top: 12px; display: none; }
+  .ge-config { background: var(--card-alt); border: 1px dashed var(--rule); border-radius: 12px; padding: 16px; margin-bottom: 12px; display: none; }
   .ge-config.show { display: block; animation: fadeIn 0.3s; }
-  .ge-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
-  .ge-input-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px; }
+  .ge-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 8px; }
+  .ge-input-group { display: flex; flex-direction: column; gap: 6px; }
   .ge-input-group label { font-size: 11px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; }
-  .ge-input-group input { padding: 8px; font-family: inherit; font-size: 13px; border: 1px solid var(--rule); border-radius: 6px; background: var(--bg); color: var(--ink); outline: none; }
+  .ge-input-group input { padding: 10px 12px; font-family: inherit; font-size: 14px; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg); color: var(--ink); outline: none; transition: border-color 0.2s; }
+  .ge-input-group input:focus { border-color: var(--ink-soft); }
 
   /* FLASHCARDS */
   .flashcard-wrap { perspective: 1800px; height: clamp(240px, 35vh, 320px); margin-bottom: 16px; }
@@ -374,8 +375,29 @@
 
   @media (max-width: 600px) {
   /* MATCH MODE MOBILE OVERHAUL */
-    .match-terms-bank { top: 90px; padding: 10px; margin: -12px -14px 16px -14px; gap: 6px; box-shadow: 0 4px 12px rgba(26,22,19,0.05); }
-    .match-term { font-size: 12px; padding: 6px 12px; }
+    .match-terms-bank {
+      top: 90px;
+      padding: 12px 14px;
+      margin: -12px -14px 16px -14px;
+
+      /* The double-stack horizontal scroll trick */
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 8px;
+      height: 110px; /* Forces items to wrap to a second column instead of going off bottom */
+
+      overflow-x: auto;
+      box-shadow: 0 4px 12px rgba(26,22,19,0.05);
+    }
+    .match-term {
+      font-size: 12px;
+      padding: 8px 14px;
+      margin: 0;
+      white-space: nowrap; /* Prevents long terms from becoming tall blocks */
+      width: max-content;
+    }
 
     /* MOBILE SETTINGS MODALS (Teleportation Styles) */
     .mobile-filter-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; width: 100%; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--ink); box-shadow: var(--shadow); transition: all 0.2s; outline: none; margin-bottom: 12px; }
@@ -2338,8 +2360,14 @@ function setExamFormat(f) {
   document.getElementById('exam-custom-panel').classList.toggle('show', f === 'custom');
   document.getElementById('exam-len-bar').style.display = f === 'custom' ? 'none' : 'flex';
 
-  // Update mobile button text
-  const labels = { 'mc': 'Standard MC', 'reverse': 'Reverse MC', 'fib': 'Fill-in', 'mixed': 'Mixed', 'custom': 'Custom' };
+  // Fix: Ensure labels map correctly to the data-e-fmt values
+  const labels = {
+    'mc': 'Standard MC',
+    'reverse': 'Reverse MC',
+    'fib': 'Fill-in',
+    'mixed': 'Mixed',
+    'custom': 'Custom'
+  };
   const valEl = document.getElementById('trigger-val-exam-fmt');
   if (valEl) valEl.textContent = labels[f] + ' ▼';
 }
