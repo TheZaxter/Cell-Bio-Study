@@ -1712,6 +1712,16 @@ const FIB_QUESTIONS = [
 // ============================================================
 // SYSTEM UTILS & CONSTANTS
 // ============================================================
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
 const isAndroid = /Android/i.test(navigator.userAgent);
 if (isAndroid) document.documentElement.classList.add('android-device');
 
