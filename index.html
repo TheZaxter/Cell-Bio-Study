@@ -160,6 +160,13 @@
   .conf-easy { border-color: rgba(80, 160, 100, 0.4); } .conf-easy:hover { background: rgba(80, 160, 100, 0.08); border-color: var(--good); }
 
   /* EXAM CENTER */
+  .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  @media (max-width: 600px) {
+    .exam-grid { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+    /* Strips the PC backgrounds on mobile so the native mobile buttons look correct */
+    .exam-grid .filter-bar { background: transparent; border: none; padding: 0; }
+  }
   .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px; }
   .quiz-progress-bar { height: 4px; background: var(--rule-soft); border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
   .quiz-progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; border-radius: 2px; }
@@ -558,13 +565,13 @@
     </div>
 
     <div id="exam-setup">
-      <div style="background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-        <div style="font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--rule-soft);">Configure Exam</div>
 
-        <div class="filter-bar transparent" id="exam-chapter-bar" style="margin-bottom: 20px;"></div>
+      <div class="exam-grid">
+        <!-- 1. Chapters (Top Left) -->
+        <div class="filter-bar transparent" id="exam-chapter-bar" style="margin-bottom: 0;"></div>
 
-        <!-- Format Filter -->
-        <div class="filter-bar transparent" style="margin-bottom: 20px;">
+        <!-- 2. Format (Top Right) -->
+        <div class="filter-bar" style="margin-bottom: 0;">
           <span class="filter-label desktop-filter-contents" style="min-width: 70px;">⚙️ Format</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Format', 'exam-fmt-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>⚙️</span><span>Format</span></div>
@@ -582,19 +589,8 @@
           </div>
         </div>
 
-        <!-- Custom Exam Panel -->
-        <div class="ge-config" id="exam-custom-panel">
-          <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 12px;">Build a custom multi-format exam.</p>
-          <div class="ge-row">
-            <div class="ge-input-group"><label>Standard MC</label><input type="number" id="e-ge-mc" value="10" min="0"></div>
-            <div class="ge-input-group"><label>Reverse MC</label><input type="number" id="e-ge-rev" value="5" min="0"></div>
-            <div class="ge-input-group"><label>Fill in Blanks</label><input type="number" id="e-ge-fib" value="5" min="0"></div>
-            <div class="ge-input-group"><label>Match Boards</label><input type="number" id="e-ge-match" value="1" min="0" max="10"></div>
-          </div>
-        </div>
-
-        <!-- Length Filter -->
-        <div class="filter-bar transparent" id="exam-len-bar" style="margin-bottom: 20px;">
+        <!-- 3. Length (Bottom Left) -->
+        <div class="filter-bar" id="exam-len-bar" style="margin-bottom: 0;">
           <span class="filter-label desktop-filter-contents" style="min-width: 70px;">📏 Length</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Exam Length', 'exam-len-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>📏</span><span>Length</span></div>
@@ -612,8 +608,8 @@
           </div>
         </div>
 
-        <!-- Timer Filter -->
-        <div class="filter-bar transparent" style="margin-bottom: 0;">
+        <!-- 4. Timer (Bottom Right) -->
+        <div class="filter-bar" style="margin-bottom: 0;">
           <span class="filter-label desktop-filter-contents" style="min-width: 70px;">⏱️ Timer</span>
           <button class="mobile-filter-trigger" onclick="openBottomSheet('Time Limit', 'exam-timer-chips')">
             <div style="display:flex; align-items:center; gap:8px;"><span>⏱️</span><span>Timer</span></div>
@@ -630,7 +626,19 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px;" onclick="startExam()">Start Exam →</button>
+
+      <!-- Custom Config Panel (Sits perfectly beneath the grid) -->
+      <div class="ge-config" id="exam-custom-panel">
+        <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 12px;">Build a custom multi-format exam.</p>
+        <div class="ge-row">
+          <div class="ge-input-group"><label>Standard MC</label><input type="number" id="e-ge-mc" value="10" min="0"></div>
+          <div class="ge-input-group"><label>Reverse MC</label><input type="number" id="e-ge-rev" value="5" min="0"></div>
+          <div class="ge-input-group"><label>Fill in Blanks</label><input type="number" id="e-ge-fib" value="5" min="0"></div>
+          <div class="ge-input-group"><label>Match Boards</label><input type="number" id="e-ge-match" value="1" min="0" max="10"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px; margin-top: 8px;" onclick="startExam()">Start Exam →</button>
     </div>
 
     <div id="exam-active" style="display: none;">
